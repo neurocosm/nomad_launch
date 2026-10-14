@@ -1,0 +1,10 @@
+{
+  "name": "NOMAD: Avionics Suite & Mission Control",
+  "description": "NOMAD Launch Control - Central Multi-Cockpit HUD Launcher, Kinetic Telemetry Avionics & Navigation System by BostonyFX",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

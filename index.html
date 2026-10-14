@@ -50,7 +50,7 @@
       background-color: var(--bg-space);
       color: var(--text-main);
       font-family: 'Space Grotesk', -apple-system, sans-serif;
-      padding: 16px 14px 28px 14px;
+      padding: 12px 12px 18px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -62,7 +62,7 @@
       max-width: 480px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
     }
 
     /* Top Brand & Header */
@@ -453,20 +453,21 @@
     .utilities-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .util-tile {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 12px 14px;
-      border-radius: 10px;
+      padding: 8px 10px;
+      border-radius: 9px;
       text-decoration: none;
       transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       text-align: left;
-      min-height: 46px;
+      min-height: 36px;
+      overflow: hidden;
     }
 
     .util-tile:hover {
@@ -478,14 +479,17 @@
     }
 
     .util-tile-title {
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-size: clamp(0.66rem, 2.3vw, 0.73rem);
+      font-weight: 600;
       font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.01em;
       margin-bottom: 0;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     /* Utility Color Identities Matching Screenshot */
