@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>NOMAD: Launch Control // Mission Control</title>
-  <meta name="description" content="NOMAD Launch Control - Central Multi-Cockpit HUD Launcher & Mission Control by BostonyFX" />
+  <meta name="description" content="NOMAD Launch Control - Central Multi-Cockpit HUD Launcher, Kinetic Telemetry Avionics &amp; Navigation System by BostonyFX" />
+  <meta property="og:title" content="NOMAD: Launch Control // Mission Control" />
+  <meta property="og:description" content="NOMAD Launch Control - Central Multi-Cockpit HUD Launcher, Kinetic Telemetry Avionics &amp; Navigation System by BostonyFX" />
   <meta name="theme-color" content="#050811" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
@@ -50,10 +52,11 @@
       background-color: var(--bg-space);
       color: var(--text-main);
       font-family: 'Space Grotesk', -apple-system, sans-serif;
-      padding: 16px 14px 28px 14px;
+      padding: max(20px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)) 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       overflow-x: hidden;
     }
 
@@ -62,7 +65,7 @@
       max-width: 480px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     /* Top Brand & Header */
@@ -71,53 +74,21 @@
       padding: 6px 0 2px 0;
     }
 
-    .brand-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      background: rgba(0, 243, 255, 0.08);
-      border: 1px solid rgba(0, 243, 255, 0.30);
-      border-radius: 999px;
-      font-size: 0.65rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      box-shadow: 0 0 14px rgba(0, 243, 255, 0.18);
-      margin-bottom: 8px;
-    }
-
-    .brand-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--accent-cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-cyan);
-      animation: pulseDot 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.75); }
-    }
-
     .main-title {
-      font-size: 1.85rem;
+      font-size: 1.68rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 3px;
-      text-shadow: 0 0 24px rgba(0, 243, 255, 0.30);
+      margin-bottom: 5px;
+      text-shadow: 0 0 24px rgba(0, 243, 255, 0.28);
     }
 
     .subtitle {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
       letter-spacing: 0.02em;
-      margin-bottom: 8px;
+      margin-bottom: 2px;
     }
 
     .creator-tag {
@@ -156,11 +127,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 16px;
+      padding: 8px 14px;
       background: rgba(11, 19, 37, 0.82);
       border: 1.5px solid rgba(0, 243, 255, 0.28);
-      border-radius: 12px;
-      font-size: clamp(0.76rem, 2.5vw, 0.88rem);
+      border-radius: 11px;
+      font-size: clamp(0.74rem, 2.4vw, 0.84rem);
       font-family: 'JetBrains Mono', monospace;
       color: #cbd5e1;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 10px rgba(0, 243, 255, 0.10);
@@ -169,15 +140,15 @@
     .telemetry-fix-status {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       color: var(--accent-green);
       font-weight: 800;
       letter-spacing: 0.04em;
     }
 
     .telemetry-fix-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       background: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--accent-green);
@@ -185,7 +156,7 @@
 
     #tb-coords-val {
       font-weight: 600;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       color: #94a3b8;
     }
 
@@ -196,25 +167,17 @@
     }
 
     .section-label {
-      font-size: 0.70rem;
+      font-size: 0.68rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       color: var(--text-dim);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
-      margin-top: 4px;
-      margin-bottom: -4px;
+      margin-top: 3px;
+      margin-bottom: -3px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .launcher-divider {
-      width: 100%;
-      height: 1px;
-      border: none;
-      background: rgba(203, 213, 225, 0.28);
-      margin: -2px 0;
     }
 
     /* 3 Hero Cockpits Stack */
@@ -231,7 +194,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid var(--border-subtle);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 12px 15px;
       text-decoration: none;
       color: inherit;
       display: flex;
@@ -294,19 +257,19 @@
     .cockpit-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .cockpit-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
       background: rgba(0, 0, 0, 0.45);
       border: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       flex-shrink: 0;
     }
 
@@ -319,11 +282,11 @@
     .cockpit-title-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .cockpit-name {
-      font-size: 1.15rem;
+      font-size: 1.10rem;
       font-weight: 800;
       letter-spacing: -0.01em;
       color: #ffffff;
@@ -338,43 +301,43 @@
       border-radius: 6px;
       border: 1px solid currentColor;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
     .cockpit-desc {
-      font-size: 0.74rem;
+      font-size: 0.70rem;
       color: var(--text-muted);
-      line-height: 1.3;
+      line-height: 1.25;
     }
 
     .cockpit-tags {
-      font-size: 0.64rem;
+      font-size: 0.60rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .cockpit-launch-action {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 6px;
+      gap: 5px;
       flex-shrink: 0;
     }
 
     .launch-btn-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.72rem;
+      gap: 3px;
+      padding: 5px 11px;
+      border-radius: 7px;
+      font-size: 0.70rem;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-subtle);
       color: #ffffff;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       transition: all 0.15s ease;
     }
 
@@ -388,14 +351,14 @@
     .boot-radio-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       padding: 3px 6px;
-      border-radius: 6px;
+      border-radius: 5px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
+      font-size: 0.60rem;
       color: var(--text-dim);
       transition: all 0.15s ease;
       user-select: none;
@@ -460,13 +423,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 12px 14px;
+      padding: 11px 13px;
       border-radius: 10px;
       text-decoration: none;
       transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       text-align: left;
-      min-height: 46px;
+      min-height: 44px;
+      overflow: hidden;
     }
 
     .util-tile:hover {
@@ -478,14 +442,17 @@
     }
 
     .util-tile-title {
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-size: clamp(0.72rem, 2.3vw, 0.78rem);
+      font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       margin-bottom: 0;
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     /* Utility Color Identities Matching Screenshot */
@@ -571,15 +538,36 @@
 
     footer {
       text-align: center;
-      font-size: 0.66rem;
+      font-size: 0.74rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: 10px;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      line-height: 1.4;
+    }
+
+    .footer-line-arch {
+      color: #94a3b8;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-line-creator {
+      color: #64748b;
+      letter-spacing: 0.02em;
     }
 
     footer a {
-      color: var(--accent-cyan);
+      color: var(--accent-amber);
       text-decoration: none;
+      font-weight: 700;
+      transition: color 0.15s ease, text-decoration 0.15s ease;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     /* BRANDING ABOUT / INFO MODAL OVERLAY (ROAD TRIP SPEC) */
@@ -858,10 +846,6 @@
     
     <!-- Top Header -->
     <div class="header-zone">
-      <div class="brand-pill">
-        <span class="brand-dot"></span>
-        <span>★ NOMAD AVIONICS SUITE</span>
-      </div>
       <h1 class="main-title">LAUNCH CONTROL</h1>
       <p class="subtitle">Select Cockpit to Begin Experience</p>
     </div>
@@ -876,8 +860,7 @@
       <div id="tb-speed-val" style="color: #ffffff; font-weight: 700;">0 MPH</div>
     </div>
 
-    <!-- Section Divider -->
-    <hr class="launcher-divider">
+
 
     <div class="cockpits-stack">
 
@@ -943,8 +926,7 @@
 
     </div>
 
-    <!-- Section Divider -->
-    <hr class="launcher-divider">
+
 
     <div class="utilities-grid">
 
@@ -971,8 +953,8 @@
     </div>
 
     <footer>
-      <div>NOMAD Avionics Architecture &bull; <span class="nomad-version" id="footer-firmware-val">v4.10072026.2006</span></div>
-      <div>Crafted by <a href="https://www.instagram.com/tony_bostony/" class="nomad-creator-link" target="_blank" rel="noopener noreferrer">BostonyFX</a></div>
+      <div class="footer-line-arch">NOMAD Avionics Architecture &bull; <span class="nomad-version" id="footer-firmware-val">v4.10072026.2006</span></div>
+      <div class="footer-line-creator">Crafted by <a href="https://www.instagram.com/tony_bostony/" class="nomad-creator-link" target="_blank" rel="noopener noreferrer">BostonyFX</a></div>
     </footer>
 
   </div>
