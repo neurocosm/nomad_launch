@@ -963,19 +963,9 @@
         <div class="util-tile-title">📖 C: USER GUIDE ↗</div>
       </a>
 
-      <!-- D: DOWNLOAD ALL FILES (.ZIP) -->
-      <a href="/api/download-zip" download="nomad_suite.zip" class="util-tile util-download">
-        <div class="util-tile-title">📦 D: DOWNLOAD ZIP</div>
-      </a>
-
-      <!-- E: PURGE CACHE AND HARD RELOAD -->
-      <div class="util-tile util-purge" onclick="handleDeepPurge()">
-        <div class="util-tile-title">⚠️ E: PURGE CACHE</div>
-      </div>
-
-      <!-- F: CREDITS & ABOUT -->
+      <!-- D: CREDITS & ABOUT -->
       <div class="util-tile util-about" onclick="openAboutModal()">
-        <div class="util-tile-title">ℹ️ F: CREDITS</div>
+        <div class="util-tile-title">ℹ️ D: CREDITS &amp; ABOUT</div>
       </div>
 
     </div>
@@ -1017,9 +1007,9 @@
       window.showToast = showToast;
 
       // Modal open/close via Unified NomadMenuEngine
-      window.openAboutModal = function() {
+      window.openAboutModal = function(tab) {
         if (window.NomadMenuEngine && typeof window.NomadMenuEngine.open === 'function') {
-          window.NomadMenuEngine.open();
+          window.NomadMenuEngine.open(tab);
           return;
         }
         const modal = document.getElementById('about-modal');

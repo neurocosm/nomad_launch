@@ -88,16 +88,16 @@ app.get(['/api/download-zip', '/download-zip', '/download'], (req, res) => {
   try {
     const zipPythonCmd = `
 import os, zipfile
-exclude_dirs = {'.git', 'node_modules', '.cache', '.npm'}
+exclude_dirs = {'.git', 'node_modules', '.cache', '.npm', '.aistudio', '__pycache__'}
 exclude_files = {'nomad_suite.zip', 'nomad-roadtrip.zip'}
 with zipfile.ZipFile('nomad_suite.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
-    for root, dirs, files in os.walk('nomad_suite'):
-        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+    for root, dirs, files in os.walk('.'):
+        dirs[:] = [d for d in dirs if d not in exclude_dirs and not d.startswith('.')]
         for file in files:
-            if file in exclude_files:
+            if file in exclude_files or file.startswith('.'):
                 continue
             path = os.path.join(root, file)
-            arcname = os.path.relpath(path, 'nomad_suite')
+            arcname = os.path.relpath(path, '.')
             zipf.write(path, arcname)
 `;
     execSync(`python3 -c "${zipPythonCmd.replace(/"/g, '\\"')}"`, { cwd: __dirname });

@@ -429,6 +429,23 @@
       </div>
     </div>
 
+    <!-- 8. SYSTEM STORAGE & MAINTENANCE -->
+    <div class="term-box">
+      <div class="box-header">[08] STORAGE SUBSYSTEM &amp; MAINTENANCE</div>
+      <div class="data-row">
+        <span class="label">PWA CACHE TIER:</span>
+        <span class="val">TIER-4 WORKER ACTIVE</span>
+      </div>
+      <div class="data-row">
+        <span class="label">OFFLINE ARCHIVE:</span>
+        <span class="val">NOMAD_SUITE.ZIP READY</span>
+      </div>
+      <div class="blackbox-actions" style="margin-top: 10px;">
+        <button class="btn-term-action" style="border-color: #ff004f; color: #ff004f;" onclick="confirmPurgeTerminal()">⚠️ PURGE CACHE &amp; REBOOT</button>
+        <a href="/api/download-zip" download="nomad_suite.zip" class="btn-term-action" style="text-decoration: none; border-color: #10b981; color: #10b981; display: inline-flex; align-items: center; justify-content: center;">📦 OFFLINE ARCHIVE (.ZIP)</a>
+      </div>
+    </div>
+
     <!-- SYSTEM BUILD VERSION -->
     <div id="geek-system-firmware" class="nomad-firmware-version" style="text-align: center; margin-top: 16px; margin-bottom: 8px; font-size: 11px; color: #886000; letter-spacing: 1px;">
       SYSTEM FIRMWARE: v3.08302026.0722 // VT220-CRT
@@ -748,6 +765,26 @@
       if (confirm("Purge all recorded Black Box route events?")) {
         localStorage.removeItem('nomad_blackbox_log');
         renderBlackBoxTable();
+      }
+    }
+
+    async function confirmPurgeTerminal() {
+      if (confirm("⚠️ CAUTION: Total Cache Purge\n\nThis will clear all cached map tiles, service workers, and local telemetry before reloading. Proceed?")) {
+        try {
+          if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (const r of regs) await r.unregister();
+          }
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          }
+          const savedBlackbox = localStorage.getItem('nomad_blackbox_log');
+          localStorage.clear();
+          sessionStorage.clear();
+          if (savedBlackbox) localStorage.setItem('nomad_blackbox_log', savedBlackbox);
+        } catch (_) {}
+        window.location.reload(true);
       }
     }
 

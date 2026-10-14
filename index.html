@@ -50,43 +50,44 @@
       background-color: var(--bg-space);
       color: var(--text-main);
       font-family: 'Space Grotesk', -apple-system, sans-serif;
-      padding: 12px 12px 18px 12px;
+      padding: max(18px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom)) 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       overflow-x: hidden;
     }
 
     .launcher-frame {
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 7px;
     }
 
     /* Top Brand & Header */
     .header-zone {
       text-align: center;
-      padding: 6px 0 2px 0;
+      padding: 4px 0 2px 0;
     }
 
     .brand-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       padding: 4px 12px;
       background: rgba(0, 243, 255, 0.08);
       border: 1px solid rgba(0, 243, 255, 0.30);
       border-radius: 999px;
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       color: var(--accent-cyan);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
-      box-shadow: 0 0 14px rgba(0, 243, 255, 0.18);
-      margin-bottom: 8px;
+      box-shadow: 0 0 12px rgba(0, 243, 255, 0.16);
+      margin-bottom: 9px;
     }
 
     .brand-dot {
@@ -104,20 +105,20 @@
     }
 
     .main-title {
-      font-size: 1.85rem;
+      font-size: 1.55rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 3px;
-      text-shadow: 0 0 24px rgba(0, 243, 255, 0.30);
+      margin-bottom: 7px;
+      text-shadow: 0 0 20px rgba(0, 243, 255, 0.28);
     }
 
     .subtitle {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       letter-spacing: 0.02em;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .creator-tag {
@@ -156,11 +157,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 16px;
+      padding: 6px 12px;
       background: rgba(11, 19, 37, 0.82);
       border: 1.5px solid rgba(0, 243, 255, 0.28);
-      border-radius: 12px;
-      font-size: clamp(0.76rem, 2.5vw, 0.88rem);
+      border-radius: 10px;
+      font-size: clamp(0.70rem, 2.3vw, 0.80rem);
       font-family: 'JetBrains Mono', monospace;
       color: #cbd5e1;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 10px rgba(0, 243, 255, 0.10);
@@ -169,15 +170,15 @@
     .telemetry-fix-status {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: var(--accent-green);
       font-weight: 800;
       letter-spacing: 0.04em;
     }
 
     .telemetry-fix-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       background: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--accent-green);
@@ -185,7 +186,7 @@
 
     #tb-coords-val {
       font-weight: 600;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       color: #94a3b8;
     }
 
@@ -196,32 +197,26 @@
     }
 
     .section-label {
-      font-size: 0.70rem;
+      font-size: 0.66rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       color: var(--text-dim);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
-      margin-top: 4px;
-      margin-bottom: -4px;
+      margin-top: 2px;
+      margin-bottom: -2px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .launcher-divider {
-      width: 100%;
-      height: 1px;
-      border: none;
-      background: rgba(203, 213, 225, 0.28);
-      margin: -2px 0;
-    }
+
 
     /* 3 Hero Cockpits Stack */
     .cockpits-stack {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
     }
 
     .cockpit-hero-card {
@@ -230,8 +225,8 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 14px 16px;
+      border-radius: 12px;
+      padding: 7px 12px;
       text-decoration: none;
       color: inherit;
       display: flex;
@@ -294,36 +289,36 @@
     .cockpit-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
     }
 
     .cockpit-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       background: rgba(0, 0, 0, 0.45);
       border: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       flex-shrink: 0;
     }
 
     .cockpit-meta {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .cockpit-title-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .cockpit-name {
-      font-size: 1.15rem;
+      font-size: 1.02rem;
       font-weight: 800;
       letter-spacing: -0.01em;
       color: #ffffff;
@@ -331,50 +326,50 @@
     }
 
     .cockpit-tier-badge {
-      font-size: 0.60rem;
+      font-size: 0.58rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 6px;
+      padding: 1px 5px;
+      border-radius: 5px;
       border: 1px solid currentColor;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
     .cockpit-desc {
-      font-size: 0.74rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
-      line-height: 1.3;
+      line-height: 1.2;
     }
 
     .cockpit-tags {
-      font-size: 0.64rem;
+      font-size: 0.60rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .cockpit-launch-action {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 6px;
+      gap: 4px;
       flex-shrink: 0;
     }
 
     .launch-btn-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.72rem;
+      gap: 3px;
+      padding: 4px 10px;
+      border-radius: 7px;
+      font-size: 0.68rem;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-subtle);
       color: #ffffff;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       transition: all 0.15s ease;
     }
 
@@ -388,18 +383,18 @@
     .boot-radio-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 3px 6px;
-      border-radius: 6px;
+      gap: 4px;
+      padding: 2px 5px;
+      border-radius: 5px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
+      font-size: 0.58rem;
       color: var(--text-dim);
       transition: all 0.15s ease;
       user-select: none;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .boot-radio-btn:hover {
@@ -575,10 +570,10 @@
 
     footer {
       text-align: center;
-      font-size: 0.66rem;
+      font-size: 0.60rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: 10px;
+      margin-top: 3px;
     }
 
     footer a {
@@ -880,8 +875,7 @@
       <div id="tb-speed-val" style="color: #ffffff; font-weight: 700;">0 MPH</div>
     </div>
 
-    <!-- Section Divider -->
-    <hr class="launcher-divider">
+
 
     <div class="cockpits-stack">
 
@@ -947,8 +941,7 @@
 
     </div>
 
-    <!-- Section Divider -->
-    <hr class="launcher-divider">
+
 
     <div class="utilities-grid">
 
@@ -967,19 +960,9 @@
         <div class="util-tile-title">📖 C: USER GUIDE ↗</div>
       </a>
 
-      <!-- D: DOWNLOAD ALL FILES (.ZIP) -->
-      <a href="/api/download-zip" download="nomad_suite.zip" class="util-tile util-download">
-        <div class="util-tile-title">📦 D: DOWNLOAD ZIP</div>
-      </a>
-
-      <!-- E: PURGE CACHE AND HARD RELOAD -->
-      <div class="util-tile util-purge" onclick="handleDeepPurge()">
-        <div class="util-tile-title">⚠️ E: PURGE CACHE</div>
-      </div>
-
-      <!-- F: CREDITS & ABOUT -->
+      <!-- D: CREDITS & ABOUT -->
       <div class="util-tile util-about" onclick="openAboutModal()">
-        <div class="util-tile-title">ℹ️ F: CREDITS</div>
+        <div class="util-tile-title">ℹ️ D: CREDITS &amp; ABOUT</div>
       </div>
 
     </div>
@@ -1021,9 +1004,9 @@
       window.showToast = showToast;
 
       // Modal open/close via Unified NomadMenuEngine
-      window.openAboutModal = function() {
+      window.openAboutModal = function(tab) {
         if (window.NomadMenuEngine && typeof window.NomadMenuEngine.open === 'function') {
-          window.NomadMenuEngine.open();
+          window.NomadMenuEngine.open(tab);
           return;
         }
         const modal = document.getElementById('about-modal');
