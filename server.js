@@ -30,7 +30,7 @@ app.get(['/api/version', '/api/suite-version'], (req, res) => {
     const versionPath = path.join(__dirname, 'version.js');
     const versionFile = fs.readFileSync(versionPath, 'utf8');
     const match = versionFile.match(/window\.NOMAD_VERSION\s*=\s*["']([^"']+)["']/);
-    const version = match ? match[1] : 'v4.10142026.0738';
+    const version = match ? match[1] : 'v4.10142026.1109';
     const stats = fs.statSync(versionPath);
 
     res.json({
@@ -44,7 +44,7 @@ app.get(['/api/version', '/api/suite-version'], (req, res) => {
   } catch (err) {
     res.json({
       status: 'ok',
-      version: 'v4.10142026.0738',
+      version: 'v4.10142026.1109',
       timestamp: Date.now(),
       creator: 'BostonyFX'
     });
