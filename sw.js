@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nomad-avionics-suite-v4-10132026-0836';
+const CACHE_NAME = 'nomad-avionics-suite-v4-10142026-0738';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -77,6 +77,12 @@ self.addEventListener('activate', (event) => {
 // Fetch Event: Network-First for Navigation & Scripts / Cache-First for static media
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  // Network-Only for all API calls (/api/version, /api/weather, /api/geocode, /api/download-zip)
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    return;
+  }
 
   // Network-First for Navigation requests (HTML pages) and dynamic script/json updates
   if (event.request.mode === 'navigate' || event.request.destination === 'document' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.json') || url.pathname === '/' || url.pathname.endsWith('/')) {

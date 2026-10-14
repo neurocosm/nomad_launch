@@ -11,12 +11,45 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
+
+// Central Suite Version & Update Registry Endpoint
+// Provides live version state with zero caching for automatic startup checks & re-download triggers
+app.get(['/api/version', '/api/suite-version'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  try {
+    const versionPath = path.join(__dirname, 'version.js');
+    const versionFile = fs.readFileSync(versionPath, 'utf8');
+    const match = versionFile.match(/window\.NOMAD_VERSION\s*=\s*["']([^"']+)["']/);
+    const version = match ? match[1] : 'v4.10142026.0738';
+    const stats = fs.statSync(versionPath);
+
+    res.json({
+      status: 'ok',
+      version: version,
+      timestamp: Date.now(),
+      mtime: stats.mtimeMs,
+      creator: 'BostonyFX',
+      appName: 'NOMAD: Avionics Suite'
+    });
+  } catch (err) {
+    res.json({
+      status: 'ok',
+      version: 'v4.10142026.0738',
+      timestamp: Date.now(),
+      creator: 'BostonyFX'
+    });
+  }
+});
 
 // API health endpoint
 app.get('/api/health', (req, res) => {

@@ -62,10 +62,10 @@
 
     .launcher-frame {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
     /* Top Brand & Header */
@@ -75,17 +75,17 @@
     }
 
     .main-title {
-      font-size: 1.68rem;
+      font-size: 1.72rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       text-shadow: 0 0 24px rgba(0, 243, 255, 0.28);
     }
 
     .subtitle {
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
       letter-spacing: 0.02em;
       margin-bottom: 2px;
@@ -103,35 +103,16 @@
       font-weight: 600;
     }
 
-    /* Firmware Pill Banner */
-    .firmware-banner {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 6px auto;
-      padding: 5px 16px;
-      border-radius: 999px;
-      background: rgba(0, 212, 255, 0.10);
-      border: 1.5px solid rgba(0, 212, 255, 0.40);
-      color: var(--accent-cyan);
-      font-size: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      box-shadow: 0 0 16px rgba(0, 212, 255, 0.20);
-    }
-
     /* GPS Avionics Heartbeat Bar */
     .telemetry-heartbeat {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 14px;
+      padding: 10px 16px;
       background: rgba(11, 19, 37, 0.82);
       border: 1.5px solid rgba(0, 243, 255, 0.28);
-      border-radius: 11px;
-      font-size: clamp(0.74rem, 2.4vw, 0.84rem);
+      border-radius: 12px;
+      font-size: clamp(0.76rem, 2.4vw, 0.86rem);
       font-family: 'JetBrains Mono', monospace;
       color: #cbd5e1;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 10px rgba(0, 243, 255, 0.10);
@@ -184,7 +165,7 @@
     .cockpits-stack {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .cockpit-hero-card {
@@ -194,7 +175,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid var(--border-subtle);
       border-radius: 14px;
-      padding: 12px 15px;
+      padding: 14px 16px;
       text-decoration: none;
       color: inherit;
       display: flex;
@@ -416,20 +397,20 @@
     .utilities-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
     }
 
     .util-tile {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 11px 13px;
-      border-radius: 10px;
+      padding: 12px 14px;
+      border-radius: 11px;
       text-decoration: none;
       transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       text-align: left;
-      min-height: 44px;
+      min-height: 48px;
       overflow: hidden;
     }
 
@@ -538,10 +519,11 @@
 
     footer {
       text-align: center;
-      font-size: 0.74rem;
+      font-size: 0.84rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: 14px;
+      margin-top: -6px;
+      padding-top: 0;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -550,11 +532,41 @@
 
     .footer-line-arch {
       color: #94a3b8;
+      font-size: 0.84rem;
       letter-spacing: 0.02em;
     }
 
+    /* Minimalist Version Update Integration */
+    .nomad-version#footer-firmware-val {
+      cursor: pointer;
+      display: inline-block;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    /* Simple GOLD color change ONLY when an update is available */
+    .nomad-version#footer-firmware-val.has-update {
+      color: #ffd700;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.70), 0 0 20px rgba(255, 183, 3, 0.45);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      animation: goldUpdateGlow 2.2s infinite ease-in-out;
+    }
+
+    @keyframes goldUpdateGlow {
+      0%, 100% {
+        color: #ffd700;
+        text-shadow: 0 0 8px rgba(255, 215, 0, 0.50);
+      }
+      50% {
+        color: #ffe875;
+        text-shadow: 0 0 18px rgba(255, 215, 0, 0.95), 0 0 28px rgba(255, 183, 3, 0.65);
+      }
+    }
+
     .footer-line-creator {
-      color: #64748b;
+      color: #94a3b8;
+      font-size: 0.85rem;
       letter-spacing: 0.02em;
     }
 
@@ -568,6 +580,66 @@
     footer a:hover {
       color: #ffffff;
       text-decoration: underline;
+    }
+
+    /* Suite Re-download Fullscreen Progress Overlay */
+    .update-progress-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 17, 0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .update-progress-card {
+      background: #0b1325;
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 0 36px rgba(0, 243, 255, 0.35), inset 0 0 20px rgba(0, 243, 255, 0.05);
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      padding: 28px 24px;
+      text-align: center;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .update-progress-spinner {
+      font-size: 2.2rem;
+      color: var(--accent-cyan);
+      display: inline-block;
+      animation: spinIcon 1s linear infinite;
+      margin-bottom: 14px;
+      text-shadow: 0 0 16px var(--accent-cyan);
+    }
+
+    .update-progress-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .update-progress-step {
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      min-height: 24px;
+    }
+
+    .update-progress-sub {
+      font-size: 0.70rem;
+      color: var(--text-dim);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 12px;
     }
 
     /* BRANDING ABOUT / INFO MODAL OVERLAY (ROAD TRIP SPEC) */
@@ -953,7 +1025,7 @@
     </div>
 
     <footer>
-      <div class="footer-line-arch">NOMAD Avionics Architecture &bull; <span class="nomad-version" id="footer-firmware-val">v4.10072026.2006</span></div>
+      <div class="footer-line-arch">NOMAD Avionics Architecture &bull; <span class="nomad-version" id="footer-firmware-val" onclick="handleVersionClick()" title="NOMAD Version">v4.10142026.0738</span></div>
       <div class="footer-line-creator">Crafted by <a href="https://www.instagram.com/tony_bostony/" class="nomad-creator-link" target="_blank" rel="noopener noreferrer">BostonyFX</a></div>
     </footer>
 
@@ -961,6 +1033,16 @@
 
   <!-- Unified About / Settings Modal Container (rendered dynamically by /js/nomad-menu.js) -->
   <div class="modal-overlay" id="about-modal"></div>
+
+  <!-- Fullscreen Suite Re-download & Update Overlay -->
+  <div class="update-progress-overlay" id="update-progress-overlay" style="display: none;">
+    <div class="update-progress-card">
+      <div class="update-progress-spinner">↻</div>
+      <div class="update-progress-title">UPDATING AVIONICS SUITE</div>
+      <div class="update-progress-step" id="update-progress-step">Contacting host for latest revision...</div>
+      <div class="update-progress-sub">Preserving default cockpit preference &amp; blackbox flight logs...</div>
+    </div>
+  </div>
 
   <!-- Ephemeral Feedback Toast -->
   <div class="launch-toast" id="launch-toast">Notification</div>
@@ -1097,16 +1179,144 @@
       // Deep purge execution
       window.handleDeepPurge = function() {
         showToast('⚠️ PURGING CACHES & RELOADING...');
-        if (window.NomadCockpitEngine) {
-          window.NomadCockpitEngine.purgeCacheAndReload();
+        executeSuiteReload('Hardware Purge');
+      };
+
+      // --- Automated Suite Update Check via Versioning (Gold Color Indicator) ---
+      let updateCheckInProgress = false;
+
+      async function checkForSuiteUpdates(isManual = false) {
+        if (updateCheckInProgress) return;
+        updateCheckInProgress = true;
+
+        const versionEl = document.getElementById('footer-firmware-val');
+
+        try {
+          const res = await fetch(`/api/version?_t=${Date.now()}`, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+
+          const currentVer = (window.NOMAD_VERSION || '').trim();
+          const remoteVer = (data && data.version ? data.version : '').trim();
+
+          // Background Service Worker registration update check
+          if ('serviceWorker' in navigator) {
+            const reg = await navigator.serviceWorker.getRegistration();
+            if (reg) await reg.update().catch(() => {});
+          }
+
+          if (remoteVer && currentVer && remoteVer !== currentVer) {
+            // New version detected -> turn version string GOLD!
+            if (versionEl) {
+              versionEl.classList.add('has-update');
+              versionEl.dataset.newVersion = remoteVer;
+              versionEl.title = `✨ Update Available (${remoteVer}) - Click to Re-download Suite`;
+            }
+            showToast(`✨ SUITE UPDATE (${remoteVer}) READY • TAP VERSION TO RELOAD`);
+            updateCheckInProgress = false;
+            return { hasUpdate: true, remoteVer, currentVer };
+          } else {
+            // Up to date -> normal color, zero bulk
+            if (versionEl) {
+              versionEl.classList.remove('has-update');
+              delete versionEl.dataset.newVersion;
+              versionEl.title = `NOMAD Avionics ${currentVer} (Up to Date)`;
+            }
+            if (isManual) {
+              showToast(`✓ SUITE IS UP TO DATE (${currentVer})`);
+            }
+            updateCheckInProgress = false;
+            return { hasUpdate: false, remoteVer, currentVer };
+          }
+        } catch (err) {
+          console.warn('Suite update check note:', err);
+          if (isManual) showToast('⚠️ UNABLE TO REACH UPDATE SERVER (OFFLINE)');
+          updateCheckInProgress = false;
+          return { hasUpdate: false, error: err };
+        }
+      }
+
+      window.checkForSuiteUpdates = checkForSuiteUpdates;
+
+      window.handleVersionClick = async function() {
+        const versionEl = document.getElementById('footer-firmware-val');
+        if (versionEl && versionEl.classList.contains('has-update') && versionEl.dataset.newVersion) {
+          executeSuiteReload(`Update to ${versionEl.dataset.newVersion}`);
+          return;
+        }
+
+        const result = await checkForSuiteUpdates(true);
+        if (result && result.hasUpdate) {
+          setTimeout(() => {
+            executeSuiteReload(`Update to ${result.remoteVer}`);
+          }, 350);
         } else {
+          const currentVer = window.NOMAD_VERSION || 'current';
+          const confirmRedownload = window.confirm(
+            `NOMAD Avionics Suite is up to date (${currentVer}).\n\n` +
+            `Would you like to force a clean re-download of all avionics assets, purge browser cache, and reboot?`
+          );
+          if (confirmRedownload) {
+            executeSuiteReload('Forced Re-download');
+          }
+        }
+      };
+      window.handleSuiteUpdateClick = window.handleVersionClick;
+
+      async function executeSuiteReload(reason) {
+        const overlay = document.getElementById('update-progress-overlay');
+        const stepEl = document.getElementById('update-progress-step');
+        if (overlay) overlay.style.display = 'flex';
+
+        function updateStep(msg) {
+          if (stepEl) stepEl.innerText = msg;
+        }
+
+        updateStep('1/4 Unregistering active service workers...');
+        try {
+          if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (const reg of regs) {
+              if (reg.active) reg.active.postMessage({ type: 'FORCE_PURGE' });
+              await reg.unregister();
+            }
+          }
+        } catch (e) {
+          console.warn('SW purge note:', e);
+        }
+
+        await new Promise(r => setTimeout(r, 220));
+        updateStep('2/4 Purging offline cache storage & map tiles...');
+        try {
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          }
+        } catch (e) {
+          console.warn('Cache purge note:', e);
+        }
+
+        await new Promise(r => setTimeout(r, 220));
+        updateStep('3/4 Preserving flight telemetry logs & cockpit defaults...');
+        try {
+          const savedDefault = localStorage.getItem('nomad_default_cockpit');
           const savedBlackbox = localStorage.getItem('nomad_blackbox_log');
           localStorage.clear();
           sessionStorage.clear();
+          if (savedDefault) localStorage.setItem('nomad_default_cockpit', savedDefault);
           if (savedBlackbox) localStorage.setItem('nomad_blackbox_log', savedBlackbox);
-          window.location.reload(true);
+        } catch (e) {
+          console.warn('Storage preservation note:', e);
         }
-      };
+
+        await new Promise(r => setTimeout(r, 250));
+        updateStep('4/4 Re-downloading fresh avionics suite & rebooting...');
+
+        const targetUrl = new URL(window.location.origin + window.location.pathname);
+        targetUrl.searchParams.set('reloaded', Date.now().toString());
+        window.location.replace(targetUrl.toString());
+      }
+      window.executeSuiteReload = executeSuiteReload;
 
       window.showAboutToast = function() {
         const creatorName = (window.NOMAD_CREATOR && window.NOMAD_CREATOR.name) || 'BostonyFX';
@@ -1144,6 +1354,11 @@
             .catch(err => console.warn('Service worker registration failed:', err));
         });
       }
+
+      // Automatically check for suite updates upon startup (non-blocking)
+      setTimeout(() => {
+        checkForSuiteUpdates(false);
+      }, 900);
     })();
   </script>
 
