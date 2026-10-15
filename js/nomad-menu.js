@@ -1258,7 +1258,6 @@
         </div>
       `;
     }
-    }
 
     overlay.innerHTML = `
       <div class="nomad-modal-box" onclick="event.stopPropagation()">
@@ -1363,6 +1362,8 @@
     if (typeof window.showToast === 'function') {
       window.showToast(window.digitSoundEnabled ? 'AVIONICS AUDIO: ON' : 'AVIONICS AUDIO: OFF');
     }
+  };
+
   // Cycle kinetic scan mode with audio, haptic, and HUD synchronization
   window.cycleUnifiedScanMode = function(e) {
     if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
