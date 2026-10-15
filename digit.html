@@ -683,6 +683,7 @@
     /* Kinetic Outline Scanner: 10-Step Line-Cycle Active Top Bar / Line (Zero Glow, Borders Only) */
     .rounded-block.line-top-active {
       border-top-color: var(--pulse-outline-color, var(--accent-cyan)) !important;
+      border-top-width: 2px !important;
       border-right-color: var(--border-cyan) !important;
       border-bottom-color: var(--border-cyan) !important;
       border-left-color: var(--border-cyan) !important;
@@ -695,6 +696,7 @@
       border-top-color: var(--border-cyan) !important;
       border-right-color: var(--border-cyan) !important;
       border-bottom-color: var(--pulse-outline-color, var(--accent-cyan)) !important;
+      border-bottom-width: 2px !important;
       border-left-color: var(--border-cyan) !important;
       box-shadow: none !important;
       background: var(--bg-card) !important;
@@ -3464,9 +3466,8 @@
     // Motion state (vehicle driving): +10% faster cadence for every 10 MPH
     // Modes: Cascade (Top to Bottom repeat), Bounce (Top to Bottom to Top), Off
     // ====================================================================
-    // Strictly enforce 5.0s (5000ms tranquil pulse) as the resting idle cadence
-    let initialIdleCadence = '5.0s';
-    localStorage.setItem('nomad_digit_scan_idle_cadence', '5.0s');
+    // Set responsive 2.0s as the default resting idle cadence for smooth animation
+    let initialIdleCadence = localStorage.getItem('nomad_digit_scan_idle_cadence') || '2.0s';
 
     // Automatic migration: Ensure 10-Step Top & Bottom Bar Line-Cycle is default active target
     if (!localStorage.getItem('nomad_digit_10step_active_v4')) {
@@ -3956,6 +3957,23 @@
       // 7. Sound turnaround
       const chkSound = document.getElementById('chk-scanner-sound');
       if (chkSound) chkSound.checked = SCANNER_CONFIG.soundTurnaround;
+
+      // 7b. Synchronize Suite Settings Modal buttons if open
+      const suiteTargetBtn = document.getElementById('btn-suite-target-toggle');
+      if (suiteTargetBtn) {
+        const scanTarget = (SCANNER_CONFIG.target === 'lines') ? '10-STEP LINE CYCLE' : '5-STEP FULL OUTLINE';
+        suiteTargetBtn.innerHTML = `
+          <span style="display:flex; align-items:center; gap:6px;">GEOMETRY: <strong style='color:#10b981;'>${scanTarget}</strong></span>
+          <span style="font-weight: 800; color: #10b981; font-size: 0.65rem; border: 1px solid rgba(16, 185, 129, 0.5); padding: 2px 6px; border-radius: 6px; background: rgba(16, 185, 129, 0.18);">TAP: SWITCH</span>
+        `;
+      }
+      const suiteModeBtn = document.getElementById('btn-suite-mode-cycle');
+      if (suiteModeBtn) {
+        suiteModeBtn.innerHTML = `
+          <span style="display:flex; align-items:center; gap:6px;">FLOW: <strong style='color:#00f3ff;'>${SCANNER_CONFIG.mode.toUpperCase()}</strong></span>
+          <span style="font-weight: 800; color: #00f3ff; font-size: 0.65rem; border: 1px solid rgba(0, 243, 255, 0.4); padding: 2px 6px; border-radius: 6px; background: rgba(0, 243, 255, 0.18);">TAP: CYCLE</span>
+        `;
+      }
 
       // 8. Sim slider
       const slider = document.getElementById('scanner-sim-slider');

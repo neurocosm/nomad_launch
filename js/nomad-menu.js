@@ -126,38 +126,46 @@
         background: #121826;
         border: 1.5px solid rgba(0, 243, 255, 0.35);
         border-radius: 18px;
-        padding: 20px 18px;
+        padding: 18px 16px 36px 16px;
         width: 100%;
         max-width: 480px;
-        max-height: 88vh;
-        max-height: 88dvh;
+        max-height: calc(100dvh - 36px);
         overflow-y: auto;
+        overscroll-behavior: contain;
         text-align: center;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 24px rgba(0, 243, 255, 0.18);
-        transform: scale(0.94);
+        transform: scale(0.96);
         transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
         -webkit-overflow-scrolling: touch;
         display: flex;
         flex-direction: column;
         gap: 10px;
         box-sizing: border-box;
+        position: relative;
       }
-      #about-modal .nomad-modal-box::-webkit-scrollbar {
-        width: 6px;
+      #about-modal .nomad-modal-x {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #94a3b8;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 0.90rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        z-index: 10;
       }
-      #about-modal .nomad-modal-box::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.25);
-        border-radius: 3px;
-      }
-      #about-modal .nomad-modal-box::-webkit-scrollbar-thumb {
-        background: rgba(0, 243, 255, 0.30);
-        border-radius: 3px;
-      }
-      #about-modal .nomad-modal-box::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 243, 255, 0.55);
-      }
-      #about-modal.active .nomad-modal-box {
-        transform: scale(1);
+      #about-modal .nomad-modal-x:hover {
+        background: rgba(255, 0, 79, 0.25);
+        border-color: #ff004f;
+        color: #ffffff;
       }
       #about-modal .modal-title-link {
         text-decoration: none;
@@ -962,7 +970,7 @@
     `;
   }
 
-  // Storage Console with Download ZIP and Purge Cache actions
+  // Storage Console with Download ZIP and Armed Purge Cache actions
   function buildStorageConsoleHTML() {
     return `
       <div class="modal-storage-console">
@@ -972,28 +980,28 @@
             <span class="credits-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35);">OFFLINE PACKAGE</span>
           </div>
           <div class="storage-card-desc">
-            Downloads the entire NOMAD Avionics Suite into a single portable <code>nomad_suite.zip</code> archive. Includes all three cockpits (Digit, Road Trip, Hyperspace), vector engines, CRT visualizers, and offline map shell.
+            Downloads the entire NOMAD Avionics Suite into a portable <code>nomad_suite.zip</code> archive. Includes all three cockpits (Digit, Road Trip, Hyperspace), vector engines, CRT visualizers, and offline map shell.
           </div>
           <div class="storage-action-row">
-            <a href="/api/download-zip" download="nomad_suite.zip" class="btn-storage-action btn-storage-download" id="btn-modal-download-zip">
+            <a href="/api/download-zip" download="nomad_suite.zip" class="btn-storage-action btn-storage-download" id="btn-modal-download-zip" onclick="window.executeUnifiedZipDownload(event)">
               <span class="storage-btn-title">📦 DOWNLOAD SUITE ARCHIVE (.ZIP)</span>
               <span class="storage-btn-sub">Click to export complete standalone offline codebase &amp; assets</span>
             </a>
           </div>
         </div>
 
-        <div class="storage-card" style="border-color: rgba(255, 0, 79, 0.45);">
+        <div class="storage-card" style="border-color: rgba(255, 0, 79, 0.45);" id="storage-purge-card">
           <div class="storage-card-header">
             <span style="color: #ff004f;">⚠️ HARDWARE CACHE PURGE &amp; RELOAD</span>
-            <span class="credits-tag" style="background: rgba(255, 0, 79, 0.15); color: #ff004f; border: 1px solid rgba(255, 0, 79, 0.35);">GUARDED ACTION</span>
+            <span class="credits-tag" style="background: rgba(255, 0, 79, 0.15); color: #ff004f; border: 1px solid rgba(255, 0, 79, 0.35);">RECOVERY TOOL</span>
           </div>
           <div class="storage-card-desc">
-            Flushes offline Service Worker caches, vector map tile storage, and transient session keys. Forces a hard network reload from the host server. (Blackbox telemetry log is preserved).
+            Flushes offline Service Worker caches, vector map tile storage, and transient session keys. Forces a hard network reload from the host server. (Blackbox flight logs preserved).
           </div>
-          <div class="storage-action-row">
-            <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.confirmUnifiedPurge()">
+          <div class="storage-action-row" id="purge-action-container">
+            <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.armUnifiedPurge()">
               <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
-              <span class="storage-btn-sub">Protected by confirmation prompt to prevent accidental data loss</span>
+              <span class="storage-btn-sub">Tap to arm cache flush &amp; fresh network fetch</span>
             </button>
           </div>
         </div>
@@ -1026,7 +1034,7 @@
     `;
   }
 
-  // Switch between Credits and Storage tabs
+  // Switch between Tabs
   window.switchNomadModalTab = function(tabId) {
     const tabs = document.querySelectorAll('#about-modal .nomad-modal-tab');
     tabs.forEach(t => {
@@ -1041,14 +1049,14 @@
   };
 
   // Generate and render the unified modal HTML
-  function renderUnifiedMenuHTML(initialTab = 'credits') {
+  function renderUnifiedMenuHTML(initialTab = null) {
     const context = getCockpitContext();
     const meta = COCKPIT_META[context] || COCKPIT_META.launcher;
     const creator = window.NOMAD_CREATOR || {
       name: 'BostonyFX',
       url: 'https://www.instagram.com/tony_bostony/'
     };
-    const version = window.NOMAD_VERSION || 'v4.10142026.1109';
+    const version = window.NOMAD_VERSION || 'v4.10142026.2018';
 
     let overlay = document.getElementById('about-modal');
     if (!overlay) {
@@ -1056,21 +1064,24 @@
       overlay.id = 'about-modal';
       document.body.appendChild(overlay);
     }
-    overlay.className = 'modal-overlay nomad-unified-modal';
+    const wasActive = overlay.classList.contains('active');
+    overlay.className = 'modal-overlay nomad-unified-modal' + (wasActive ? ' active' : '');
     overlay.onclick = function(e) {
       if (e.target === overlay) window.closeAboutModal(e);
     };
 
     const isCockpit = (context !== 'launcher');
+    const selectedTab = initialTab || (isCockpit ? 'cockpit' : 'credits');
 
     // ========================================================
     // SCENARIO 1: LAUNCH CONTROL / HOMEPAGE CONTEXT
     // Dedicate the modal directly to CREDITS, ATTRIBUTIONS & STORAGE TOOLS.
-    // Segmented Tabs: [ 📜 CREDITS & APIS ] [ ⚙️ STORAGE & UTILITIES ]
     // ========================================================
     if (!isCockpit) {
       overlay.innerHTML = `
         <div class="nomad-modal-box" onclick="event.stopPropagation()">
+          <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
+
           <!-- Top Title Link to User Guide -->
           <a href="features.html" class="modal-title-link" title="View Full Documentation &amp; Features">
             <div class="modal-title" style="color: #38bdf8;">NOMAD: Avionics Suite ↗</div>
@@ -1089,16 +1100,16 @@
 
           <!-- Top Segmented Tabs: Instantly visible at top of modal -->
           <div class="nomad-modal-tabs">
-            <button type="button" class="nomad-modal-tab ${initialTab !== 'storage' ? 'active' : ''}" data-tab="credits" onclick="window.switchNomadModalTab('credits')">
+            <button type="button" class="nomad-modal-tab ${selectedTab !== 'storage' ? 'active' : ''}" data-tab="credits" onclick="window.switchNomadModalTab('credits')">
               <span>📜 CREDITS &amp; APIS</span>
             </button>
-            <button type="button" class="nomad-modal-tab tab-storage ${initialTab === 'storage' ? 'active' : ''}" data-tab="storage" onclick="window.switchNomadModalTab('storage')">
+            <button type="button" class="nomad-modal-tab tab-storage ${selectedTab === 'storage' ? 'active' : ''}" data-tab="storage" onclick="window.switchNomadModalTab('storage')">
               <span>⚙️ STORAGE &amp; UTILITIES</span>
             </button>
           </div>
 
           <!-- TAB PANEL 1: CREDITS & BILL OF MATERIALS -->
-          <div class="modal-tab-panel ${initialTab !== 'storage' ? 'active' : ''}" data-panel="credits" id="modal-panel-credits">
+          <div class="modal-tab-panel ${selectedTab !== 'storage' ? 'active' : ''}" data-panel="credits" id="modal-panel-credits">
             <!-- Shortcut Jump Banner -->
             <div class="credits-storage-jump-banner" onclick="window.switchNomadModalTab('storage')" title="Jump to Download ZIP &amp; Purge Cache">
               <span>⚙️ Looking for <strong>Download ZIP</strong> or <strong>Purge Cache</strong>?</span>
@@ -1107,36 +1118,15 @@
 
             <!-- Comprehensive Bill of Materials -->
             ${buildCreditsHTML()}
-
-            <!-- Always-visible Storage Actions Card at bottom of Credits list -->
-            <div class="storage-card" style="border-color: rgba(0, 243, 255, 0.35); margin-top: 4px;">
-              <div class="storage-card-header">
-                <span style="color: #00f3ff;">⚙️ SYSTEM STORAGE &amp; OFFLINE ACTIONS</span>
-                <span class="credits-tag" style="background: rgba(0, 243, 255, 0.12); color: #00f3ff; border: 1px solid rgba(0, 243, 255, 0.3);">UTILITIES</span>
-              </div>
-              <div class="storage-card-desc">
-                Direct access to the offline codebase archive and hardware cache purge:
-              </div>
-              <div class="storage-action-row">
-                <a href="/api/download-zip" download="nomad_suite.zip" class="btn-storage-action btn-storage-download">
-                  <span class="storage-btn-title">📦 DOWNLOAD SUITE ARCHIVE (.ZIP)</span>
-                  <span class="storage-btn-sub">Complete offline backup of application &amp; assets</span>
-                </a>
-                <button type="button" class="btn-storage-action btn-storage-purge" onclick="window.confirmUnifiedPurge()">
-                  <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
-                  <span class="storage-btn-sub">Flushes offline map tiles, Service Workers &amp; storage</span>
-                </button>
-              </div>
-            </div>
           </div>
 
           <!-- TAB PANEL 2: DEDICATED STORAGE CONSOLE (Buttons front and center!) -->
-          <div class="modal-tab-panel ${initialTab === 'storage' ? 'active' : ''}" data-panel="storage" id="modal-panel-storage">
+          <div class="modal-tab-panel ${selectedTab === 'storage' ? 'active' : ''}" data-panel="storage" id="modal-panel-storage">
             ${buildStorageConsoleHTML()}
           </div>
 
           <!-- Close Action -->
-          <div style="margin-top: 4px;">
+          <div style="margin-top: 10px;">
             <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)">Close</button>
           </div>
 
@@ -1151,7 +1141,8 @@
 
     // ========================================================
     // SCENARIO 2: ACTIVE COCKPIT CONTEXT (Hyperspace, Road Trip, Digit)
-    // Keep Cockpit Switcher + Controls at top, and provide the Credits & Bill of Materials!
+    // 3 Clean Segmented Tabs: [ 📟 COCKPIT & FX ] [ ⚙️ STORAGE & PURGE ] [ 📜 CREDITS & APIS ]
+    // Zero cutoffs, guaranteed scrolling, and prominent buttons!
     // ========================================================
     const defaultBoot = localStorage.getItem('nomad_default_cockpit') || 'hyperspace';
     const isDefault = (defaultBoot === context);
@@ -1222,6 +1213,9 @@
 
     overlay.innerHTML = `
       <div class="nomad-modal-box" onclick="event.stopPropagation()">
+        <!-- Convenient Top-Right Close Button -->
+        <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
+
         <!-- Top Link to Documentation -->
         <a href="${meta.guideAnchor}" class="modal-title-link" title="View Features &amp; Guide">
           <div class="modal-title" style="color: ${meta.accentColor};">${meta.name} ↗</div>
@@ -1233,53 +1227,56 @@
           by <a href="${creator.url || 'https://www.instagram.com/tony_bostony/'}" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: none;">${creator.name}</a>
         </div>
 
-        <!-- Cockpit Description -->
-        <div class="modal-body">
-          ${meta.desc}
+        <!-- Cockpit Segmented Tabs (Never cut off; easy navigation) -->
+        <div class="nomad-modal-tabs">
+          <button type="button" class="nomad-modal-tab ${selectedTab === 'cockpit' ? 'active' : ''}" data-tab="cockpit" onclick="window.switchNomadModalTab('cockpit')">
+            <span>📟 COCKPIT &amp; FX</span>
+          </button>
+          <button type="button" class="nomad-modal-tab tab-storage ${selectedTab === 'storage' ? 'active' : ''}" data-tab="storage" onclick="window.switchNomadModalTab('storage')">
+            <span>⚙️ STORAGE &amp; PURGE</span>
+          </button>
+          <button type="button" class="nomad-modal-tab ${selectedTab === 'credits' ? 'active' : ''}" data-tab="credits" onclick="window.switchNomadModalTab('credits')">
+            <span>📜 CREDITS</span>
+          </button>
         </div>
 
-        <!-- Cockpit Switcher Section -->
-        ${switcherHTML}
+        <!-- TAB PANEL 1: COCKPIT & FX CONTROLS -->
+        <div class="modal-tab-panel ${selectedTab === 'cockpit' ? 'active' : ''}" data-panel="cockpit" id="modal-panel-cockpit">
+          <!-- Cockpit Description -->
+          <div class="modal-body">
+            ${meta.desc}
+          </div>
 
-        <!-- Action Buttons Stack (Cockpit Context) -->
-        <div class="modal-action-stack">
-          ${scannerHTML}
-          ${audioHTML}
-          <a href="visualizer.html?from=${context}" class="modal-btn-row modal-vis-btn">✨ VISUALIZER ARCADE ↗</a>
-          <a href="geek-stats.html?from=${context}" class="modal-btn-row modal-stats-btn">&gt; GEEK STATS (VT220) _</a>
+          <!-- Cockpit Switcher Section -->
+          ${switcherHTML}
+
+          <!-- Action Buttons Stack (Cockpit Context) -->
+          <div class="modal-action-stack">
+            ${scannerHTML}
+            ${audioHTML}
+            <a href="visualizer.html?from=${context}" class="modal-btn-row modal-vis-btn">✨ VISUALIZER ARCADE ↗</a>
+            <a href="geek-stats.html?from=${context}" class="modal-btn-row modal-stats-btn">&gt; GEEK STATS (VT220) _</a>
+          </div>
+
+          <!-- Shortcut Jump Banner to Storage Tab -->
+          <div class="credits-storage-jump-banner" onclick="window.switchNomadModalTab('storage')" title="Jump to Download ZIP &amp; Purge Cache" style="margin-top: 4px;">
+            <span>⚙️ Need <strong>Download ZIP</strong> or <strong>Purge Cache</strong>?</span>
+            <span style="color: #10b981; font-weight: 800; font-size: 0.60rem;">VIEW STORAGE TOOLS ➔</span>
+          </div>
         </div>
 
-        <!-- Collapsible Credits & Open Source Bill of Materials Drawer -->
-        <details class="modal-credits-drawer">
-          <summary class="modal-credits-summary">
-            <span>📜 CREDITS, APIS &amp; BILL OF MATERIALS</span>
-            <span style="font-size: 0.60rem; opacity: 0.7;">EXPAND ▾</span>
-          </summary>
-          <div class="modal-credits-drawer-content">
-            ${buildCreditsHTML()}
-          </div>
-        </details>
+        <!-- TAB PANEL 2: SYSTEM STORAGE & HARDWARE PURGE -->
+        <div class="modal-tab-panel ${selectedTab === 'storage' ? 'active' : ''}" data-panel="storage" id="modal-panel-storage">
+          ${buildStorageConsoleHTML()}
+        </div>
 
-        <!-- System Storage & Maintenance Section (Always visible with clear actions) -->
-        <details class="modal-maintenance-drawer" open>
-          <summary class="modal-maintenance-summary">
-            <span>⚙️ SYSTEM STORAGE, ARCHIVE &amp; PURGE</span>
-            <span style="font-size: 0.60rem; color: #10b981; font-weight: 800;">ZIP + PURGE ▾</span>
-          </summary>
-          <div class="modal-maintenance-content">
-            <a href="/api/download-zip" download="nomad_suite.zip" class="btn-storage-action btn-storage-download">
-              <span class="storage-btn-title">📦 DOWNLOAD SUITE ARCHIVE (.ZIP)</span>
-              <span class="storage-btn-sub">Developer offline codebase &amp; asset backup</span>
-            </a>
-            <button type="button" class="btn-storage-action btn-storage-purge" onclick="window.confirmUnifiedPurge()">
-              <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
-              <span class="storage-btn-sub">Flushes offline map tiles, storage &amp; workers</span>
-            </button>
-          </div>
-        </details>
+        <!-- TAB PANEL 3: CREDITS, APIS & BILL OF MATERIALS -->
+        <div class="modal-tab-panel ${selectedTab === 'credits' ? 'active' : ''}" data-panel="credits" id="modal-panel-credits">
+          ${buildCreditsHTML()}
+        </div>
 
         <!-- Close Action -->
-        <div style="margin-top: 4px;">
+        <div style="margin-top: 10px;">
           <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)">Close</button>
         </div>
 
@@ -1314,7 +1311,6 @@
       label.style.color = window.digitSoundEnabled ? '#00f3ff' : '#64748b';
     }
     if (typeof window.handleAudioClick === 'function') {
-      // Trigger digit internal state
       window.handleAudioClick();
     }
     if (typeof window.showToast === 'function') {
@@ -1322,33 +1318,72 @@
     }
   };
 
-  // Guarded purge requiring explicit user confirmation
-  window.confirmUnifiedPurge = function() {
-    const ok = window.confirm(
-      "⚠️ CAUTION: HARDWARE CACHE PURGE\n\n" +
-      "This action will:\n" +
-      "• Unregister active offline Service Workers\n" +
-      "• Clear cached map tiles and vector graphics\n" +
-      "• Flush transient session storage\n" +
-      "• Force-reload clean source from the host\n\n" +
-      "Are you sure you want to proceed?"
-    );
-    if (ok) {
-      window.executeUnifiedPurge();
+  // Standalone ZIP Download execution with immediate toast feedback
+  window.executeUnifiedZipDownload = function(e) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('📦 PACKAGING & DOWNLOADING NOMAD_SUITE.ZIP...');
+    }
+    setTimeout(() => {
+      try {
+        const link = document.createElement('a');
+        link.href = '/api/download-zip';
+        link.download = 'nomad_suite.zip';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (_) {}
+    }, 150);
+  };
+
+  // In-UI Armed Purge Confirmation (Eliminates window.confirm failure in iframes/browsers)
+  let purgeArmedTimer = null;
+  window.armUnifiedPurge = function() {
+    const container = document.getElementById('purge-action-container');
+    if (container) {
+      container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:6px; width:100%;">
+          <button type="button" class="btn-storage-action" style="background: rgba(255, 0, 79, 0.28); border: 2px solid #ff004f; color: #ffffff; text-align: center; justify-content: center; align-items: center; box-shadow: 0 0 16px rgba(255, 0, 79, 0.4);" onclick="window.executeUnifiedPurge()">
+            <span class="storage-btn-title" style="color: #ff004f; font-size: 0.78rem;">⚠️ CONFIRM: TAP TO PURGE ALL CACHE &amp; RELOAD NOW</span>
+            <span class="storage-btn-sub" style="color: #fff;">Unregisters workers, flushes disk cache &amp; executes clean restart</span>
+          </button>
+          <button type="button" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 6px; color: #94a3b8; font-size: 0.66rem; font-family: 'JetBrains Mono', monospace; cursor: pointer;" onclick="window.disarmUnifiedPurge()">
+            ✕ Cancel Purge
+          </button>
+        </div>
+      `;
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('⚠️ PURGE ARMED: TAP AGAIN TO CONFIRM REBOOT');
+    }
+    clearTimeout(purgeArmedTimer);
+    purgeArmedTimer = setTimeout(window.disarmUnifiedPurge, 10000);
+  };
+
+  window.disarmUnifiedPurge = function() {
+    clearTimeout(purgeArmedTimer);
+    const container = document.getElementById('purge-action-container');
+    if (container) {
+      container.innerHTML = `
+        <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.armUnifiedPurge()">
+          <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
+          <span class="storage-btn-sub">Tap to arm cache flush &amp; fresh network fetch</span>
+        </button>
+      `;
     }
   };
 
-  // Deep purge & hard reload
+  // Deep purge & hard reload: calls /purge server route with Clear-Site-Data
   window.executeUnifiedPurge = function() {
     if (typeof window.showToast === 'function') {
-      window.showToast('⚠️ PURGING ALL CACHES & REFETCHING SOURCE...');
+      window.showToast('⚠️ PURGING ALL CACHES & REBOOTING...');
     }
     setTimeout(async () => {
       try {
         if ('serviceWorker' in navigator) {
           const regs = await navigator.serviceWorker.getRegistrations();
           for (const reg of regs) {
-            if (reg.active) reg.active.postMessage({ type: 'FORCE_PURGE' });
+            try { if (reg.active) reg.active.postMessage({ type: 'FORCE_PURGE' }); } catch (_) {}
             await reg.unregister();
           }
         }
@@ -1366,14 +1401,15 @@
       } catch (err) {
         console.warn('Purge notice:', err);
       }
-      const dest = new URL(window.location.origin + window.location.pathname);
-      dest.searchParams.set('purge', Date.now().toString());
-      window.location.replace(dest.toString());
-    }, 400);
+      // Navigate to server-side /purge endpoint which delivers Clear-Site-Data: "cache"
+      const p = (window.location.pathname || '').replace(/^\//, '') || 'digit.html';
+      const target = p.includes('digit') ? 'digit.html' : (p.includes('roadtrip') ? 'roadtrip.html' : (p.includes('hyperspace') ? 'hyperspace.html' : 'digit.html'));
+      window.location.replace('/purge?dest=' + encodeURIComponent(target) + '&_t=' + Date.now());
+    }, 350);
   };
 
-  // Open modal (accepts optional initial tab: 'credits' or 'storage')
-  window.openAboutModal = function(initialTab = 'credits') {
+  // Open modal (accepts optional initial tab: 'cockpit', 'storage', or 'credits')
+  window.openAboutModal = function(initialTab = null) {
     ensureMenuStyles();
     renderUnifiedMenuHTML(initialTab);
     const modal = document.getElementById('about-modal');
