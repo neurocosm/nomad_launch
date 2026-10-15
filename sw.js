@@ -51,7 +51,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event: Cleanup Stale Caches, Claim Clients & Force Open Tabs to Refresh
+// Activate Event: Cleanup Stale Caches & Claim Clients safely
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -62,15 +62,7 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).then(() => self.clients.claim()).then(() => {
-      return self.clients.matchAll({ type: 'window' }).then((clients) => {
-        clients.forEach((client) => {
-          if (client.url && typeof client.navigate === 'function') {
-            client.navigate(client.url);
-          }
-        });
-      });
-    })
+    }).then(() => self.clients.claim())
   );
 });
 

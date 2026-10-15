@@ -2293,7 +2293,7 @@
     // ==========================================
     // NOMAD: DIGIT — Versioning & PWA Call-Home Engine
     // ==========================================
-    const NOMAD_CURRENT_VERSION = 'v1.10022026.2157';
+    const NOMAD_CURRENT_VERSION = window.NOMAD_VERSION || 'v4.10142026.1109';
     let serviceWorkerRegistration = null;
     let isUpdateAvailable = false;
 
@@ -2439,12 +2439,9 @@
           })
           .catch(() => {});
 
-        let refreshing = false;
+        // Background worker updates should not force reload open tabs
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
+          console.log('[NOMAD SW] Controller changed');
         });
       });
     }
