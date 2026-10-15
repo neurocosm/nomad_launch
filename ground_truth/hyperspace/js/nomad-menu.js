@@ -1102,7 +1102,7 @@
       name: 'BostonyFX',
       url: 'https://www.instagram.com/tony_bostony/'
     };
-    const version = window.NOMAD_VERSION || 'v4.10142026.2018';
+    const version = window.NOMAD_VERSION || 'v4.10152026.1250';
 
     let overlay = document.getElementById('about-modal');
     if (!overlay) {
@@ -1222,11 +1222,24 @@
     let scannerHTML = '';
     if (context === 'digit') {
       const isSoundOn = (window.digitSoundEnabled !== false);
+      const activeTheme = (typeof window.getCurrentNomadTheme === 'function' && window.getCurrentNomadTheme().name) || 'MATRIX';
       audioHTML = `
-        <button id="btn-audio-modal" class="modal-btn-row modal-audio-btn" onclick="window.toggleUnifiedAudio()" title="Toggle Avionics Audio">
-          <span>🔊 AVIONICS AUDIO</span>
-          <span id="audio-modal-status" style="font-weight: 800; color: #00f3ff;">${isSoundOn ? 'ON' : 'OFF'}</span>
-        </button>
+        <div class="digit-quick-hud-bar" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px; padding:12px 14px; background:linear-gradient(135deg, rgba(0, 243, 255, 0.10), rgba(245, 158, 11, 0.10)); border:1.5px solid rgba(0, 243, 255, 0.5); border-radius:14px; box-shadow: 0 4px 18px rgba(0,0,0,0.5);">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; font-weight:800; color:#00f3ff; letter-spacing:0.08em;">
+            <span>⚡ DIGIT QUICK CONTROLS</span>
+            <span style="font-size:0.58rem; padding:2px 6px; border-radius:4px; background:rgba(0, 243, 255, 0.2); color:#fff; font-weight:700;">HUD ACTIVE</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <button id="btn-audio-modal" type="button" class="modal-btn-row modal-audio-btn" onclick="window.toggleUnifiedAudio && window.toggleUnifiedAudio()" title="Toggle Avionics Audio" style="margin:0; padding:12px 10px; border-radius:10px; justify-content:space-between; background:rgba(0, 243, 255, 0.18); border:1.5px solid rgba(0, 243, 255, 0.6); cursor:pointer;">
+              <span style="font-size:0.78rem; font-weight:800; letter-spacing:0.04em;">🔊 AUDIO</span>
+              <span id="audio-modal-status" style="font-weight:900; color:#00f3ff; font-size:0.75rem; padding:2px 8px; border-radius:6px; background:rgba(0, 243, 255, 0.25);">${isSoundOn ? 'ON' : 'OFF'}</span>
+            </button>
+            <button id="btn-theme-modal" type="button" class="modal-btn-row" onclick="if (window.cycleNomadTheme) { const t = window.cycleNomadTheme(); const el = document.getElementById('lbl-theme-modal-name'); if (el) el.textContent = (t.name || 'THEME').split(' ')[0] + ' ⟳'; }" title="Cycle Color Theme" style="margin:0; padding:12px 10px; border-radius:10px; justify-content:space-between; background:rgba(245, 158, 11, 0.18); border:1.5px solid rgba(245, 158, 11, 0.6); cursor:pointer;">
+              <span style="font-size:0.78rem; font-weight:800; letter-spacing:0.04em;">🎨 THEME</span>
+              <span id="lbl-theme-modal-name" style="font-weight:900; color:#f59e0b; font-size:0.72rem; padding:2px 8px; border-radius:6px; background:rgba(245, 158, 11, 0.25);">${activeTheme.split(' ')[0]} ⟳</span>
+            </button>
+          </div>
+        </div>
       `;
 
       const rawScanMode = localStorage.getItem('nomad_digit_scan_mode') || 'cascade';
@@ -1292,6 +1305,9 @@
 
         <!-- TAB PANEL 1: COCKPIT & FX CONTROLS (SCROLLABLE WITH ZERO CUTOFFS) -->
         <div class="modal-tab-panel ${selectedTab === 'cockpit' ? 'active' : ''}" data-panel="cockpit" id="modal-panel-cockpit">
+          <!-- Prominent Quick Controls for DIGIT (Audio & Theme right at top!) -->
+          ${context === 'digit' ? audioHTML : ''}
+
           <!-- Cockpit Description -->
           <div class="modal-body">
             ${meta.desc}
@@ -1303,7 +1319,7 @@
           <!-- Action Buttons Stack (Cockpit Context) -->
           <div class="modal-action-stack">
             ${scannerHTML}
-            ${audioHTML}
+            ${context !== 'digit' ? audioHTML : ''}
             <a href="visualizer.html?from=${context}" class="modal-btn-row modal-vis-btn">✨ VISUALIZER ARCADE ↗</a>
             <a href="geek-stats.html?from=${context}" class="modal-btn-row modal-stats-btn">&gt; GEEK STATS (VT220) _</a>
           </div>
