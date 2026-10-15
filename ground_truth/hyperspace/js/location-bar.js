@@ -67,9 +67,9 @@
     if (!el || !card) return;
 
     const dockedShield = document.getElementById('location-docked-shield');
-    const shieldOffset = (dockedShield && dockedShield.style.display !== 'none') ? 44 : 0;
-    const maxAllowedWidth = Math.max(120, card.clientWidth - 36 - shieldOffset);
-    let fontSize = window.innerWidth < 480 ? 24 : 28;
+    const shieldOffset = (dockedShield && dockedShield.style.display !== 'none') ? 48 : 0;
+    const maxAllowedWidth = Math.max(120, card.clientWidth - 40 - shieldOffset);
+    let fontSize = window.innerWidth < 480 ? 32 : 40;
     el.style.fontSize = `${fontSize}px`;
     const minFontSize = 14;
 
