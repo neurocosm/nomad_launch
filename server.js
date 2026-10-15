@@ -19,18 +19,52 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
+// Universal No-Cache Middleware for Application Shell, Service Workers, and Dynamic Scripts
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (
+    p.endsWith('.html') ||
+    p.endsWith('.js') ||
+    p.endsWith('.json') ||
+    p === '/' ||
+    p === '/sw.js'
+  ) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
 // Central Suite Version & Update Registry Endpoint
 // Provides live version state with zero caching for automatic startup checks & re-download triggers
-app.get(['/api/version', '/api/suite-version'], (req, res) => {
+app.get(['/api/version', '/api/suite-version', '/version.json'], (req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
+
+  // Defuse legacy DIGIT infinite reload loops:
+  // If an un-migrated browser instance is still running the old cached digit.html,
+  // it checks /api/version and auto-reloads if version !== 'v4.10102026.1032'.
+  // Returning 'v4.10102026.1032' defuses the reload loop on the spot so the browser can stabilize.
+  const referer = req.headers.referer || '';
+  const isLegacyDigitClient = referer.includes('digit') && !req.query.client;
+  if (isLegacyDigitClient) {
+    return res.json({
+      status: 'ok',
+      version: 'v4.10102026.1032',
+      timestamp: Date.now(),
+      legacyDefused: true,
+      creator: 'BostonyFX',
+      appName: 'NOMAD: Avionics Suite'
+    });
+  }
 
   try {
     const versionPath = path.join(__dirname, 'version.js');
     const versionFile = fs.readFileSync(versionPath, 'utf8');
     const match = versionFile.match(/window\.NOMAD_VERSION\s*=\s*["']([^"']+)["']/);
-    const version = match ? match[1] : 'v4.10142026.1109';
+    const version = match ? match[1] : 'v4.10142026.2018';
     const stats = fs.statSync(versionPath);
 
     res.json({
@@ -44,11 +78,104 @@ app.get(['/api/version', '/api/suite-version'], (req, res) => {
   } catch (err) {
     res.json({
       status: 'ok',
-      version: 'v4.10142026.1109',
+      version: 'v4.10142026.2018',
       timestamp: Date.now(),
       creator: 'BostonyFX'
     });
   }
+});
+
+// Emergency Purge & Recovery Endpoint
+// Visitable directly by user at /purge or /reset to instantly wipe service workers and cached assets
+app.get(['/purge', '/reset', '/force-purge'], (req, res) => {
+  res.setHeader('Clear-Site-Data', '"cache"');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>NOMAD Avionics — Cache Purge & Recovery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #06090e;
+      color: #38bdf8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 32px 24px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    }
+    h1 { font-size: 1.3rem; margin: 0 0 12px; color: #f59e0b; letter-spacing: 1px; }
+    p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; margin: 0 0 20px; }
+    .status { font-size: 0.85rem; color: #38bdf8; font-weight: bold; margin-bottom: 24px; }
+    a.btn {
+      display: inline-block;
+      background: #38bdf8;
+      color: #000;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚠️ NOMAD PURGE & RECOVERY</h1>
+    <p>Clearing registered service workers, cached application shells, and resetting cockpit state...</p>
+    <div class="status" id="status-text">PURGING CACHES...</div>
+    <a href="/digit.html?v=${Date.now()}" class="btn" id="launch-btn" style="display:none;">LAUNCH NOMAD DIGIT ↗</a>
+  </div>
+  <script>
+    async function purgeEverything() {
+      const statusEl = document.getElementById('status-text');
+      const btn = document.getElementById('launch-btn');
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            await reg.unregister();
+          }
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        sessionStorage.clear();
+        statusEl.innerText = '✓ CACHE PURGED SUCCESSFULLY';
+        statusEl.style.color = '#10b981';
+        btn.style.display = 'inline-block';
+        setTimeout(() => {
+          window.location.replace('/digit.html?fresh=' + Date.now());
+        }, 1200);
+      } catch (e) {
+        statusEl.innerText = 'PURGE COMPLETE — REDIRECTING...';
+        setTimeout(() => {
+          window.location.replace('/digit.html?fresh=' + Date.now());
+        }, 1200);
+      }
+    }
+    purgeEverything();
+  </script>
+</body>
+</html>`);
 });
 
 // API health endpoint

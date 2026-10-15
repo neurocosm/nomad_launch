@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nomad-avionics-suite-v4-10142026-1109';
+const CACHE_NAME = 'nomad-avionics-suite-v4-10142026-2018';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -58,6 +58,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
+            console.log('[NOMAD SW] Purged obsolete cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -72,14 +73,14 @@ self.addEventListener('fetch', (event) => {
 
   // Network-Only for all API calls (/api/version, /api/weather, /api/geocode, /api/download-zip)
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+    event.respondWith(fetch(event.request));
     return;
   }
 
   // Network-First for Navigation requests (HTML pages) and dynamic script/json updates
   if (event.request.mode === 'navigate' || event.request.destination === 'document' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.json') || url.pathname === '/' || url.pathname.endsWith('/')) {
     event.respondWith(
-      fetch(event.request, { cache: 'no-store' }).then((networkResponse) => {
+      fetch(event.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {

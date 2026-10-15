@@ -1808,7 +1808,7 @@
 
   <!-- Footer Credits -->
   <footer class="footer-bar">
-    NOMAD: DIGIT &bull; <span class="nomad-version" id="footer-firmware-val" onclick="handleVersionClick()" title="NOMAD Version">v4.10142026.1109</span> &bull; Crafted by <a href="https://www.instagram.com/tony_bostony/" target="_blank" rel="noopener noreferrer" class="nomad-creator-link footer-brand">BostonyFX</a>
+    NOMAD: DIGIT &bull; <span class="nomad-version" id="footer-firmware-val" onclick="handleVersionClick()" title="NOMAD Version">v4.10142026.2018</span> &bull; Crafted by <a href="https://www.instagram.com/tony_bostony/" target="_blank" rel="noopener noreferrer" class="nomad-creator-link footer-brand">BostonyFX</a>
   </footer>
 
   <div id="toast-pill" class="toast-pill">COPIED TO CLIPBOARD</div>
@@ -3181,7 +3181,7 @@
     // NOMAD: DIGIT — Versioning & PWA Call-Home Engine
     // ==========================================
     function getNomadCurrentVersion() {
-      return (window.NOMAD_VERSION || 'v4.10142026.1109').trim();
+      return (window.NOMAD_VERSION || 'v4.10142026.2018').trim();
     }
     let serviceWorkerRegistration = null;
     let isUpdateAvailable = false;
@@ -3254,13 +3254,13 @@
       const currentVer = getNomadCurrentVersion();
 
       try {
-        let res = await fetch(`/api/version?_t=${Date.now()}`, {
+        let res = await fetch(`/api/version?client=nomad_v4&v=${encodeURIComponent(currentVer)}&_t=${Date.now()}`, {
           cache: 'no-store',
           headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
         }).catch(() => null);
 
         if (!res || !res.ok) {
-          res = await fetch(`/version.json?_t=${Date.now()}`, {
+          res = await fetch(`/version.json?client=nomad_v4&v=${encodeURIComponent(currentVer)}&_t=${Date.now()}`, {
             cache: 'no-store',
             headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
           }).catch(() => null);
@@ -3347,7 +3347,7 @@
     // PWA Service Worker Registration & Lifecycle
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
           .then((reg) => {
             serviceWorkerRegistration = reg;
           })

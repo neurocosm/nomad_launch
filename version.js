@@ -10,7 +10,7 @@
 // NOMAD Central Version Registry
 // Edit this single line at the end of a session to update the version across all pages and modals.
 // Format: v<Major>.<MMDDYYYY>.<HHMM> (.HHMM timestamp is Eastern Time US)
-window.NOMAD_VERSION = "v4.10142026.1109";
+window.NOMAD_VERSION = "v4.10142026.2018";
 
 // NOMAD Creator & Visionary Registry (SINGLE FILE OF REFERENCE FOR ALL BRANDING)
 window.NOMAD_CREATOR = {
