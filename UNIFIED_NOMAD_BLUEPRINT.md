@@ -29,3 +29,23 @@ Top-header toggle allowing instant switching between the three cockpits on the f
 
 Branding & Version Registry:
 BostonyFX credits (@neurocosm) and US Eastern Time versioning rules.
+
+======================================================================
+MANDATORY GROUND RULE: SYNCHRONIZED VERSION BUMP ON EVERY CHANGE
+======================================================================
+Whenever an engineer or AI assistant updates, fixes, refines, or adds any feature, the build version MUST be incremented across all version files:
+1. /version.js (window.NOMAD_VERSION)
+2. /version.json ("version" & "timestamp")
+3. /sw.js (CACHE_NAME: 'nomad-avionics-suite-v<Major>-<MMDDYYYY>-<HHMM>')
+4. /js/nomad-menu.js (fallback default version)
+5. /ground_truth/*/version.js (mirrored ground truth registries)
+6. /nomad_suite.zip (rebuilt with latest synchronized version)
+
+Standard Format:
+v<Major>.<MMDDYYYY>.<HHMM>
+Where:
+- <Major> = v4 (current major suite generation)
+- <MMDDYYYY> = Build month, day, year (e.g., 10152026)
+- <HHMM> = Current timestamp in US Eastern Time (EDT/EST) (e.g., 1232)
+======================================================================
+

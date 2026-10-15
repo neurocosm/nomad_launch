@@ -7,3 +7,7 @@ This directory houses the unified multi-cockpit prototype (RoadTrip + Hyperspace
 - `/nomad_suite/ground_truth/digit/` (Pristine DIGIT 5-block reference)
 - `/nomad_suite/ground_truth/roadtrip/` (Pristine RoadTrip v3 reference)
 - `/nomad_suite/index.html` (The Unified Multi-Cockpit Application)
+
+## Ground Rules:
+- **Mandatory Versioning Bump**: Whenever code, assets, styles, or features are updated or fixed, increment the version across `version.js`, `version.json`, `sw.js`, and `js/nomad-menu.js` using format `v<Major>.<MMDDYYYY>.<HHMM>` (US Eastern Time).
+

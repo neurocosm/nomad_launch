@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nomad-avionics-suite-v4-10142026-2018';
+const CACHE_NAME = 'nomad-avionics-suite-v4-10152026-1232';
 
 const ASSETS_TO_CACHE = [
   '/',
