@@ -39,9 +39,9 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Install Event: Cache Core App Shell & Assets (Skip waiting immediately)
+// Install Event: Cache Core App Shell & Assets
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  // Do NOT self.skipWaiting() unconditionally here — prevents controllerchange infinite reload loops across open tabs
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE).catch(err => {

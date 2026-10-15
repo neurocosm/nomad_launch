@@ -1279,9 +1279,14 @@
       background: #0b1325;
       border: 1px solid rgba(0, 243, 255, 0.4);
       border-radius: 16px;
-      padding: 20px 18px;
+      padding: 20px 18px 36px 18px;
       width: 100%;
-      max-width: 360px;
+      max-width: 380px;
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      box-sizing: border-box;
       text-align: center;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 243, 255, 0.2);
       font-family: 'JetBrains Mono', monospace;
@@ -1670,13 +1675,19 @@
           <span style="font-size: 0.58rem; color: #10b981; font-weight: 800; background: rgba(16, 185, 129, 0.2); padding: 2px 7px; border-radius: 6px; border: 1px solid #10b981;">SUBTLE OPTION</span>
         </div>
         <div class="scanner-grid-2">
-          <button type="button" class="scanner-btn-opt" data-opt-target="lines" style="padding: 10px 6px;">
-            <span style="font-size:0.75rem; font-weight:800; display:block; margin-bottom:3px; color:#fff;">⮛ TOP &amp; BTM BARS</span>
-            <span style="font-size:0.58rem;font-weight:700;color:var(--accent-cyan);display:block;">10-STEP LINE CYCLE</span>
+          <button type="button" class="scanner-btn-opt" data-opt-target="lines" style="padding: 12px 8px; text-align: left; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size:0.78rem; font-weight:800; color:#fff;">⮛ TOP &amp; BTM BARS</span>
+              <span class="target-indicator lines-ind" style="font-size:0.55rem; font-weight:800; color:#00f3ff;">[ACTIVE]</span>
+            </div>
+            <span style="font-size:0.62rem; font-weight:700; color:#38bdf8; display:block;">10-STEP LINE CYCLE</span>
           </button>
-          <button type="button" class="scanner-btn-opt" data-opt-target="full" style="padding: 10px 6px;">
-            <span style="font-size:0.75rem; font-weight:800; display:block; margin-bottom:3px; color:#fff;">▢ FULL OUTLINE</span>
-            <span style="font-size:0.58rem;font-weight:700;opacity:0.85;display:block;">5-STEP BLOCK PERIMETER</span>
+          <button type="button" class="scanner-btn-opt" data-opt-target="full" style="padding: 12px 8px; text-align: left; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size:0.78rem; font-weight:800; color:#fff;">▢ FULL OUTLINE</span>
+              <span class="target-indicator full-ind" style="font-size:0.55rem; font-weight:800; color:#10b981;"></span>
+            </div>
+            <span style="font-size:0.62rem; font-weight:700; color:#94a3b8; display:block;">5-STEP BLOCK PERIMETER</span>
           </button>
         </div>
         <div style="font-size: 0.60rem; color: #cbd5e1; margin-top: 7px; line-height: 1.35; padding: 4px 6px; background: rgba(0,0,0,0.3); border-radius: 6px;">
@@ -3909,7 +3920,14 @@
 
       // 1b. Target geometry buttons (10-step lines vs 5-step full)
       document.querySelectorAll('[data-opt-target]').forEach(btn => {
-        btn.classList.toggle('is-selected', btn.getAttribute('data-opt-target') === SCANNER_CONFIG.target);
+        const isLines = btn.getAttribute('data-opt-target') === 'lines';
+        const isSelected = (btn.getAttribute('data-opt-target') === SCANNER_CONFIG.target);
+        btn.classList.toggle('is-selected', isSelected);
+        const ind = btn.querySelector('.target-indicator');
+        if (ind) {
+          ind.textContent = isSelected ? '✓ ACTIVE' : '';
+          ind.style.display = isSelected ? 'inline-block' : 'none';
+        }
       });
 
       // Synchronize top header target button label and active styling
@@ -4123,8 +4141,10 @@
       btn.addEventListener('click', () => {
         SCANNER_CONFIG.mode = btn.getAttribute('data-opt-mode');
         localStorage.setItem('nomad_digit_scan_mode', SCANNER_CONFIG.mode);
+        try { playTone(1400); if ('vibrate' in navigator) navigator.vibrate(30); } catch (_) {}
         syncScannerModalUI();
         startScanner();
+        showToast(`⚡ SCANNER FLOW: ${SCANNER_CONFIG.mode.toUpperCase()}`);
       });
     });
 
@@ -4134,6 +4154,7 @@
         SCANNER_CONFIG.target = btn.getAttribute('data-opt-target');
         localStorage.setItem('nomad_digit_scan_target', SCANNER_CONFIG.target);
         scannerSeqIndex = 0;
+        try { playTone(1500); if ('vibrate' in navigator) navigator.vibrate(40); } catch (_) {}
         syncScannerModalUI();
         startScanner();
         showToast(SCANNER_CONFIG.target === 'lines' 

@@ -126,21 +126,29 @@
         background: #121826;
         border: 1.5px solid rgba(0, 243, 255, 0.35);
         border-radius: 18px;
-        padding: 18px 16px 36px 16px;
+        padding: 14px 14px 12px 14px;
         width: 100%;
         max-width: 480px;
-        max-height: calc(100dvh - 36px);
-        overflow-y: auto;
-        overscroll-behavior: contain;
+        max-height: min(92dvh, 760px);
+        height: auto;
         text-align: center;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 24px rgba(0, 243, 255, 0.18);
         transform: scale(0.96);
         transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-        -webkit-overflow-scrolling: touch;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+      }
+      #about-modal .nomad-modal-header-fixed {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        text-align: center;
+        padding-right: 28px;
         position: relative;
       }
       #about-modal .nomad-modal-x {
@@ -359,13 +367,14 @@
       }
       /* Modal Navigation Tabs */
       #about-modal .nomad-modal-tabs {
+        flex-shrink: 0;
         display: flex;
         gap: 6px;
         background: rgba(0, 0, 0, 0.45);
         padding: 4px;
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.10);
-        margin: 2px 0 4px 0;
+        margin: 2px 0 2px 0;
       }
       #about-modal .nomad-modal-tab {
         flex: 1;
@@ -405,10 +414,26 @@
       #about-modal .modal-tab-panel {
         display: none;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 4px 28px 2px;
       }
       #about-modal .modal-tab-panel.active {
         display: flex;
+      }
+      #about-modal .nomad-modal-footer-fixed {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 6px;
+        margin-top: 2px;
       }
       #about-modal .credits-storage-jump-banner {
         display: flex;
@@ -442,10 +467,31 @@
         background: rgba(0, 0, 0, 0.40);
         border: 1.5px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
-        padding: 11px 13px;
+        padding: 12px 14px;
         display: flex;
         flex-direction: column;
-        gap: 7px;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+      #about-modal .storage-card:active {
+        transform: scale(0.99);
+      }
+      #about-modal .storage-card.card-zip {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.08);
+      }
+      #about-modal .storage-card.card-zip:hover {
+        background: rgba(16, 185, 129, 0.15);
+        box-shadow: 0 0 16px rgba(16, 185, 129, 0.28);
+      }
+      #about-modal .storage-card.card-purge {
+        border-color: #ff004f;
+        background: rgba(255, 0, 79, 0.08);
+      }
+      #about-modal .storage-card.card-purge:hover {
+        background: rgba(255, 0, 79, 0.15);
+        box-shadow: 0 0 16px rgba(255, 0, 79, 0.28);
       }
       #about-modal .storage-card-header {
         display: flex;
@@ -974,34 +1020,34 @@
   function buildStorageConsoleHTML() {
     return `
       <div class="modal-storage-console">
-        <div class="storage-card" style="border-color: rgba(16, 185, 129, 0.45);">
+        <div class="storage-card card-zip" onclick="window.executeUnifiedZipDownload(event)" title="Tap to download standalone ZIP archive">
           <div class="storage-card-header">
             <span style="color: #10b981;">📦 STANDALONE SUITE ARCHIVE (.ZIP)</span>
-            <span class="credits-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35);">OFFLINE PACKAGE</span>
+            <span class="credits-tag" style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981;">1-TAP DOWNLOAD</span>
           </div>
           <div class="storage-card-desc">
-            Downloads the entire NOMAD Avionics Suite into a portable <code>nomad_suite.zip</code> archive. Includes all three cockpits (Digit, Road Trip, Hyperspace), vector engines, CRT visualizers, and offline map shell.
+            Downloads complete standalone offline codebase (1.3 MB) containing all 3 cockpits (Digit, Road Trip, Hyperspace), CRT visualizers, vector graphics &amp; offline maps.
           </div>
           <div class="storage-action-row">
-            <a href="/api/download-zip" download="nomad_suite.zip" class="btn-storage-action btn-storage-download" id="btn-modal-download-zip" onclick="window.executeUnifiedZipDownload(event)">
-              <span class="storage-btn-title">📦 DOWNLOAD SUITE ARCHIVE (.ZIP)</span>
-              <span class="storage-btn-sub">Click to export complete standalone offline codebase &amp; assets</span>
-            </a>
+            <button type="button" class="btn-storage-action btn-storage-download" id="btn-modal-download-zip" onclick="window.executeUnifiedZipDownload(event)">
+              <span class="storage-btn-title" id="lbl-zip-btn-title">📦 DOWNLOAD SUITE ARCHIVE (.ZIP)</span>
+              <span class="storage-btn-sub" id="lbl-zip-btn-sub">Tap here to download standalone 1.3 MB nomad_suite.zip</span>
+            </button>
           </div>
         </div>
 
-        <div class="storage-card" style="border-color: rgba(255, 0, 79, 0.45);" id="storage-purge-card">
+        <div class="storage-card card-purge" id="storage-purge-card" onclick="window.executeUnifiedPurge(event)" title="Tap to purge cache and reload">
           <div class="storage-card-header">
             <span style="color: #ff004f;">⚠️ HARDWARE CACHE PURGE &amp; RELOAD</span>
-            <span class="credits-tag" style="background: rgba(255, 0, 79, 0.15); color: #ff004f; border: 1px solid rgba(255, 0, 79, 0.35);">RECOVERY TOOL</span>
+            <span class="credits-tag" style="background: rgba(255, 0, 79, 0.2); color: #ff004f; border: 1px solid #ff004f;">1-TAP REBOOT</span>
           </div>
           <div class="storage-card-desc">
-            Flushes offline Service Worker caches, vector map tile storage, and transient session keys. Forces a hard network reload from the host server. (Blackbox flight logs preserved).
+            Unregisters service workers, purges disk &amp; memory cache, flushes stale code, and fetches fresh server files. (Blackbox flight logs preserved).
           </div>
           <div class="storage-action-row" id="purge-action-container">
-            <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.armUnifiedPurge()">
-              <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
-              <span class="storage-btn-sub">Tap to arm cache flush &amp; fresh network fetch</span>
+            <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.executeUnifiedPurge(event)">
+              <span class="storage-btn-title" id="lbl-purge-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD (NOW)</span>
+              <span class="storage-btn-sub" id="lbl-purge-btn-sub">Tap to instantly flush caches, drop service workers &amp; clean reboot</span>
             </button>
           </div>
         </div>
@@ -1080,22 +1126,24 @@
     if (!isCockpit) {
       overlay.innerHTML = `
         <div class="nomad-modal-box" onclick="event.stopPropagation()">
-          <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
+          <div class="nomad-modal-header-fixed">
+            <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
 
-          <!-- Top Title Link to User Guide -->
-          <a href="features.html" class="modal-title-link" title="View Full Documentation &amp; Features">
-            <div class="modal-title" style="color: #38bdf8;">NOMAD: Avionics Suite ↗</div>
-            <div class="modal-features-hint">SYSTEM ARCHITECTURE &amp; BILL OF MATERIALS</div>
-          </a>
+            <!-- Top Title Link to User Guide -->
+            <a href="features.html" class="modal-title-link" title="View Full Documentation &amp; Features">
+              <div class="modal-title" style="color: #38bdf8;">NOMAD: Avionics Suite ↗</div>
+              <div class="modal-features-hint">SYSTEM ARCHITECTURE &amp; BILL OF MATERIALS</div>
+            </a>
 
-          <!-- Unified Creator Attribution -->
-          <div class="modal-author">
-            Crafted &amp; Architected by <a href="${creator.url || 'https://www.instagram.com/tony_bostony/'}" target="_blank" rel="noopener noreferrer">${creator.name}</a>
-          </div>
+            <!-- Unified Creator Attribution -->
+            <div class="modal-author">
+              Crafted &amp; Architected by <a href="${creator.url || 'https://www.instagram.com/tony_bostony/'}" target="_blank" rel="noopener noreferrer">${creator.name}</a>
+            </div>
 
-          <!-- Mission & Architecture Statement -->
-          <div class="modal-body">
-            NOMAD is an independent, zero-dependency avionics navigation suite engineered for high-altitude telemetry, tactical cartography, and offline readiness.
+            <!-- Mission & Architecture Statement -->
+            <div class="modal-body" style="margin-top: 4px;">
+              NOMAD is an independent, zero-dependency avionics navigation suite engineered for high-altitude telemetry, tactical cartography, and offline readiness.
+            </div>
           </div>
 
           <!-- Top Segmented Tabs: Instantly visible at top of modal -->
@@ -1125,14 +1173,10 @@
             ${buildStorageConsoleHTML()}
           </div>
 
-          <!-- Close Action -->
-          <div style="margin-top: 10px;">
-            <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)">Close</button>
-          </div>
-
-          <!-- Single Version Tag at Bottom of Card -->
-          <div class="modal-bottom-version nomad-version" id="nomad-modal-version">
-            ${version}
+          <!-- Fixed Footer -->
+          <div class="nomad-modal-footer-fixed">
+            <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)" style="margin: 0; padding: 6px 16px;">Close</button>
+            <div class="modal-bottom-version nomad-version" id="nomad-modal-version">${version}</div>
           </div>
         </div>
       `;
@@ -1190,41 +1234,48 @@
       const currentTarget = localStorage.getItem('nomad_digit_scan_target') || 'lines';
       const scanTarget = currentTarget === 'lines' ? '10-STEP LINE CYCLE' : '5-STEP FULL OUTLINE';
       scannerHTML = `
-        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:4px; padding:8px 10px; background:rgba(0, 243, 255, 0.06); border:1px solid rgba(0, 243, 255, 0.25); border-radius:10px;">
-          <div style="font-size:0.62rem; font-weight:800; color:#00f3ff; letter-spacing:0.08em; display:flex; justify-content:space-between; align-items:center;">
-            <span>⚡ KINETIC FEATURES &amp; OUTLINE SCANNER</span>
-            <span style="font-size:0.56rem; padding:1px 5px; border-radius:4px; background:rgba(0, 243, 255, 0.15); border:1px solid rgba(0, 243, 255, 0.3); color:#fff;">DIGIT FX</span>
+        <div class="modal-scanner-console" style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px; padding:10px 12px; background:rgba(0, 243, 255, 0.05); border:1.5px solid rgba(0, 243, 255, 0.28); border-radius:12px;">
+          <div style="font-size:0.64rem; font-weight:800; color:#00f3ff; letter-spacing:0.08em; display:flex; justify-content:space-between; align-items:center;">
+            <span>⚡ KINETIC OUTLINE SCANNER &amp; FX</span>
+            <span style="font-size:0.56rem; padding:2px 6px; border-radius:4px; background:rgba(0, 243, 255, 0.18); border:1px solid rgba(0, 243, 255, 0.4); color:#fff; font-weight:700;">HUD ACTIVE</span>
           </div>
-          <button id="btn-suite-mode-cycle" class="modal-btn-row modal-scanner-btn" onclick="if (window.cycleDigitScanMode) { window.cycleDigitScanMode(); } else { const modes=['cascade','bounce','off']; const cur=localStorage.getItem('nomad_digit_scan_mode')||'cascade'; const next=modes[(modes.indexOf(cur)+1)%modes.length]; localStorage.setItem('nomad_digit_scan_mode', next); } NomadMenuEngine.render();" title="Cycle Kinetic FX Scanner Mode (Cascade ➔ Bounce ➔ Off)" style="background: rgba(0, 243, 255, 0.12); border-color: rgba(0, 243, 255, 0.45); color: #fff;">
-            <span style="display:flex; align-items:center; gap:6px;">FLOW: <strong style='color:#00f3ff;'>${scanMode}</strong></span>
-            <span style="font-weight: 800; color: #00f3ff; font-size: 0.65rem; border: 1px solid rgba(0, 243, 255, 0.4); padding: 2px 6px; border-radius: 6px; background: rgba(0, 243, 255, 0.18);">TAP: CYCLE</span>
-          </button>
-          <button id="btn-suite-target-toggle" class="modal-btn-row modal-scanner-btn" onclick="if (window.toggleDigitScanTarget) { window.toggleDigitScanTarget(); } else { const n = (localStorage.getItem('nomad_digit_scan_target') || 'lines') === 'lines' ? 'full' : 'lines'; localStorage.setItem('nomad_digit_scan_target', n); } NomadMenuEngine.render();" title="Toggle 10-Step Top/Bottom Lines vs 5-Step Full Outline" style="background: rgba(16, 185, 129, 0.14); border: 1px solid #10b981; color: #fff;">
-            <span style="display:flex; align-items:center; gap:6px;">GEOMETRY: <strong style='color:#10b981;'>${scanTarget}</strong></span>
-            <span style="font-weight: 800; color: #10b981; font-size: 0.65rem; border: 1px solid rgba(16, 185, 129, 0.5); padding: 2px 6px; border-radius: 6px; background: rgba(16, 185, 129, 0.18);">TAP: SWITCH</span>
-          </button>
-          <button id="btn-scanner-modal-row" class="modal-btn-row modal-scanner-btn" onclick="if (window.closeAboutModal) window.closeAboutModal(); setTimeout(() => { if (window.openDigitScannerModal) window.openDigitScannerModal(); }, 60);" title="Configure All Kinetic FX Outline Scanner Settings" style="background: linear-gradient(135deg, rgba(0, 243, 255, 0.18), rgba(245, 158, 11, 0.18)); border-color: rgba(0, 243, 255, 0.6); color: #fff;">
-            <span style="display:flex; align-items:center; gap:6px; font-weight:700;">⚡ KINETIC FEATURES &amp; SETTINGS</span>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+            <button id="btn-suite-mode-cycle" type="button" class="modal-btn-row modal-scanner-btn" onclick="window.cycleUnifiedScanMode(event)" title="Cycle Scan Mode: Cascade ➔ Bounce ➔ Off" style="background: rgba(0, 243, 255, 0.12); border: 1px solid rgba(0, 243, 255, 0.45); padding: 8px 8px; border-radius: 8px; flex-direction: column; align-items: flex-start; gap: 2px;">
+              <span style="font-size: 0.54rem; color: #94a3b8; font-weight: 700; letter-spacing: 0.06em;">FLOW PATTERN</span>
+              <strong id="lbl-suite-scan-mode" style="color: #00f3ff; font-size: 0.72rem; letter-spacing: 0.04em;">${scanMode} ⟳</strong>
+            </button>
+            <button id="btn-suite-target-toggle" type="button" class="modal-btn-row modal-scanner-btn" onclick="window.toggleUnifiedScanTarget(event)" title="Toggle Geometry: 10-Step Lines vs 5-Step Full Outline" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.45); padding: 8px 8px; border-radius: 8px; flex-direction: column; align-items: flex-start; gap: 2px;">
+              <span style="font-size: 0.54rem; color: #94a3b8; font-weight: 700; letter-spacing: 0.06em;">GEOMETRY</span>
+              <strong id="lbl-suite-scan-target" style="color: #10b981; font-size: 0.70rem; letter-spacing: 0.04em;">${currentTarget === 'lines' ? '10-LINES ⇄' : '5-FULL ⇄'}</strong>
+            </button>
+          </div>
+
+          <button id="btn-scanner-modal-row" type="button" class="modal-btn-row modal-scanner-btn" onclick="if (window.closeAboutModal) window.closeAboutModal(); setTimeout(() => { if (window.openDigitScannerModal) window.openDigitScannerModal(); }, 60);" title="Open Full Kinetic Scanner &amp; Cadence Settings" style="background: linear-gradient(135deg, rgba(0, 243, 255, 0.18), rgba(245, 158, 11, 0.18)); border: 1.5px solid rgba(0, 243, 255, 0.55); color: #fff; padding: 10px 12px; border-radius: 8px; justify-content: space-between;">
+            <span style="display:flex; align-items:center; gap:6px; font-weight:700; font-size:0.75rem;">⚡ ALL SCANNER &amp; SPEED SETTINGS</span>
             <span id="scanner-modal-status" style="font-weight: 800; color: #ffb703; font-size: 0.68rem; border: 1px solid rgba(255, 183, 3, 0.5); padding: 3px 8px; border-radius: 6px; background: rgba(255, 183, 3, 0.18);">OPEN ➔</span>
           </button>
         </div>
       `;
     }
+    }
 
     overlay.innerHTML = `
       <div class="nomad-modal-box" onclick="event.stopPropagation()">
-        <!-- Convenient Top-Right Close Button -->
-        <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
+        <!-- FIXED HEADER (Always accessible) -->
+        <div class="nomad-modal-header-fixed">
+          <button type="button" class="nomad-modal-x" onclick="window.closeAboutModal(event)" title="Close Settings">✕</button>
 
-        <!-- Top Link to Documentation -->
-        <a href="${meta.guideAnchor}" class="modal-title-link" title="View Features &amp; Guide">
-          <div class="modal-title" style="color: ${meta.accentColor};">${meta.name} ↗</div>
-          <div class="modal-features-hint">${meta.badge}</div>
-        </a>
+          <!-- Top Link to Documentation -->
+          <a href="${meta.guideAnchor}" class="modal-title-link" title="View Features &amp; Guide">
+            <div class="modal-title" style="color: ${meta.accentColor};">${meta.name} ↗</div>
+            <div class="modal-features-hint">${meta.badge}</div>
+          </a>
 
-        <!-- Unified Creator Credit -->
-        <div class="modal-author">
-          by <a href="${creator.url || 'https://www.instagram.com/tony_bostony/'}" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: none;">${creator.name}</a>
+          <!-- Unified Creator Credit -->
+          <div class="modal-author">
+            by <a href="${creator.url || 'https://www.instagram.com/tony_bostony/'}" target="_blank" rel="noopener noreferrer" style="color: #f59e0b; font-weight: 700; text-decoration: none;">${creator.name}</a>
+          </div>
         </div>
 
         <!-- Cockpit Segmented Tabs (Never cut off; easy navigation) -->
@@ -1240,7 +1291,7 @@
           </button>
         </div>
 
-        <!-- TAB PANEL 1: COCKPIT & FX CONTROLS -->
+        <!-- TAB PANEL 1: COCKPIT & FX CONTROLS (SCROLLABLE WITH ZERO CUTOFFS) -->
         <div class="modal-tab-panel ${selectedTab === 'cockpit' ? 'active' : ''}" data-panel="cockpit" id="modal-panel-cockpit">
           <!-- Cockpit Description -->
           <div class="modal-body">
@@ -1265,24 +1316,20 @@
           </div>
         </div>
 
-        <!-- TAB PANEL 2: SYSTEM STORAGE & HARDWARE PURGE -->
+        <!-- TAB PANEL 2: SYSTEM STORAGE & HARDWARE PURGE (SCROLLABLE) -->
         <div class="modal-tab-panel ${selectedTab === 'storage' ? 'active' : ''}" data-panel="storage" id="modal-panel-storage">
           ${buildStorageConsoleHTML()}
         </div>
 
-        <!-- TAB PANEL 3: CREDITS, APIS & BILL OF MATERIALS -->
+        <!-- TAB PANEL 3: CREDITS, APIS & BILL OF MATERIALS (SCROLLABLE) -->
         <div class="modal-tab-panel ${selectedTab === 'credits' ? 'active' : ''}" data-panel="credits" id="modal-panel-credits">
           ${buildCreditsHTML()}
         </div>
 
-        <!-- Close Action -->
-        <div style="margin-top: 10px;">
-          <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)">Close</button>
-        </div>
-
-        <!-- Single Version Tag at Bottom of Card -->
-        <div class="modal-bottom-version nomad-version" id="nomad-modal-version">
-          ${version}
+        <!-- FIXED FOOTER (Always visible at bottom, never cut off) -->
+        <div class="nomad-modal-footer-fixed">
+          <button type="button" class="modal-close-btn" onclick="window.closeAboutModal(event)" style="margin: 0; padding: 6px 16px;">Close</button>
+          <div class="modal-bottom-version nomad-version" id="nomad-modal-version">${version}</div>
         </div>
       </div>
     `;
@@ -1316,68 +1363,100 @@
     if (typeof window.showToast === 'function') {
       window.showToast(window.digitSoundEnabled ? 'AVIONICS AUDIO: ON' : 'AVIONICS AUDIO: OFF');
     }
+  // Cycle kinetic scan mode with audio, haptic, and HUD synchronization
+  window.cycleUnifiedScanMode = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    try {
+      if (typeof window.playTone === 'function') window.playTone(1600);
+      if ('vibrate' in navigator) navigator.vibrate(35);
+    } catch (_) {}
+
+    if (typeof window.cycleDigitScanMode === 'function') {
+      window.cycleDigitScanMode();
+    } else {
+      const modes = ['cascade', 'bounce', 'off'];
+      const cur = localStorage.getItem('nomad_digit_scan_mode') || 'cascade';
+      const next = modes[(modes.indexOf(cur) + 1) % modes.length];
+      localStorage.setItem('nomad_digit_scan_mode', next);
+    }
+
+    const newMode = (localStorage.getItem('nomad_digit_scan_mode') || 'cascade').toUpperCase();
+    const lbl = document.getElementById('lbl-suite-scan-mode');
+    if (lbl) lbl.textContent = `${newMode} ⟳`;
+    if (typeof window.showToast === 'function') {
+      window.showToast(`⚡ SCANNER FLOW: ${newMode}`);
+    }
   };
 
-  // Standalone ZIP Download execution with immediate toast feedback
+  // Toggle kinetic scan target (10-Step Top/Bottom Lines vs 5-Step Full Outline)
+  window.toggleUnifiedScanTarget = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    try {
+      if (typeof window.playTone === 'function') window.playTone(1400);
+      if ('vibrate' in navigator) navigator.vibrate(40);
+    } catch (_) {}
+
+    if (typeof window.toggleDigitScanTarget === 'function') {
+      window.toggleDigitScanTarget();
+    } else {
+      const cur = localStorage.getItem('nomad_digit_scan_target') || 'lines';
+      const next = (cur === 'lines') ? 'full' : 'lines';
+      localStorage.setItem('nomad_digit_scan_target', next);
+    }
+
+    const newTarget = localStorage.getItem('nomad_digit_scan_target') || 'lines';
+    const lbl = document.getElementById('lbl-suite-scan-target');
+    if (lbl) lbl.textContent = (newTarget === 'lines') ? '10-LINES ⇄' : '5-FULL ⇄';
+    if (typeof window.showToast === 'function') {
+      window.showToast(newTarget === 'lines' 
+        ? '⚡ SCANNER: 10-STEP LINE CYCLE (TOP ➔ BTM BARS)' 
+        : '⚡ SCANNER: 5-STEP FULL BLOCK OUTLINE');
+    }
+  };
+
+  // Standalone ZIP Download execution with immediate direct download and user feedback
   window.executeUnifiedZipDownload = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    try {
+      if (typeof window.playTone === 'function') window.playTone(1760);
+      if ('vibrate' in navigator) navigator.vibrate(50);
+    } catch (_) {}
+
+    const titleEl = document.getElementById('lbl-zip-btn-title');
+    const subEl = document.getElementById('lbl-zip-btn-sub');
+    if (titleEl) titleEl.textContent = '⏳ DOWNLOADING NOMAD_SUITE.ZIP...';
+    if (subEl) subEl.textContent = 'Transferring package to device downloads...';
+
     if (typeof window.showToast === 'function') {
-      window.showToast('📦 PACKAGING & DOWNLOADING NOMAD_SUITE.ZIP...');
+      window.showToast('📦 DOWNLOADING NOMAD_SUITE.ZIP (1.3 MB)...');
     }
+
+    // Direct browser navigation triggers the browser download manager cleanly without popup blocker issues
+    window.location.href = '/api/download-zip';
+
     setTimeout(() => {
-      try {
-        const link = document.createElement('a');
-        link.href = '/api/download-zip';
-        link.download = 'nomad_suite.zip';
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (_) {}
-    }, 150);
+      if (titleEl) titleEl.textContent = '📦 DOWNLOAD SUITE ARCHIVE (.ZIP)';
+      if (subEl) subEl.textContent = 'Tap here to download standalone 1.3 MB nomad_suite.zip';
+    }, 4500);
   };
 
-  // In-UI Armed Purge Confirmation (Eliminates window.confirm failure in iframes/browsers)
-  let purgeArmedTimer = null;
-  window.armUnifiedPurge = function() {
-    const container = document.getElementById('purge-action-container');
-    if (container) {
-      container.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:6px; width:100%;">
-          <button type="button" class="btn-storage-action" style="background: rgba(255, 0, 79, 0.28); border: 2px solid #ff004f; color: #ffffff; text-align: center; justify-content: center; align-items: center; box-shadow: 0 0 16px rgba(255, 0, 79, 0.4);" onclick="window.executeUnifiedPurge()">
-            <span class="storage-btn-title" style="color: #ff004f; font-size: 0.78rem;">⚠️ CONFIRM: TAP TO PURGE ALL CACHE &amp; RELOAD NOW</span>
-            <span class="storage-btn-sub" style="color: #fff;">Unregisters workers, flushes disk cache &amp; executes clean restart</span>
-          </button>
-          <button type="button" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 6px; color: #94a3b8; font-size: 0.66rem; font-family: 'JetBrains Mono', monospace; cursor: pointer;" onclick="window.disarmUnifiedPurge()">
-            ✕ Cancel Purge
-          </button>
-        </div>
-      `;
-    }
+  // Immediate Deep purge & hard reload: calls /purge server route with Clear-Site-Data
+  window.executeUnifiedPurge = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    try {
+      if (typeof window.playTone === 'function') window.playTone(880);
+      if ('vibrate' in navigator) navigator.vibrate([80, 50, 80]);
+    } catch (_) {}
+
+    const titleEl = document.getElementById('lbl-purge-btn-title');
+    const subEl = document.getElementById('lbl-purge-btn-sub');
+    if (titleEl) titleEl.textContent = '⚠️ PURGING ALL CACHES & REBOOTING NOW...';
+    if (subEl) subEl.textContent = 'Unregistering workers, clearing disk cache & fetching fresh server build...';
+
     if (typeof window.showToast === 'function') {
-      window.showToast('⚠️ PURGE ARMED: TAP AGAIN TO CONFIRM REBOOT');
+      window.showToast('⚠️ PURGING ALL CACHES & REBOOTING NOW...');
     }
-    clearTimeout(purgeArmedTimer);
-    purgeArmedTimer = setTimeout(window.disarmUnifiedPurge, 10000);
-  };
 
-  window.disarmUnifiedPurge = function() {
-    clearTimeout(purgeArmedTimer);
-    const container = document.getElementById('purge-action-container');
-    if (container) {
-      container.innerHTML = `
-        <button type="button" class="btn-storage-action btn-storage-purge" id="btn-modal-purge-cache" onclick="window.armUnifiedPurge()">
-          <span class="storage-btn-title">⚠️ PURGE CACHE &amp; HARD RELOAD</span>
-          <span class="storage-btn-sub">Tap to arm cache flush &amp; fresh network fetch</span>
-        </button>
-      `;
-    }
-  };
-
-  // Deep purge & hard reload: calls /purge server route with Clear-Site-Data
-  window.executeUnifiedPurge = function() {
-    if (typeof window.showToast === 'function') {
-      window.showToast('⚠️ PURGING ALL CACHES & REBOOTING...');
-    }
     setTimeout(async () => {
       try {
         if ('serviceWorker' in navigator) {
@@ -1401,11 +1480,11 @@
       } catch (err) {
         console.warn('Purge notice:', err);
       }
-      // Navigate to server-side /purge endpoint which delivers Clear-Site-Data: "cache"
+      // Navigate to server-side /purge endpoint which delivers Clear-Site-Data: "cache", "storage"
       const p = (window.location.pathname || '').replace(/^\//, '') || 'digit.html';
       const target = p.includes('digit') ? 'digit.html' : (p.includes('roadtrip') ? 'roadtrip.html' : (p.includes('hyperspace') ? 'hyperspace.html' : 'digit.html'));
       window.location.replace('/purge?dest=' + encodeURIComponent(target) + '&_t=' + Date.now());
-    }, 350);
+    }, 250);
   };
 
   // Open modal (accepts optional initial tab: 'cockpit', 'storage', or 'credits')
