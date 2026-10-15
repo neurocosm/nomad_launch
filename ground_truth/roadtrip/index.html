@@ -3213,10 +3213,15 @@
           const keys = await caches.keys();
           await Promise.all(keys.map(key => caches.delete(key)));
         }
+        const savedBlackbox = localStorage.getItem('nomad_blackbox_log');
+        const savedDefault = localStorage.getItem('nomad_default_cockpit');
         sessionStorage.clear();
+        localStorage.clear();
+        if (savedBlackbox) localStorage.setItem('nomad_blackbox_log', savedBlackbox);
+        if (savedDefault) localStorage.setItem('nomad_default_cockpit', savedDefault);
 
         setTimeout(() => {
-          window.location.href = window.location.pathname + '?recall=' + Date.now();
+          window.location.replace(window.location.pathname + '?recall=' + Date.now());
         }, 600);
       } catch (err) {
         window.location.reload(true);

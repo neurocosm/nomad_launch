@@ -68,102 +68,19 @@ app.get(['/api/version', '/api/suite-version', '/version.json'], (req, res) => {
   });
 });
 
-// Emergency Purge & Recovery Endpoint
-// Visitable directly by user at /purge or /reset to instantly wipe service workers and cached assets
+// Emergency Purge & Recovery Endpoints
+// Rescues old bookmarks or misdirected /purge requests, flushes headers, and redirects immediately to root HUDs
+app.get('/purge/:file', (req, res) => {
+  const targetFile = req.params.file.replace(/[^a-zA-Z0-9_\-\.]/g, '');
+  res.redirect(302, `/${targetFile}`);
+});
+
 app.get(['/purge', '/reset', '/force-purge'], (req, res) => {
   res.setHeader('Clear-Site-Data', '"cache", "storage"');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-  const rawDest = (req.query.dest || 'digit.html').replace(/[^a-zA-Z0-9_\-\.]/g, '');
-  const destFile = rawDest.endsWith('.html') ? rawDest : (rawDest ? `${rawDest}.html` : 'digit.html');
-  const destName = destFile.replace('.html', '').toUpperCase();
-
-  res.send(`<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>NOMAD Avionics — Cache Purge & Recovery</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background: #06090e;
-      color: #38bdf8;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    .card {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      border-radius: 16px;
-      padding: 32px 24px;
-      max-width: 440px;
-      width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.85);
-    }
-    h1 { font-size: 1.3rem; margin: 0 0 12px; color: #f59e0b; letter-spacing: 1px; }
-    p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; margin: 0 0 20px; }
-    .status { font-size: 0.85rem; color: #38bdf8; font-weight: bold; margin-bottom: 24px; }
-    a.btn {
-      display: inline-block;
-      background: #38bdf8;
-      color: #000;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>⚠️ NOMAD PURGE &amp; RECOVERY</h1>
-    <p>Clearing registered service workers, cached application shells, and resetting cockpit state...</p>
-    <div class="status" id="status-text">PURGING CACHES...</div>
-    <a href="/${destFile}?fresh=${Date.now()}" class="btn" id="launch-btn" style="display:none;">LAUNCH NOMAD ${destName} ↗</a>
-  </div>
-  <script>
-    async function purgeEverything() {
-      const statusEl = document.getElementById('status-text');
-      const btn = document.getElementById('launch-btn');
-      const targetDest = '/${destFile}?fresh=' + Date.now();
-      try {
-        if ('serviceWorker' in navigator) {
-          const regs = await navigator.serviceWorker.getRegistrations();
-          for (const reg of regs) {
-            await reg.unregister();
-          }
-        }
-        if ('caches' in window) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map(k => caches.delete(k)));
-        }
-        sessionStorage.clear();
-        statusEl.innerText = '✓ CACHE PURGED SUCCESSFULLY';
-        statusEl.style.color = '#10b981';
-        btn.style.display = 'inline-block';
-        setTimeout(() => {
-          window.location.replace(targetDest);
-        }, 1100);
-      } catch (e) {
-        statusEl.innerText = 'PURGE COMPLETE — REDIRECTING...';
-        setTimeout(() => {
-          window.location.replace(targetDest);
-        }, 1100);
-      }
-    }
-    purgeEverything();
-  </script>
-</body>
-</html>`);
+  const rawDest = (req.query.dest || 'index.html').replace(/[^a-zA-Z0-9_\-\.]/g, '');
+  const destFile = rawDest.endsWith('.html') ? rawDest : (rawDest ? `${rawDest}.html` : 'index.html');
+  res.redirect(302, `/${destFile}?purged=${Date.now()}`);
 });
 
 // API health endpoint

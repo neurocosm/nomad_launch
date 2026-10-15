@@ -42,6 +42,7 @@
   <script src="js/vehicle-safezone.js"></script>
   <script src="js/location-bar.js"></script>
   <script src="js/modals.js"></script>
+  <script src="js/nomad-menu.js"></script>
   <script src="js/kinetic-bubbles.js"></script>
   
   <style>
@@ -3041,8 +3042,35 @@
     </div>
   </div>
 
-  <!-- Unified About / Settings Modal Container (rendered dynamically by /js/nomad-menu.js) -->
-  <div class="modal-overlay" id="about-modal"></div>
+  <!-- Unified About / Settings Modal Container (Enhanced by /js/nomad-menu.js with built-in fallback) -->
+  <div class="modal-overlay" id="about-modal" onclick="closeAboutModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <a href="features.html#hyperspace" class="modal-title-link" title="View Features & Guide">
+        <div class="modal-title" style="color: #ff0055;">NOMAD: Hyperspace ↗</div>
+        <div class="modal-features-hint">Kinetic Telemetry • User Guide &amp; Features</div>
+      </a>
+      <div class="modal-author">
+        by <a href="https://www.instagram.com/tony_bostony/" target="_blank" rel="noopener noreferrer" style="color: #007aff; font-weight: 700; text-decoration: none;">BostonyFX</a>
+      </div>
+      <div class="modal-body">
+        Kinetic vector canvas with floating telemetry, real-time GPS tracking, and heads-up navigation dashboard.
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+        <a href="index.html" class="modal-vis-btn" style="background: rgba(0, 243, 255, 0.15); border-color: #00f3ff; color: #00f3ff;">🛰️ LAUNCH CONTROL (HOME) ↗</a>
+        <a href="visualizer.html?from=hyperspace" class="modal-vis-btn">✨ VISUALIZER ARCADE ↗</a>
+        <a href="geek-stats.html?from=hyperspace" class="modal-stats-btn">&gt; GEEK STATS (VT220) _</a>
+      </div>
+
+      <!-- HARDWARE PURGE BUTTON -->
+      <button type="button" class="modal-purge-btn" onclick="executeTotalRecall()">⚠️ PURGE CACHE &amp; HARD RELOAD</button>
+
+      <div style="margin-top: 4px;">
+        <button type="button" class="modal-close-btn" onclick="closeAboutModal()">Close</button>
+      </div>
+      <div class="modal-version-tag nomad-version" id="nomad-modal-version">v4</div>
+    </div>
+  </div>
 
   <!-- WEATHER REFRESH CONFIG MODAL OVERLAY -->
   <div class="modal-overlay" id="weather-modal" onclick="closeWeatherModal(event)">
@@ -5232,10 +5260,15 @@
           const keys = await caches.keys();
           await Promise.all(keys.map(key => caches.delete(key)));
         }
+        const savedBlackbox = localStorage.getItem('nomad_blackbox_log');
+        const savedDefault = localStorage.getItem('nomad_default_cockpit');
         sessionStorage.clear();
+        localStorage.clear();
+        if (savedBlackbox) localStorage.setItem('nomad_blackbox_log', savedBlackbox);
+        if (savedDefault) localStorage.setItem('nomad_default_cockpit', savedDefault);
 
         setTimeout(() => {
-          window.location.href = window.location.pathname + '?recall=' + Date.now();
+          window.location.replace(window.location.pathname + '?recall=' + Date.now());
         }, 600);
       } catch (err) {
         window.location.reload(true);

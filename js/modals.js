@@ -18,7 +18,11 @@
   /**
    * Opens the About / Version Registry Modal
    */
-  window.openAboutModal = function() {
+  window.openAboutModal = function(initialTab = null) {
+    if (window.NomadMenuEngine && typeof window.NomadMenuEngine.open === 'function') {
+      window.NomadMenuEngine.open(initialTab);
+      return;
+    }
     const modal = document.getElementById('about-modal');
     if (modal) {
       if (typeof window.applyNomadRegistry === 'function') window.applyNomadRegistry();

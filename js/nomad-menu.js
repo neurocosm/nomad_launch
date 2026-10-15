@@ -1441,7 +1441,7 @@
     }, 4500);
   };
 
-  // Immediate Deep purge & hard reload: calls /purge server route with Clear-Site-Data
+  // Immediate Deep purge & hard reload: 100% client-side in-place reboot (works on GitHub Pages & AI Studio)
   window.executeUnifiedPurge = function(e) {
     if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     try {
@@ -1471,20 +1471,37 @@
           const keys = await caches.keys();
           await Promise.all(keys.map(k => caches.delete(k)));
         }
-        // Preserve critical flight and collision detection telemetry database
+        // Preserve critical flight and collision detection telemetry database & default cockpit
         const savedBlackbox = localStorage.getItem('nomad_blackbox_log');
+        const savedDefault = localStorage.getItem('nomad_default_cockpit');
         localStorage.clear();
         sessionStorage.clear();
         if (savedBlackbox) {
           localStorage.setItem('nomad_blackbox_log', savedBlackbox);
         }
+        if (savedDefault) {
+          localStorage.setItem('nomad_default_cockpit', savedDefault);
+        }
       } catch (err) {
         console.warn('Purge notice:', err);
       }
-      // Navigate to server-side /purge endpoint which delivers Clear-Site-Data: "cache", "storage"
-      const p = (window.location.pathname || '').replace(/^\//, '') || 'digit.html';
-      const target = p.includes('digit') ? 'digit.html' : (p.includes('roadtrip') ? 'roadtrip.html' : (p.includes('hyperspace') ? 'hyperspace.html' : 'digit.html'));
-      window.location.replace('/purge?dest=' + encodeURIComponent(target) + '&_t=' + Date.now());
+
+      // Revert to 100% Client-Side In-Place Reload:
+      // Stay on the current page with a cache-busting timestamp query parameter.
+      // Never navigate to a server-side /purge path or directory.
+      try {
+        const cleanUrl = new URL(window.location.href);
+        if (cleanUrl.pathname.includes('/purge')) {
+          cleanUrl.pathname = cleanUrl.pathname.replace(/\/purge\/?/g, '/');
+          if (!cleanUrl.pathname || cleanUrl.pathname === '/') {
+            cleanUrl.pathname = '/index.html';
+          }
+        }
+        cleanUrl.searchParams.set('purge', Date.now().toString());
+        window.location.replace(cleanUrl.toString());
+      } catch (_) {
+        window.location.reload(true);
+      }
     }, 250);
   };
 
