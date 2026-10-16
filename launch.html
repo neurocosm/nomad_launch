@@ -45,50 +45,76 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: var(--bg-space);
+      box-sizing: border-box;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: auto;
+      touch-action: none;
+    }
+
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
       background: radial-gradient(circle at 50% 0%, #0d1a33 0%, #050811 75%);
       background-color: var(--bg-space);
       color: var(--text-main);
       font-family: 'Space Grotesk', -apple-system, sans-serif;
-      padding: max(20px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)) 14px;
+      padding: max(10px, env(safe-area-inset-top, 10px)) 16px max(10px, env(safe-area-inset-bottom, 10px)) 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      overflow-x: hidden;
+      box-sizing: border-box;
+      overflow: hidden;
+      touch-action: none;
     }
 
     .launcher-frame {
       width: 100%;
-      max-width: 500px;
+      max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      align-items: center;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      overflow: hidden;
+      touch-action: none;
     }
 
     /* Top Brand & Header */
     .header-zone {
       text-align: center;
-      padding: 6px 0 2px 0;
+      padding: 0;
+      margin-top: 0;
+      margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
     .main-title {
-      font-size: 1.72rem;
+      font-size: clamp(1.35rem, 3.8vh, 1.65rem);
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 6px;
+      margin-bottom: 2px;
       text-shadow: 0 0 24px rgba(0, 243, 255, 0.28);
     }
 
     .subtitle {
-      font-size: 0.76rem;
+      font-size: clamp(0.68rem, 1.8vh, 0.74rem);
       color: var(--text-muted);
       letter-spacing: 0.02em;
-      margin-bottom: 2px;
+      margin-bottom: 0;
     }
 
     .creator-tag {
@@ -104,29 +130,39 @@
     }
 
     /* ========================================================
-       EXPANDED AVIONICS DATA BAR (HUD Hero Block Size)
-       Multi-Card Telemetry Carousel: Location • Speed • Weather • Compass • Coords
+       PRECISE HUD BLOCK PARITY SPECIFICATION
+       DATA BAR Card matches the exact height (70px), width (100%), and border-radius (14px) of Lower HUD Cockpit cards
        ======================================================== */
+    .data-bar-card,
+    .cockpit-hero-card {
+      width: 100%;
+      height: 70px;
+      min-height: 70px;
+      max-height: 70px;
+      border-radius: 14px;
+      box-sizing: border-box;
+    }
+
     .data-bar-card {
       position: relative;
       background: var(--bg-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1.5px solid rgba(0, 243, 255, 0.35);
-      border-radius: 14px;
-      padding: 12px 16px 10px 16px;
+      border: 1.5px solid rgba(0, 243, 255, 0.45);
+      padding: 0 16px;
       color: #e2e8f0;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(0, 243, 255, 0.12);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 14px rgba(0, 243, 255, 0.15);
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      touch-action: pan-y;
+      touch-action: none;
       cursor: pointer;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 84px;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
       transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
     }
 
@@ -141,60 +177,11 @@
       box-shadow: 0 0 20px rgba(48, 209, 88, 0.5) !important;
     }
 
-    .data-bar-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      font-size: 0.62rem;
-      font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.06em;
-    }
-
-    .data-bar-meta-left {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .telemetry-fix-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--accent-green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-green);
-      animation: pulseGreenFix 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseGreenFix {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(0.85); }
-    }
-
-    .data-bar-seq {
-      font-weight: 800;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-    }
-
-    .data-bar-badge {
-      font-size: 0.56rem;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: rgba(48, 209, 88, 0.18);
-      border: 1px solid rgba(48, 209, 88, 0.45);
-      color: var(--accent-green);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
     /* Carousel Sliding Viewport */
     .data-bar-viewport {
       position: relative;
       width: 100%;
       overflow: hidden;
-      min-height: 42px;
       display: flex;
       align-items: center;
     }
@@ -211,11 +198,13 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
+      text-align: center;
       padding: 2px 0;
     }
 
     .data-hero-text {
-      font-size: clamp(1.05rem, 2.9vw, 1.25rem);
+      font-size: clamp(1.15rem, 3vh, 1.35rem);
       font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
@@ -227,13 +216,13 @@
 
     .data-hero-split {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: baseline;
-      gap: 10px;
+      gap: 12px;
     }
 
     .data-hero-val {
-      font-size: clamp(1.05rem, 2.9vw, 1.25rem);
+      font-size: clamp(1.15rem, 3vh, 1.35rem);
       font-weight: 800;
       color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
@@ -241,7 +230,7 @@
     }
 
     .data-hero-val.secondary {
-      font-size: clamp(0.80rem, 2.2vw, 0.95rem);
+      font-size: clamp(0.88rem, 2.3vh, 1.02rem);
       font-weight: 700;
       color: var(--accent-cyan);
     }
@@ -254,38 +243,42 @@
     }
 
     .data-sub-text {
-      font-size: clamp(0.64rem, 1.8vw, 0.72rem);
+      font-size: clamp(0.66rem, 1.8vh, 0.74rem);
       font-family: 'JetBrains Mono', monospace;
       color: #94a3b8;
-      margin-top: 3px;
+      margin-top: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.02em;
     }
 
-    /* Bottom Pagination & Hint Row */
-    .data-bar-bottom-row {
+    /* Unified Avionics Deck: Telemetry DATA BAR + Separator Dots + 3 Cockpits + Flush 4 Utilities */
+    .avionics-deck,
+    .avionics-console-deck {
+      width: 100%;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      margin-top: 6px;
-      padding-top: 4px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.58rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-dim);
+      gap: 0;
+      flex-shrink: 0;
     }
 
-    .data-bar-hint {
-      letter-spacing: 0.05em;
-      color: #64748b;
+    /* Natural Separator: Pagination Dots Underneath the Block */
+    .data-bar-dots-separator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 12px;
+      margin: 2px 0 4px 0;
+      flex-shrink: 0;
+      line-height: 1;
     }
 
     .data-bar-dots {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .db-dot {
@@ -303,15 +296,10 @@
 
     .db-dot.active {
       width: 14px;
-      border-radius: 4px;
+      height: 5px;
+      border-radius: 3px;
       background: var(--accent-cyan);
       box-shadow: 0 0 8px var(--accent-cyan);
-    }
-
-    .data-bar-autocycle-indicator {
-      font-weight: 700;
-      color: var(--accent-green);
-      letter-spacing: 0.04em;
     }
 
     /* DATA BAR Settings Modal Box */
@@ -340,7 +328,10 @@
     .cockpits-stack {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     .cockpit-hero-card {
@@ -350,7 +341,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid var(--border-subtle);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 0 16px;
       text-decoration: none;
       color: inherit;
       display: flex;
@@ -399,6 +390,7 @@
 
     .cockpit-hero-card.card-hyperspace {
       border-color: rgba(255, 0, 85, 0.40);
+      margin-bottom: 0 !important;
     }
     .cockpit-hero-card.card-hyperspace:hover {
       border-color: var(--accent-magenta);
@@ -408,6 +400,7 @@
       border-color: var(--accent-magenta);
       background: rgba(255, 0, 85, 0.08);
       box-shadow: 0 0 18px rgba(255, 0, 85, 0.35);
+      margin-bottom: 0 !important;
     }
 
     .cockpit-left {
@@ -568,25 +561,31 @@
       color: var(--accent-amber);
     }
 
-    /* 6 Shared Utilities Deck */
+    /* 4 Shared Utilities Deck (NO space between Hyperspace and the 4 blocks below) */
     .utilities-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 6px;
+      width: 100%;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      box-sizing: border-box;
     }
 
     .util-tile {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 12px 14px;
-      border-radius: 11px;
+      align-items: center;
+      padding: 0 14px;
+      height: 42px;
+      min-height: 42px;
+      max-height: 42px;
+      border-radius: 10px;
       text-decoration: none;
       transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
       text-align: left;
-      min-height: 48px;
       overflow: hidden;
+      box-sizing: border-box;
     }
 
     .util-tile:hover {
@@ -697,7 +696,7 @@
       font-size: 0.84rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-dim);
-      margin-top: -6px;
+      margin-top: 14px;
       padding-top: 0;
       display: flex;
       flex-direction: column;
@@ -1097,60 +1096,52 @@
       <p class="subtitle">Select Cockpit to Begin Experience</p>
     </div>
 
-    <!-- Expanded Avionics DATA BAR (HUD Hero Block Size) -->
-    <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
-      <!-- Top Meta Row -->
-      <div class="data-bar-top-row">
-        <div class="data-bar-meta-left">
-          <span class="telemetry-fix-dot"></span>
-          <span class="data-bar-seq" id="db-card-seq">01 // CIVIC LOCATION</span>
-        </div>
-        <div class="data-bar-badge" id="db-badge">GPS LOCKED</div>
-      </div>
-
-      <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
-      <div class="data-bar-viewport">
-        <div class="data-bar-slider" id="data-bar-slider">
-          <!-- Card 01: Civic Location & Highway Route -->
-          <div class="data-card" data-index="0">
-            <div class="data-hero-text" id="db-loc-street">Resolving Location...</div>
-            <div class="data-sub-text" id="db-loc-city">Triangulating satellite coordinates...</div>
-          </div>
-          <!-- Card 02: Speed & Velocity -->
-          <div class="data-card" data-index="1">
-            <div class="data-hero-split">
-              <div class="data-hero-val"><span id="db-speed-mph">0.0</span> <span class="data-unit">MPH</span></div>
-              <div class="data-hero-val secondary"><span id="db-speed-kmh">0.0</span> <span class="data-unit">KM/H</span></div>
+    <!-- Unified Avionics Console Deck (DATA BAR + Compact Dots Separator + Cockpits + Flush 4 Utilities) -->
+    <div class="avionics-console-deck">
+      <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
+        <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
+        <div class="data-bar-viewport">
+          <div class="data-bar-slider" id="data-bar-slider">
+            <!-- Card 01: Civic Location & Highway Route -->
+            <div class="data-card" data-index="0">
+              <div class="data-hero-text" id="db-loc-street">Resolving Location...</div>
+              <div class="data-sub-text" id="db-loc-city">Triangulating satellite coordinates...</div>
             </div>
-            <div class="data-sub-text" id="db-speed-sub">&lt; 1.8 CLAMP (STATIONARY LOCK) • 0.00 m/s</div>
-          </div>
-          <!-- Card 03: Atmospheric Matrix (Weather) -->
-          <div class="data-card" data-index="2">
-            <div class="data-hero-split">
-              <div class="data-hero-val"><span id="db-weather-temp-f">--.-</span><span class="data-unit">°F</span> / <span id="db-weather-temp-c">--.-</span><span class="data-unit">°C</span></div>
-              <div class="data-hero-val secondary" id="db-weather-cond">SCANNING...</div>
+            <!-- Card 02: Speed & Velocity -->
+            <div class="data-card" data-index="1">
+              <div class="data-hero-split">
+                <div class="data-hero-val"><span id="db-speed-mph">0.0</span> <span class="data-unit">MPH</span></div>
+                <div class="data-hero-val secondary"><span id="db-speed-kmh">0.0</span> <span class="data-unit">KM/H</span></div>
+              </div>
+              <div class="data-sub-text" id="db-speed-sub">&lt; 1.8 CLAMP (STATIONARY LOCK) • 0.00 m/s</div>
             </div>
-            <div class="data-sub-text" id="db-weather-sub">HUMIDITY: --% • UV: -- • BARO: --.-- inHg</div>
-          </div>
-          <!-- Card 04: Compass & Altimetry -->
-          <div class="data-card" data-index="3">
-            <div class="data-hero-split">
-              <div class="data-hero-val"><span id="db-compass-cardinal">N</span> <span id="db-compass-degrees">000°</span></div>
-              <div class="data-hero-val secondary"><span id="db-alt-ft">--</span> <span class="data-unit">FT MSL</span></div>
+            <!-- Card 03: Atmospheric Matrix (Weather) -->
+            <div class="data-card" data-index="2">
+              <div class="data-hero-split">
+                <div class="data-hero-val"><span id="db-weather-temp-f">--.-</span><span class="data-unit">°F</span> / <span id="db-weather-temp-c">--.-</span><span class="data-unit">°C</span></div>
+                <div class="data-hero-val secondary" id="db-weather-cond">SCANNING...</div>
+              </div>
+              <div class="data-sub-text" id="db-weather-sub">HUMIDITY: --% • UV: -- • BARO: --.-- inHg</div>
             </div>
-            <div class="data-sub-text" id="db-compass-sub">ELEVATION: -- M • GPS ACCURACY: ±-- M</div>
-          </div>
-          <!-- Card 05: Precision Geodetic Coordinates -->
-          <div class="data-card" data-index="4">
-            <div class="data-hero-text font-mono" id="db-coords-full">42.360100° N, 71.058900° W</div>
-            <div class="data-sub-text" id="db-coords-sub">AASHTO CORRIDOR GRID: FN42 • TAP TO COPY</div>
+            <!-- Card 04: Compass & Altimetry -->
+            <div class="data-card" data-index="3">
+              <div class="data-hero-split">
+                <div class="data-hero-val"><span id="db-compass-cardinal">N</span> <span id="db-compass-degrees">000°</span></div>
+                <div class="data-hero-val secondary"><span id="db-alt-ft">--</span> <span class="data-unit">FT MSL</span></div>
+              </div>
+              <div class="data-sub-text" id="db-compass-sub">ELEVATION: -- M • GPS ACCURACY: ±-- M</div>
+            </div>
+            <!-- Card 05: Precision Geodetic Coordinates -->
+            <div class="data-card" data-index="4">
+              <div class="data-hero-text font-mono" id="db-coords-full">42.360100° N, 71.058900° W</div>
+              <div class="data-sub-text" id="db-coords-sub">AASHTO CORRIDOR GRID: FN42 • TAP TO COPY</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Bottom Pagination & Hint Row -->
-      <div class="data-bar-bottom-row">
-        <div class="data-bar-hint" title="Hold block or tap gear for settings">SWIPE ⇄ • HOLD ⚙</div>
+      <!-- Telemetry Carousel Dots (Compact Natural Separator from HUD Cockpits) -->
+      <div class="data-bar-dots-separator">
         <div class="data-bar-dots" id="data-bar-dots">
           <span class="db-dot active" data-index="0" title="01 Civic Location"></span>
           <span class="db-dot" data-index="1" title="02 Speed &amp; Velocity"></span>
@@ -1158,100 +1149,96 @@
           <span class="db-dot" data-index="3" title="04 Compass &amp; Altitude"></span>
           <span class="db-dot" data-index="4" title="05 Coordinates"></span>
         </div>
-        <button type="button" class="data-bar-autocycle-indicator" id="db-cycle-status" onclick="openDataBarModal(); event.stopPropagation();" title="Tap or hold DATA BAR for settings" style="background: none; border: none; cursor: pointer; padding: 0;">MANUAL ⚙</button>
-      </div>
-    </div>
-
-
-
-    <div class="cockpits-stack">
-
-      <!-- 1. DIGIT -->
-      <a href="./digit.html" class="cockpit-hero-card card-digit" id="card-hud-digit">
-        <div class="cockpit-left">
-          <div class="cockpit-avatar" style="border-color: rgba(48, 209, 88, 0.4); color: #30d158;">📟</div>
-          <div class="cockpit-meta">
-            <div class="cockpit-title-row">
-              <span class="cockpit-name">DIGIT</span>
-            </div>
-            <div class="cockpit-desc">Military monospace ASCII matrix</div>
-          </div>
-        </div>
-        <div class="cockpit-launch-action">
-          <span class="launch-btn-pill">LAUNCH ↗</span>
-          <button type="button" class="boot-radio-btn" id="radio-btn-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Set DIGIT as Default Boot Cockpit">
-            <span class="radio-circle"><span class="radio-dot"></span></span>
-            <span class="radio-label">SET DEFAULT</span>
-          </button>
-        </div>
-      </a>
-
-      <!-- 2. ROAD TRIP -->
-      <a href="./roadtrip.html" class="cockpit-hero-card card-roadtrip" id="card-hud-roadtrip">
-        <div class="cockpit-left">
-          <div class="cockpit-avatar" style="border-color: rgba(0, 243, 255, 0.4); color: #00f3ff;">🚗</div>
-          <div class="cockpit-meta">
-            <div class="cockpit-title-row">
-              <span class="cockpit-name">ROAD TRIP</span>
-            </div>
-            <div class="cockpit-desc">High-contrast street level mapping accuracy</div>
-          </div>
-        </div>
-        <div class="cockpit-launch-action">
-          <span class="launch-btn-pill">LAUNCH ↗</span>
-          <button type="button" class="boot-radio-btn" id="radio-btn-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Set ROAD TRIP as Default Boot Cockpit">
-            <span class="radio-circle"><span class="radio-dot"></span></span>
-            <span class="radio-label">SET DEFAULT</span>
-          </button>
-        </div>
-      </a>
-
-      <!-- 3. HYPERSPACE -->
-      <a href="./hyperspace.html" class="cockpit-hero-card card-hyperspace" id="card-hud-hyperspace">
-        <div class="cockpit-left">
-          <div class="cockpit-avatar" style="border-color: rgba(255, 0, 85, 0.4); color: #ff0055;">🚀</div>
-          <div class="cockpit-meta">
-            <div class="cockpit-title-row">
-              <span class="cockpit-name">HYPERSPACE</span>
-            </div>
-            <div class="cockpit-desc">Kinetic vector canvas with floating telemetry</div>
-          </div>
-        </div>
-        <div class="cockpit-launch-action">
-          <span class="launch-btn-pill">LAUNCH ↗</span>
-          <button type="button" class="boot-radio-btn" id="radio-btn-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Set HYPERSPACE as Default Boot Cockpit">
-            <span class="radio-circle"><span class="radio-dot"></span></span>
-            <span class="radio-label">SET DEFAULT</span>
-          </button>
-        </div>
-      </a>
-
-    </div>
-
-
-
-    <div class="utilities-grid">
-
-      <!-- A: VISUALIZER ARCADE -->
-      <a href="./visualizer.html?from=launcher" class="util-tile util-arcade">
-        <div class="util-tile-title">✨ A: ARCADE ↗</div>
-      </a>
-
-      <!-- B: GEEK STATS (VT220) -->
-      <a href="./geek-stats.html?from=launcher" class="util-tile util-stats">
-        <div class="util-tile-title">&gt; B: GEEK STATS _</div>
-      </a>
-
-      <!-- C: USER GUIDE -->
-      <a href="./features.html?from=launcher" class="util-tile util-guide">
-        <div class="util-tile-title">📖 C: USER GUIDE ↗</div>
-      </a>
-
-      <!-- D: CREDITS & ABOUT -->
-      <div class="util-tile util-about" onclick="openAboutModal()">
-        <div class="util-tile-title">ℹ️ D: CREDITS &amp; ABOUT</div>
       </div>
 
+      <div class="cockpits-stack">
+
+        <!-- 1. DIGIT -->
+        <a href="./digit.html" class="cockpit-hero-card card-digit" id="card-hud-digit">
+          <div class="cockpit-left">
+            <div class="cockpit-avatar" style="border-color: rgba(48, 209, 88, 0.4); color: #30d158;">📟</div>
+            <div class="cockpit-meta">
+              <div class="cockpit-title-row">
+                <span class="cockpit-name">DIGIT</span>
+              </div>
+              <div class="cockpit-desc">Military monospace ASCII matrix</div>
+            </div>
+          </div>
+          <div class="cockpit-launch-action">
+            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <button type="button" class="boot-radio-btn" id="radio-btn-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Set DIGIT as Default Boot Cockpit">
+              <span class="radio-circle"><span class="radio-dot"></span></span>
+              <span class="radio-label">SET DEFAULT</span>
+            </button>
+          </div>
+        </a>
+
+        <!-- 2. ROAD TRIP -->
+        <a href="./roadtrip.html" class="cockpit-hero-card card-roadtrip" id="card-hud-roadtrip">
+          <div class="cockpit-left">
+            <div class="cockpit-avatar" style="border-color: rgba(0, 243, 255, 0.4); color: #00f3ff;">🚗</div>
+            <div class="cockpit-meta">
+              <div class="cockpit-title-row">
+                <span class="cockpit-name">ROAD TRIP</span>
+              </div>
+              <div class="cockpit-desc">High-contrast street level mapping accuracy</div>
+            </div>
+          </div>
+          <div class="cockpit-launch-action">
+            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <button type="button" class="boot-radio-btn" id="radio-btn-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Set ROAD TRIP as Default Boot Cockpit">
+              <span class="radio-circle"><span class="radio-dot"></span></span>
+              <span class="radio-label">SET DEFAULT</span>
+            </button>
+          </div>
+        </a>
+
+        <!-- 3. HYPERSPACE -->
+        <a href="./hyperspace.html" class="cockpit-hero-card card-hyperspace" id="card-hud-hyperspace">
+          <div class="cockpit-left">
+            <div class="cockpit-avatar" style="border-color: rgba(255, 0, 85, 0.4); color: #ff0055;">🚀</div>
+            <div class="cockpit-meta">
+              <div class="cockpit-title-row">
+                <span class="cockpit-name">HYPERSPACE</span>
+              </div>
+              <div class="cockpit-desc">Kinetic vector canvas with floating telemetry</div>
+            </div>
+          </div>
+          <div class="cockpit-launch-action">
+            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <button type="button" class="boot-radio-btn" id="radio-btn-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Set HYPERSPACE as Default Boot Cockpit">
+              <span class="radio-circle"><span class="radio-dot"></span></span>
+              <span class="radio-label">SET DEFAULT</span>
+            </button>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- 4 Utilities Deck (Tightly coupled with NO space below Hyperspace) -->
+      <div class="utilities-grid">
+
+        <!-- A: VISUALIZER ARCADE -->
+        <a href="./visualizer.html?from=launcher" class="util-tile util-arcade">
+          <div class="util-tile-title">✨ A: ARCADE ↗</div>
+        </a>
+
+        <!-- B: GEEK STATS (VT220) -->
+        <a href="./geek-stats.html?from=launcher" class="util-tile util-stats">
+          <div class="util-tile-title">&gt; B: GEEK STATS _</div>
+        </a>
+
+        <!-- C: USER GUIDE -->
+        <a href="./features.html?from=launcher" class="util-tile util-guide">
+          <div class="util-tile-title">📖 C: USER GUIDE ↗</div>
+        </a>
+
+        <!-- D: CREDITS & ABOUT -->
+        <div class="util-tile util-about" onclick="openAboutModal()">
+          <div class="util-tile-title">ℹ️ D: CREDITS &amp; ABOUT</div>
+        </div>
+
+      </div>
     </div>
 
     <footer>
@@ -1397,6 +1384,13 @@
       }
       window.showToast = showToast;
 
+      // Lock mobile viewport scrolling (guarantee non-scrollable Launch Control on Pixel / Android)
+      document.addEventListener('touchmove', function(e) {
+        if (!e.target.closest('.modal-body, .modal-tab-panel, .databar-settings-box')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
       // Modal open/close via Unified NomadMenuEngine
       window.openAboutModal = function(tab) {
         if (window.NomadMenuEngine && typeof window.NomadMenuEngine.open === 'function') {
@@ -1537,6 +1531,7 @@
       let touchStartTime = 0;
       let isLongPressFired = false;
       let longPressTimeout = null;
+      let lastTapTime = 0;
 
       function startPress(clientX, clientY) {
         touchStartX = clientX;
@@ -1555,7 +1550,7 @@
           } catch (_) {}
           playDataBarTone(1800);
           openDataBarModal();
-        }, 450); // 450ms hold triggers dedicated DATA BAR settings
+        }, 400); // 400ms hold triggers dedicated DATA BAR settings
       }
 
       function endPress(clientX, clientY) {
@@ -1563,7 +1558,7 @@
         if (dataBarEl) dataBarEl.classList.remove('pressing');
 
         if (isLongPressFired) {
-          setTimeout(() => { isLongPressFired = false; }, 80);
+          setTimeout(() => { isLongPressFired = false; }, 120);
           return;
         }
 
@@ -1583,8 +1578,17 @@
           return;
         }
 
-        // Tap detected (< 280ms, < 12px move)
-        if (duration < 280 && Math.abs(diffX) < 12 && Math.abs(diffY) < 12) {
+        // Tap detected (< 320ms, < 20px move)
+        if (duration < 320 && Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
+          const now = Date.now();
+          if (now - lastTapTime < 320) {
+            // Quick Double-Tap shortcut to open DATA BAR settings
+            lastTapTime = 0;
+            openDataBarModal();
+            return;
+          }
+          lastTapTime = now;
+
           if (activeCardIndex === 4) {
             // Coordinates card: Tap to copy
             const coordsText = document.getElementById('db-coords-full')?.innerText || '';
@@ -1625,7 +1629,11 @@
           if (e.touches && e.touches[0]) {
             const dx = Math.abs(e.touches[0].clientX - touchStartX);
             const dy = Math.abs(e.touches[0].clientY - touchStartY);
-            if (dx > 12 || dy > 12) clearTimeout(longPressTimeout);
+            // Allow up to 25px thumb jitter before aborting long-press
+            if (dx > 25 || dy > 25) {
+              clearTimeout(longPressTimeout);
+              if (dataBarEl) dataBarEl.classList.remove('pressing');
+            }
           }
         }, { passive: true });
 
@@ -1649,13 +1657,22 @@
           if (!isMouseDown) return;
           const dx = Math.abs(e.clientX - touchStartX);
           const dy = Math.abs(e.clientY - touchStartY);
-          if (dx > 12 || dy > 12) clearTimeout(longPressTimeout);
+          if (dx > 25 || dy > 25) {
+            clearTimeout(longPressTimeout);
+            if (dataBarEl) dataBarEl.classList.remove('pressing');
+          }
         });
 
         window.addEventListener('mouseup', (e) => {
           if (!isMouseDown) return;
           isMouseDown = false;
           endPress(e.clientX, e.clientY);
+        });
+
+        // Double click shortcut for desktop
+        dataBarEl.addEventListener('dblclick', (e) => {
+          e.preventDefault();
+          openDataBarModal();
         });
 
         dataBarEl.addEventListener('mouseenter', () => { isDataBarPaused = true; });
@@ -1790,7 +1807,8 @@
             if (snap.primaryRoute && snap.highwayDirection) {
               locStreet.innerText = `${snap.primaryRoute} ${snap.highwayDirection}`;
             } else if (snap.streetName) {
-              locStreet.innerText = snap.streetName;
+              const hasHouseNum = snap.houseNumber && !snap.streetName.startsWith(snap.houseNumber);
+              locStreet.innerText = hasHouseNum ? `${snap.houseNumber} ${snap.streetName}` : snap.streetName;
             } else if (snap.cityState) {
               locStreet.innerText = snap.cityState;
             }

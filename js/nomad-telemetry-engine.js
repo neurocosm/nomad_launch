@@ -83,6 +83,7 @@
 
   // Active Resolved Location Elements
   let currentStreetName = 'Locating...';
+  let currentHouseNumber = '';
   let currentCityState = '';
   let currentCountyZip = '';
   let currentPrimaryRoute = null;
@@ -286,6 +287,7 @@
 
       // Location & Corridor Context
       streetName: currentStreetName,
+      houseNumber: currentHouseNumber,
       cityState: currentCityState,
       countyZip: currentCountyZip,
       primaryRoute: currentPrimaryRoute,
@@ -371,14 +373,45 @@
     lastGeocodeLon = lon;
 
     try {
-      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
-      const response = await fetch(url, { headers: { 'Accept-Language': 'en-US,en;q=0.9' } });
-      if (!response.ok) return;
-      const data = await response.json();
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&extratags=1&namedetails=1`;
+      let data = null;
+
+      // Try local server proxy first (reliable headers & timeout)
+      try {
+        const proxyRes = await fetch(`/api/geocode?lat=${lat}&lon=${lon}&zoom=18`);
+        if (proxyRes.ok) {
+          data = await proxyRes.json();
+        }
+      } catch (_) {}
+
+      // Direct Nominatim fallback if server proxy unavailable
+      if (!data || !data.address) {
+        const response = await fetch(url, { headers: { 'Accept-Language': 'en-US,en;q=0.9' } });
+        if (response.ok) {
+          data = await response.json();
+        }
+      }
+
       if (!data || !data.address) return;
 
       const addr = data.address;
       hasInitialGeocode = true;
+
+      // Robust house number extraction (address, extratags, display_name, name)
+      let houseNumber = (addr.house_number || addr.housenumber || addr.street_number || addr.building_number || '').split(';')[0].trim();
+      if (!houseNumber && data.extratags && data.extratags['addr:housenumber']) {
+        houseNumber = data.extratags['addr:housenumber'].trim();
+      }
+      if (!houseNumber && data.display_name) {
+        const dnMatch = data.display_name.match(/^(\d+[\w-]*)\s*,\s*/);
+        if (dnMatch && dnMatch[1]) {
+          houseNumber = dnMatch[1].trim();
+        }
+      }
+      if (!houseNumber && data.name && /^\d+[\w-]*$/.test(data.name.trim())) {
+        houseNumber = data.name.trim();
+      }
+      currentHouseNumber = houseNumber;
 
       // Extract City/Town
       const city = addr.city || addr.town || addr.village || addr.municipality || addr.hamlet || addr.suburb || '';
@@ -387,7 +420,7 @@
       const postcode = addr.postcode ? addr.postcode.split('-')[0] : '';
 
       // Route Detection & Singularity Logic
-      let road = addr.road || addr.pedestrian || addr.footway || addr.cycleway || addr.path || '';
+      let road = addr.road || addr.pedestrian || addr.footway || addr.cycleway || addr.path || addr.residential || '';
       let detectedInterstate = null;
       let detectedRoute = null;
       let secondaryRoute = null;
@@ -415,7 +448,7 @@
       currentRouteShield = detectedRoute;
       currentSecondaryRouteShield = secondaryRoute;
 
-      // Determine Primary Route Header Singularity
+      // Determine Primary Route Header Singularity (Include House Number for local street lines)
       let primaryRouteHeader = '';
       if (detectedInterstate) {
         const dir = getHighwayDirection(detectedInterstate, currentHeading, 'interstate');
@@ -428,11 +461,12 @@
         currentHighwayDirection = dir;
         currentCorridorAxis = getHighwayCorridorAxis(detectedRoute, 'state');
       } else if (road) {
-        primaryRouteHeader = formatStreetName(road);
+        const formattedRoad = formatStreetName(road);
+        primaryRouteHeader = houseNumber && !formattedRoad.startsWith(houseNumber) ? `${houseNumber} ${formattedRoad}` : formattedRoad;
         currentHighwayDirection = '';
         currentCorridorAxis = 'any';
       } else {
-        primaryRouteHeader = 'Local Road';
+        primaryRouteHeader = houseNumber ? `${houseNumber} Local Road` : 'Local Road';
         currentHighwayDirection = '';
         currentCorridorAxis = 'any';
       }
