@@ -103,48 +103,221 @@
       font-weight: 600;
     }
 
-    /* GPS Avionics Heartbeat Bar */
-    .telemetry-heartbeat {
+    /* ========================================================
+       EXPANDED AVIONICS DATA BAR (HUD Hero Block Size)
+       Multi-Card Telemetry Carousel: Location • Speed • Weather • Compass • Coords
+       ======================================================== */
+    .data-bar-card {
+      position: relative;
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(0, 243, 255, 0.35);
+      border-radius: 14px;
+      padding: 12px 16px 10px 16px;
+      color: #e2e8f0;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(0, 243, 255, 0.12);
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 84px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+    .data-bar-card:hover {
+      border-color: rgba(0, 243, 255, 0.65);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 243, 255, 0.22);
+    }
+
+    .data-bar-card.pressing {
+      transform: scale(0.985);
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 20px rgba(48, 209, 88, 0.5) !important;
+    }
+
+    .data-bar-top-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 16px;
-      background: rgba(11, 19, 37, 0.82);
-      border: 1.5px solid rgba(0, 243, 255, 0.28);
-      border-radius: 12px;
-      font-size: clamp(0.76rem, 2.4vw, 0.86rem);
+      margin-bottom: 4px;
+      font-size: 0.62rem;
       font-family: 'JetBrains Mono', monospace;
-      color: #cbd5e1;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 10px rgba(0, 243, 255, 0.10);
+      letter-spacing: 0.06em;
     }
 
-    .telemetry-fix-status {
+    .data-bar-meta-left {
       display: flex;
       align-items: center;
       gap: 7px;
-      color: var(--accent-green);
-      font-weight: 800;
-      letter-spacing: 0.04em;
     }
 
     .telemetry-fix-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--accent-green);
+      animation: pulseGreenFix 2s infinite ease-in-out;
     }
 
-    #tb-coords-val {
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: #94a3b8;
+    @keyframes pulseGreenFix {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
     }
 
-    #tb-speed-val {
+    .data-bar-seq {
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+
+    .data-bar-badge {
+      font-size: 0.56rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(48, 209, 88, 0.18);
+      border: 1px solid rgba(48, 209, 88, 0.45);
+      color: var(--accent-green);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Carousel Sliding Viewport */
+    .data-bar-viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+    }
+
+    .data-bar-slider {
+      display: flex;
+      width: 100%;
+      transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .data-card {
+      min-width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2px 0;
+    }
+
+    .data-hero-text {
+      font-size: clamp(1.05rem, 2.9vw, 1.25rem);
       font-weight: 800;
       color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    .data-hero-split {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .data-hero-val {
+      font-size: clamp(1.05rem, 2.9vw, 1.25rem);
+      font-weight: 800;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.15;
+    }
+
+    .data-hero-val.secondary {
+      font-size: clamp(0.80rem, 2.2vw, 0.95rem);
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .data-unit {
+      font-size: 0.65em;
+      font-weight: 700;
+      color: #94a3b8;
       letter-spacing: 0.02em;
+    }
+
+    .data-sub-text {
+      font-size: clamp(0.64rem, 1.8vw, 0.72rem);
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.02em;
+    }
+
+    /* Bottom Pagination & Hint Row */
+    .data-bar-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.58rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dim);
+    }
+
+    .data-bar-hint {
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+
+    .data-bar-dots {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .db-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.35);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .db-dot:hover {
+      background: rgba(0, 243, 255, 0.7);
+    }
+
+    .db-dot.active {
+      width: 14px;
+      border-radius: 4px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .data-bar-autocycle-indicator {
+      font-weight: 700;
+      color: var(--accent-green);
+      letter-spacing: 0.04em;
+    }
+
+    /* DATA BAR Settings Modal Box */
+    .databar-settings-box {
+      max-width: 440px !important;
+      background: #0b1325 !important;
+      border: 1.5px solid rgba(0, 243, 255, 0.45) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 243, 255, 0.25) !important;
     }
 
     .section-label {
@@ -922,14 +1095,69 @@
       <p class="subtitle">Select Cockpit to Begin Experience</p>
     </div>
 
-    <!-- Live Telemetry Heartbeat -->
-    <div class="telemetry-heartbeat">
-      <div class="telemetry-fix-status">
-        <span class="telemetry-fix-dot"></span>
-        <span id="tb-lock-status">GPS LOCKED</span>
+    <!-- Expanded Avionics DATA BAR (HUD Hero Block Size) -->
+    <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
+      <!-- Top Meta Row -->
+      <div class="data-bar-top-row">
+        <div class="data-bar-meta-left">
+          <span class="telemetry-fix-dot"></span>
+          <span class="data-bar-seq" id="db-card-seq">01 // CIVIC LOCATION</span>
+        </div>
+        <div class="data-bar-badge" id="db-badge">GPS LOCKED</div>
       </div>
-      <div id="tb-coords-val">42.3601° N, 71.0589° W</div>
-      <div id="tb-speed-val" style="color: #ffffff; font-weight: 700;">0 MPH</div>
+
+      <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
+      <div class="data-bar-viewport">
+        <div class="data-bar-slider" id="data-bar-slider">
+          <!-- Card 01: Civic Location & Highway Route -->
+          <div class="data-card" data-index="0">
+            <div class="data-hero-text" id="db-loc-street">Resolving Location...</div>
+            <div class="data-sub-text" id="db-loc-city">Triangulating satellite coordinates...</div>
+          </div>
+          <!-- Card 02: Speed & Velocity -->
+          <div class="data-card" data-index="1">
+            <div class="data-hero-split">
+              <div class="data-hero-val"><span id="db-speed-mph">0.0</span> <span class="data-unit">MPH</span></div>
+              <div class="data-hero-val secondary"><span id="db-speed-kmh">0.0</span> <span class="data-unit">KM/H</span></div>
+            </div>
+            <div class="data-sub-text" id="db-speed-sub">&lt; 1.8 CLAMP (STATIONARY LOCK) • 0.00 m/s</div>
+          </div>
+          <!-- Card 03: Atmospheric Matrix (Weather) -->
+          <div class="data-card" data-index="2">
+            <div class="data-hero-split">
+              <div class="data-hero-val"><span id="db-weather-temp-f">--.-</span><span class="data-unit">°F</span> / <span id="db-weather-temp-c">--.-</span><span class="data-unit">°C</span></div>
+              <div class="data-hero-val secondary" id="db-weather-cond">SCANNING...</div>
+            </div>
+            <div class="data-sub-text" id="db-weather-sub">HUMIDITY: --% • UV: -- • BARO: --.-- inHg</div>
+          </div>
+          <!-- Card 04: Compass & Altimetry -->
+          <div class="data-card" data-index="3">
+            <div class="data-hero-split">
+              <div class="data-hero-val"><span id="db-compass-cardinal">N</span> <span id="db-compass-degrees">000°</span></div>
+              <div class="data-hero-val secondary"><span id="db-alt-ft">--</span> <span class="data-unit">FT MSL</span></div>
+            </div>
+            <div class="data-sub-text" id="db-compass-sub">ELEVATION: -- M • GPS ACCURACY: ±-- M</div>
+          </div>
+          <!-- Card 05: Precision Geodetic Coordinates -->
+          <div class="data-card" data-index="4">
+            <div class="data-hero-text font-mono" id="db-coords-full">42.360100° N, 71.058900° W</div>
+            <div class="data-sub-text" id="db-coords-sub">AASHTO CORRIDOR GRID: FN42 • TAP TO COPY</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Pagination & Hint Row -->
+      <div class="data-bar-bottom-row">
+        <div class="data-bar-hint">SWIPE ⇄ TO CYCLE</div>
+        <div class="data-bar-dots" id="data-bar-dots">
+          <span class="db-dot active" data-index="0" title="01 Civic Location"></span>
+          <span class="db-dot" data-index="1" title="02 Speed &amp; Velocity"></span>
+          <span class="db-dot" data-index="2" title="03 Weather &amp; Atmosphere"></span>
+          <span class="db-dot" data-index="3" title="04 Compass &amp; Altitude"></span>
+          <span class="db-dot" data-index="4" title="05 Coordinates"></span>
+        </div>
+        <div class="data-bar-autocycle-indicator" id="db-cycle-status">MANUAL</div>
+      </div>
     </div>
 
 
@@ -1031,6 +1259,75 @@
 
   </div>
 
+  <!-- Dedicated DATA BAR Settings Modal (Opened via Long-Press on DATA BAR) -->
+  <div class="modal-overlay" id="databar-settings-modal" style="display: none;" onclick="closeDataBarModal(event)">
+    <div class="modal-box databar-settings-box" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 243, 255, 0.25); padding-bottom: 8px; margin-bottom: 12px;">
+        <div style="font-size: 0.95rem; font-weight: 800; color: #00f3ff; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">
+          ⚡ DATA BAR SETTINGS
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeDataBarModal()" style="margin: 0; padding: 4px 10px; font-size: 0.70rem;">✕</button>
+      </div>
+
+      <div class="modal-body" style="font-size: 0.74rem; color: #94a3b8; margin-bottom: 12px; text-align: left;">
+        Configure auto-cycle rotation, cadence, and default startup card for the Launch Control DATA BAR.
+      </div>
+
+      <!-- AUTO-CYCLE TOGGLE -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0, 243, 255, 0.08); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 10px; margin-bottom: 10px;">
+        <div style="text-align: left;">
+          <div style="font-size: 0.76rem; font-weight: 800; color: #fff;">AUTO-CYCLE CARDS</div>
+          <div style="font-size: 0.62rem; color: #94a3b8;">Automatically rotate through telemetry cards</div>
+        </div>
+        <button type="button" id="btn-toggle-autocycle" onclick="toggleDataBarAutoCycle()" style="background: rgba(48, 209, 88, 0.2); border: 1.5px solid #30d158; color: #30d158; font-weight: 800; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 6px 14px; border-radius: 8px; cursor: pointer;">
+          OFF
+        </button>
+      </div>
+
+      <!-- ROTATION CADENCE -->
+      <div style="padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 12px; text-align: left;">
+        <div style="font-size: 0.70rem; font-weight: 800; color: #cbd5e1; margin-bottom: 6px; letter-spacing: 0.04em;">CYCLE CADENCE (SECONDS)</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;" id="db-cadence-buttons">
+          <button type="button" class="modal-btn-row db-cadence-btn" onclick="setDataBarCadence(5)" data-sec="5" style="margin: 0; padding: 6px; justify-content: center; font-size: 0.72rem;">5s</button>
+          <button type="button" class="modal-btn-row db-cadence-btn active" onclick="setDataBarCadence(8)" data-sec="8" style="margin: 0; padding: 6px; justify-content: center; font-size: 0.72rem; background: rgba(0, 243, 255, 0.2); border-color: #00f3ff; color: #fff;">8s</button>
+          <button type="button" class="modal-btn-row db-cadence-btn" onclick="setDataBarCadence(12)" data-sec="12" style="margin: 0; padding: 6px; justify-content: center; font-size: 0.72rem;">12s</button>
+          <button type="button" class="modal-btn-row db-cadence-btn" onclick="setDataBarCadence(15)" data-sec="15" style="margin: 0; padding: 6px; justify-content: center; font-size: 0.72rem;">15s</button>
+        </div>
+      </div>
+
+      <!-- DIRECT CARD JUMP / SELECTOR -->
+      <div style="padding: 10px 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 14px; text-align: left;">
+        <div style="font-size: 0.70rem; font-weight: 800; color: #cbd5e1; margin-bottom: 6px; letter-spacing: 0.04em;">TELEMETRY CARDS (TAP TO VIEW)</div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <button type="button" class="modal-btn-row" onclick="jumpDataBarCard(0)" style="margin: 0; padding: 7px 10px; font-size: 0.70rem; justify-content: space-between;">
+            <span>01 // Civic Location &amp; Route</span>
+            <span style="color: #30d158; font-weight: 800;">DEFAULT</span>
+          </button>
+          <button type="button" class="modal-btn-row" onclick="jumpDataBarCard(1)" style="margin: 0; padding: 7px 10px; font-size: 0.70rem; justify-content: space-between;">
+            <span>02 // Speed &amp; Velocity (MPH / KMH)</span>
+            <span style="color: #00f3ff; font-weight: 700;">VIEW ➔</span>
+          </button>
+          <button type="button" class="modal-btn-row" onclick="jumpDataBarCard(2)" style="margin: 0; padding: 7px 10px; font-size: 0.70rem; justify-content: space-between;">
+            <span>03 // Atmospheric Matrix (Weather)</span>
+            <span style="color: #f59e0b; font-weight: 700;">VIEW ➔</span>
+          </button>
+          <button type="button" class="modal-btn-row" onclick="jumpDataBarCard(3)" style="margin: 0; padding: 7px 10px; font-size: 0.70rem; justify-content: space-between;">
+            <span>04 // Compass Heading &amp; Elevation</span>
+            <span style="color: #a855f7; font-weight: 700;">VIEW ➔</span>
+          </button>
+          <button type="button" class="modal-btn-row" onclick="jumpDataBarCard(4)" style="margin: 0; padding: 7px 10px; font-size: 0.70rem; justify-content: space-between;">
+            <span>05 // Geodetic GPS Coordinates</span>
+            <span style="color: #38bdf8; font-weight: 700;">VIEW ➔</span>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="modal-close-btn" onclick="closeDataBarModal()" style="width: 100%; padding: 10px; background: rgba(0, 243, 255, 0.15); border: 1.5px solid #00f3ff; color: #fff; font-weight: 800; border-radius: 8px; cursor: pointer;">
+        SAVE &amp; RETURN TO LAUNCH CONTROL
+      </button>
+    </div>
+  </div>
+
   <!-- Unified About / Settings Modal Container (Enhanced by /js/nomad-menu.js with built-in fallback) -->
   <div class="modal-overlay" id="about-modal" onclick="closeAboutModal(event)">
     <div class="modal-box" onclick="event.stopPropagation()">
@@ -1079,6 +1376,7 @@
   <script src="./js/nomad-menu.js"></script>
   <script src="./js/nomad-return.js"></script>
   <script src="./js/nomad-telemetry-engine.js"></script>
+  <script src="./js/nomad-weather-engine.js"></script>
   <script src="./js/nomad-cockpit-engine.js"></script>
 
   <script>
@@ -1138,23 +1436,438 @@
         });
       }
 
-      // Live Telemetry Hook
-      if (window.NomadTelemetryEngine && typeof window.NomadTelemetryEngine.onUpdate === 'function') {
+      // ========================================================
+      // EXPANDED AVIONICS DATA BAR CONTROLLER
+      // 5 Telemetry Cards: Location, Speed, Weather, Compass, Coords
+      // Features: Touch/Mouse Swipe, Auto-Cycle, Dedicated Settings Modal
+      // ========================================================
+      const dataBarEl = document.getElementById('launcher-data-bar');
+      const dataBarSlider = document.getElementById('data-bar-slider');
+      const dbCardSeq = document.getElementById('db-card-seq');
+      const dbBadge = document.getElementById('db-badge');
+      const dbDots = document.querySelectorAll('.db-dot');
+      const dbCycleStatus = document.getElementById('db-cycle-status');
+      const databarModal = document.getElementById('databar-settings-modal');
+
+      const CARD_TITLES = [
+        '01 // CIVIC LOCATION',
+        '02 // SPEED & VELOCITY',
+        '03 // ATMOSPHERIC MATRIX',
+        '04 // COMPASS & ALTIMETRY',
+        '05 // GEODETIC POSITION'
+      ];
+
+      const TOTAL_CARDS = 5;
+      let activeCardIndex = 0; // Default: Card 0 (Civic Location)
+      let isAutoCycleOn = (localStorage.getItem('nomad_databar_autocycle') === 'true');
+      let cycleCadenceSec = parseInt(localStorage.getItem('nomad_databar_cadence') || '8', 10);
+      let autoCycleTimer = null;
+      let isDataBarPaused = false;
+
+      // Audio feedback tone
+      let dataBarAudioCtx = null;
+      function playDataBarTone(freq = 1500) {
+        try {
+          if (!dataBarAudioCtx) dataBarAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (dataBarAudioCtx.state === 'suspended') dataBarAudioCtx.resume();
+          const osc = dataBarAudioCtx.createOscillator();
+          const gain = dataBarAudioCtx.createGain();
+          osc.frequency.setValueAtTime(freq, dataBarAudioCtx.currentTime);
+          gain.gain.setValueAtTime(0.04, dataBarAudioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, dataBarAudioCtx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(dataBarAudioCtx.destination);
+          osc.start();
+          osc.stop(dataBarAudioCtx.currentTime + 0.04);
+        } catch (_) {}
+      }
+
+      function updateDataBarCardUI(sound = true) {
+        if (!dataBarSlider) return;
+        dataBarSlider.style.transform = `translateX(-${activeCardIndex * 100}%)`;
+
+        if (dbCardSeq) {
+          dbCardSeq.innerText = CARD_TITLES[activeCardIndex] || `0${activeCardIndex + 1} // TELEMETRY`;
+        }
+
+        dbDots.forEach((dot, idx) => {
+          if (idx === activeCardIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+
+        if (dbCycleStatus) {
+          dbCycleStatus.innerText = isAutoCycleOn ? `AUTO (${cycleCadenceSec}s)` : 'MANUAL';
+          dbCycleStatus.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
+        }
+
+        if (sound) {
+          playDataBarTone(1500 + activeCardIndex * 120);
+          try {
+            if ('vibrate' in navigator) navigator.vibrate(22);
+          } catch (_) {}
+        }
+      }
+
+      function setDataBarCard(index, sound = true) {
+        activeCardIndex = ((index % TOTAL_CARDS) + TOTAL_CARDS) % TOTAL_CARDS;
+        updateDataBarCardUI(sound);
+        resetAutoCycleTimer();
+      }
+
+      window.setDataBarCard = setDataBarCard;
+
+      // Auto-Cycle Engine
+      function resetAutoCycleTimer() {
+        if (autoCycleTimer) clearInterval(autoCycleTimer);
+        if (isAutoCycleOn && !isDataBarPaused) {
+          autoCycleTimer = setInterval(() => {
+            setDataBarCard(activeCardIndex + 1, false);
+          }, cycleCadenceSec * 1000);
+        }
+      }
+
+      // Gesture & Touch Tracking
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+      let isLongPressFired = false;
+      let longPressTimeout = null;
+
+      function startPress(clientX, clientY) {
+        touchStartX = clientX;
+        touchStartY = clientY;
+        touchStartTime = Date.now();
+        isLongPressFired = false;
+
+        if (dataBarEl) dataBarEl.classList.add('pressing');
+
+        clearTimeout(longPressTimeout);
+        longPressTimeout = setTimeout(() => {
+          isLongPressFired = true;
+          if (dataBarEl) dataBarEl.classList.remove('pressing');
+          try {
+            if ('vibrate' in navigator) navigator.vibrate([60, 40, 80]);
+          } catch (_) {}
+          playDataBarTone(1800);
+          openDataBarModal();
+        }, 520); // 520ms hold triggers dedicated DATA BAR settings
+      }
+
+      function endPress(clientX, clientY) {
+        clearTimeout(longPressTimeout);
+        if (dataBarEl) dataBarEl.classList.remove('pressing');
+
+        if (isLongPressFired) return;
+
+        const diffX = clientX - touchStartX;
+        const diffY = clientY - touchStartY;
+        const duration = Date.now() - touchStartTime;
+
+        // Horizontal Swipe threshold (> 35px)
+        if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX < 0) {
+            // Swiped Left ➔ Next card
+            setDataBarCard(activeCardIndex + 1);
+          } else {
+            // Swiped Right ➔ Previous card
+            setDataBarCard(activeCardIndex - 1);
+          }
+          return;
+        }
+
+        // Tap detected (< 280ms, < 12px move)
+        if (duration < 280 && Math.abs(diffX) < 12 && Math.abs(diffY) < 12) {
+          if (activeCardIndex === 4) {
+            // Coordinates card: Tap to copy
+            const coordsText = document.getElementById('db-coords-full')?.innerText || '';
+            if (navigator.clipboard && coordsText) {
+              navigator.clipboard.writeText(coordsText).catch(() => {});
+              showToast('COPIED GPS COORDINATES');
+              playDataBarTone(1900);
+            } else {
+              setDataBarCard(activeCardIndex + 1);
+            }
+          } else {
+            setDataBarCard(activeCardIndex + 1);
+          }
+        }
+      }
+
+      function cancelPress() {
+        clearTimeout(longPressTimeout);
+        if (dataBarEl) dataBarEl.classList.remove('pressing');
+      }
+
+      if (dataBarEl) {
+        // Touch events
+        dataBarEl.addEventListener('touchstart', (e) => {
+          if (e.touches && e.touches[0]) {
+            startPress(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+
+        dataBarEl.addEventListener('touchmove', (e) => {
+          if (e.touches && e.touches[0]) {
+            const dx = Math.abs(e.touches[0].clientX - touchStartX);
+            const dy = Math.abs(e.touches[0].clientY - touchStartY);
+            if (dx > 12 || dy > 12) clearTimeout(longPressTimeout);
+          }
+        }, { passive: true });
+
+        dataBarEl.addEventListener('touchend', (e) => {
+          if (e.changedTouches && e.changedTouches[0]) {
+            endPress(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+          }
+        });
+
+        dataBarEl.addEventListener('touchcancel', cancelPress);
+
+        // Desktop Mouse drag & click
+        let isMouseDown = false;
+        dataBarEl.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          isMouseDown = true;
+          startPress(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          if (!isMouseDown) return;
+          const dx = Math.abs(e.clientX - touchStartX);
+          const dy = Math.abs(e.clientY - touchStartY);
+          if (dx > 12 || dy > 12) clearTimeout(longPressTimeout);
+        });
+
+        window.addEventListener('mouseup', (e) => {
+          if (!isMouseDown) return;
+          isMouseDown = false;
+          endPress(e.clientX, e.clientY);
+        });
+
+        dataBarEl.addEventListener('mouseenter', () => { isDataBarPaused = true; });
+        dataBarEl.addEventListener('mouseleave', () => { isDataBarPaused = false; resetAutoCycleTimer(); });
+      }
+
+      // Dot click targets
+      dbDots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetIdx = parseInt(dot.dataset.index, 10);
+          if (!isNaN(targetIdx)) setDataBarCard(targetIdx);
+        });
+      });
+
+      // DATA BAR Settings Modal Handlers
+      window.openDataBarModal = function() {
+        if (!databarModal) return;
+        isDataBarPaused = true;
+        databarModal.style.display = 'flex';
+
+        // Update auto-cycle toggle in modal
+        const toggleBtn = document.getElementById('btn-toggle-autocycle');
+        if (toggleBtn) {
+          toggleBtn.innerText = isAutoCycleOn ? 'ON' : 'OFF';
+          toggleBtn.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
+          toggleBtn.style.borderColor = isAutoCycleOn ? '#30d158' : '#475569';
+          toggleBtn.style.background = isAutoCycleOn ? 'rgba(48, 209, 88, 0.2)' : 'rgba(71, 85, 105, 0.2)';
+        }
+
+        // Update active cadence button
+        document.querySelectorAll('.db-cadence-btn').forEach(btn => {
+          const sec = parseInt(btn.dataset.sec, 10);
+          if (sec === cycleCadenceSec) {
+            btn.classList.add('active');
+            btn.style.background = 'rgba(0, 243, 255, 0.2)';
+            btn.style.borderColor = '#00f3ff';
+            btn.style.color = '#fff';
+          } else {
+            btn.classList.remove('active');
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+          }
+        });
+      };
+
+      window.closeDataBarModal = function(e) {
+        if (e) e.stopPropagation();
+        if (databarModal) databarModal.style.display = 'none';
+        isDataBarPaused = false;
+        resetAutoCycleTimer();
+      };
+
+      window.toggleDataBarAutoCycle = function() {
+        isAutoCycleOn = !isAutoCycleOn;
+        localStorage.setItem('nomad_databar_autocycle', isAutoCycleOn ? 'true' : 'false');
+
+        const toggleBtn = document.getElementById('btn-toggle-autocycle');
+        if (toggleBtn) {
+          toggleBtn.innerText = isAutoCycleOn ? 'ON' : 'OFF';
+          toggleBtn.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
+          toggleBtn.style.borderColor = isAutoCycleOn ? '#30d158' : '#475569';
+          toggleBtn.style.background = isAutoCycleOn ? 'rgba(48, 209, 88, 0.2)' : 'rgba(71, 85, 105, 0.2)';
+        }
+
+        if (dbCycleStatus) {
+          dbCycleStatus.innerText = isAutoCycleOn ? `AUTO (${cycleCadenceSec}s)` : 'MANUAL';
+          dbCycleStatus.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
+        }
+
+        showToast(isAutoCycleOn ? `DATA BAR: AUTO-CYCLE ON (${cycleCadenceSec}s)` : 'DATA BAR: AUTO-CYCLE OFF');
+        resetAutoCycleTimer();
+      };
+
+      window.setDataBarCadence = function(sec) {
+        cycleCadenceSec = sec;
+        localStorage.setItem('nomad_databar_cadence', sec.toString());
+
+        document.querySelectorAll('.db-cadence-btn').forEach(btn => {
+          const s = parseInt(btn.dataset.sec, 10);
+          if (s === sec) {
+            btn.classList.add('active');
+            btn.style.background = 'rgba(0, 243, 255, 0.2)';
+            btn.style.borderColor = '#00f3ff';
+            btn.style.color = '#fff';
+          } else {
+            btn.classList.remove('active');
+            btn.style.background = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+          }
+        });
+
+        if (dbCycleStatus) {
+          dbCycleStatus.innerText = isAutoCycleOn ? `AUTO (${cycleCadenceSec}s)` : 'MANUAL';
+        }
+
+        showToast(`CADENCE SET TO ${sec}s`);
+        resetAutoCycleTimer();
+      };
+
+      window.jumpDataBarCard = function(idx) {
+        setDataBarCard(idx);
+        closeDataBarModal();
+        showToast(`LOADED CARD 0${idx + 1}`);
+      };
+
+      // Real-Time Telemetry Data Feed (NomadTelemetryEngine)
+      if (window.NomadTelemetryEngine) {
+        if (typeof window.NomadTelemetryEngine.start === 'function') {
+          window.NomadTelemetryEngine.start();
+        }
+
         window.NomadTelemetryEngine.onUpdate((snap) => {
           if (!snap) return;
-          const coordsEl = document.getElementById('tb-coords-val');
-          const speedEl = document.getElementById('tb-speed-val');
-          const lockEl = document.getElementById('tb-lock-status');
 
-          if (snap.hasRealGpsLock && snap.latitude !== null) {
-            if (coordsEl) coordsEl.innerText = `${snap.latitude.toFixed(4)}° N, ${Math.abs(snap.longitude).toFixed(4)}° W`;
-            if (lockEl) lockEl.innerText = 'GPS LOCKED';
+          // Card 01: Civic Location & Highway Route
+          const locStreet = document.getElementById('db-loc-street');
+          const locCity = document.getElementById('db-loc-city');
+          if (locStreet) {
+            if (snap.primaryRoute && snap.highwayDirection) {
+              locStreet.innerText = `${snap.primaryRoute} ${snap.highwayDirection}`;
+            } else if (snap.streetName) {
+              locStreet.innerText = snap.streetName;
+            } else if (snap.cityState) {
+              locStreet.innerText = snap.cityState;
+            }
           }
-          if (speedEl && snap.speedMph !== null) {
-            speedEl.innerText = `${Math.round(snap.speedMph)} MPH`;
+          if (locCity) {
+            let sub = '';
+            if (snap.cityState) sub += snap.cityState;
+            if (snap.countyZip) sub += (sub ? ' • ' : '') + snap.countyZip;
+            if (snap.corridorAxis) sub += (sub ? ' • ' : '') + `CORRIDOR: ${snap.corridorAxis}`;
+            if (sub) locCity.innerText = sub;
+          }
+
+          // Card 02: Speed & Velocity
+          const speedMphEl = document.getElementById('db-speed-mph');
+          const speedKmhEl = document.getElementById('db-speed-kmh');
+          const speedSubEl = document.getElementById('db-speed-sub');
+          if (speedMphEl) speedMphEl.innerText = (snap.speedMph || 0).toFixed(1);
+          if (speedKmhEl) speedKmhEl.innerText = (snap.speedKmh || 0).toFixed(1);
+          if (speedSubEl) {
+            const rawMps = (snap.rawSpeedMps || 0).toFixed(2);
+            if (snap.isStationary) {
+              speedSubEl.innerText = `< 1.8 CLAMP (STATIONARY LOCK) • ${rawMps} m/s`;
+            } else {
+              speedSubEl.innerText = `ACTIVE CORRIDOR CRUISE • ${rawMps} m/s`;
+            }
+          }
+
+          // Card 04: Compass & Altimetry
+          const compassCardEl = document.getElementById('db-compass-cardinal');
+          const compassDegEl = document.getElementById('db-compass-degrees');
+          const altFtEl = document.getElementById('db-alt-ft');
+          const compassSubEl = document.getElementById('db-compass-sub');
+          if (compassCardEl) compassCardEl.innerText = snap.cardinalShort || 'N';
+          if (compassDegEl) compassDegEl.innerText = `${String(snap.headingDeg || 0).padStart(3, '0')}°`;
+          if (altFtEl) altFtEl.innerText = snap.altitudeFeet !== null ? `${snap.altitudeFeet} FT MSL` : '-- FT';
+          if (compassSubEl) {
+            const altM = snap.altitudeMeters !== null ? `${snap.altitudeMeters} M` : '-- M';
+            const accM = snap.accuracyMeters !== null ? `±${snap.accuracyMeters} M` : '±-- M';
+            compassSubEl.innerText = `ELEVATION: ${altM} • GPS ACCURACY: ${accM}`;
+          }
+
+          // Card 05: Precision Geodetic Coordinates
+          const coordsFullEl = document.getElementById('db-coords-full');
+          const coordsSubEl = document.getElementById('db-coords-sub');
+          if (coordsFullEl && snap.latitude !== null && snap.longitude !== null) {
+            const latStr = `${Math.abs(snap.latitude).toFixed(6)}° ${snap.latitude >= 0 ? 'N' : 'S'}`;
+            const lonStr = `${Math.abs(snap.longitude).toFixed(6)}° ${snap.longitude >= 0 ? 'E' : 'W'}`;
+            coordsFullEl.innerText = `${latStr}, ${lonStr}`;
+          }
+          if (coordsSubEl) {
+            const grid = snap.corridorAxis || 'AASHTO';
+            coordsSubEl.innerText = `CORRIDOR AXIS: ${grid} • TAP TO COPY`;
+          }
+
+          // Status Badge
+          if (dbBadge) {
+            if (snap.hasRealGpsLock) {
+              dbBadge.innerText = 'GPS LOCKED';
+              dbBadge.style.color = '#30d158';
+              dbBadge.style.borderColor = 'rgba(48, 209, 88, 0.45)';
+              dbBadge.style.background = 'rgba(48, 209, 88, 0.18)';
+            } else {
+              dbBadge.innerText = 'SEEKING...';
+              dbBadge.style.color = '#00f3ff';
+              dbBadge.style.borderColor = 'rgba(0, 243, 255, 0.45)';
+              dbBadge.style.background = 'rgba(0, 243, 255, 0.18)';
+            }
           }
         });
       }
+
+      // Real-Time Weather Data Feed (NomadWeatherEngine)
+      if (window.NomadWeatherEngine) {
+        if (typeof window.NomadWeatherEngine.start === 'function') {
+          window.NomadWeatherEngine.start();
+        }
+
+        window.NomadWeatherEngine.onUpdate((w) => {
+          if (!w) return;
+          const tempFEl = document.getElementById('db-weather-temp-f');
+          const tempCEl = document.getElementById('db-weather-temp-c');
+          const condEl = document.getElementById('db-weather-cond');
+          const weatherSubEl = document.getElementById('db-weather-sub');
+
+          if (tempFEl && w.tempF !== null) tempFEl.innerText = w.tempF.toFixed(1);
+          if (tempCEl && w.tempC !== null) tempCEl.innerText = w.tempC.toFixed(1);
+          if (condEl && w.conditionText) condEl.innerText = w.conditionText.toUpperCase();
+          if (weatherSubEl) {
+            const rh = w.humidityPercent !== null ? `${w.humidityPercent}%` : '--%';
+            const uv = w.uvIndex !== null ? w.uvIndex.toFixed(1) : '--';
+            const inHg = w.pressureInHg !== null ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
+            weatherSubEl.innerText = `HUMIDITY: ${rh} • UV: ${uv} • BARO: ${inHg}`;
+          }
+        });
+      }
+
+      // Initial View Setup (Location Card 0 is Default)
+      updateDataBarCardUI(false);
+      resetAutoCycleTimer();
 
       // Startup Boot Preference Management (Card Radio Selectors)
       function updateBootUI(cockpitId) {
