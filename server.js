@@ -148,6 +148,47 @@ app.get('/api/geocode', async (req, res) => {
   }
 });
 
+// Philosophical Cognition & Quote Proxy Endpoint
+// Proxies external quotes or delivers curated philosophical reflections
+app.get('/api/quote', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 3500);
+    const r = await fetch('https://dummyjson.com/quotes/random', { signal: ctrl.signal });
+    clearTimeout(tid);
+    if (r.ok) {
+      const d = await r.json();
+      if (d && d.quote) {
+        return res.json({ quote: d.quote.trim(), author: d.author ? d.author.trim() : 'Philosopher' });
+      }
+    }
+  } catch (_) {}
+
+  // Curated philosophical reflections
+  const corpus = [
+    { quote: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius" },
+    { quote: "We suffer more often in imagination than in reality.", author: "Seneca" },
+    { quote: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche" },
+    { quote: "The journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+    { quote: "Nature does not hurry, yet everything is accomplished.", author: "Lao Tzu" },
+    { quote: "Muddy water is best cleared by leaving it alone.", author: "Alan Watts" },
+    { quote: "You are an aperture through which the universe is looking at itself.", author: "Alan Watts" },
+    { quote: "In the depth of winter, I finally learned that within me there lay an invincible summer.", author: "Albert Camus" },
+    { quote: "Happiness is the meaning and the purpose of life, the whole aim of human existence.", author: "Aristotle" },
+    { quote: "Freedom is what you do with what’s been done to you.", author: "Jean-Paul Sartre" },
+    { quote: "Wonder is the beginning of wisdom.", author: "Socrates" },
+    { quote: "Peace comes from within. Do not seek it without.", author: "Gautama Buddha" },
+    { quote: "No man ever steps in the same river twice, for it's not the same river and he's not the same man.", author: "Heraclitus" },
+    { quote: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
+    { quote: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
+    { quote: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+    { quote: "It is not death that a man should fear, but he should fear never beginning to live.", author: "Marcus Aurelius" }
+  ];
+  const chosen = corpus[Math.floor(Math.random() * corpus.length)];
+  res.json(chosen);
+});
+
 // Dynamic Project Backup Endpoint: Generates and serves a clean .ZIP archive of the entire project
 app.get(['/api/download-zip', '/download-zip', '/download'], (req, res) => {
   try {
