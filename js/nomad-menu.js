@@ -81,7 +81,7 @@
       badge: 'Tactical Monospace Telemetry Matrix',
       guideAnchor: 'features.html#digit',
       accentColor: '#30d158',
-      desc: 'Military monospace ASCII matrix &amp; high-density telemetry.'
+      desc: ''
     },
     launcher: {
       name: 'NOMAD: Avionics Suite',
@@ -1102,7 +1102,7 @@
       name: 'BostonyFX',
       url: 'https://www.instagram.com/tony_bostony/'
     };
-    const version = window.NOMAD_VERSION || 'v4.10172026.0540';
+    const version = window.NOMAD_VERSION || 'v4.10172026.0749';
 
     let overlay = document.getElementById('about-modal');
     if (!overlay) {
@@ -1308,10 +1308,11 @@
           <!-- Prominent Quick Controls for DIGIT (Audio & Theme right at top!) -->
           ${context === 'digit' ? audioHTML : ''}
 
-          <!-- Cockpit Description -->
+          <!-- Cockpit Description (Rendered only when meta.desc is specified) -->
+          ${meta.desc ? `
           <div class="modal-body">
             ${meta.desc}
-          </div>
+          </div>` : ''}
 
           <!-- Cockpit Switcher Section -->
           ${switcherHTML}

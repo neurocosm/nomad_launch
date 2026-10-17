@@ -81,7 +81,7 @@
       badge: 'Tactical Monospace Telemetry Matrix',
       guideAnchor: 'features.html#digit',
       accentColor: '#30d158',
-      desc: 'Military monospace ASCII matrix &amp; high-density telemetry.'
+      desc: ''
     },
     launcher: {
       name: 'NOMAD: Avionics Suite',

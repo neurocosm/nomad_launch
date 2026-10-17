@@ -81,7 +81,7 @@
 
     .launcher-frame {
       width: 100%;
-      max-width: 440px;
+      max-width: 435px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -304,7 +304,7 @@
 
     /* DATA BAR Settings Modal Box */
     .databar-settings-box {
-      max-width: 440px !important;
+      max-width: 435px !important;
       background: #0b1325 !important;
       border: 1.5px solid rgba(0, 243, 255, 0.45) !important;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 243, 255, 0.25) !important;
@@ -342,23 +342,17 @@
       border: 1.5px solid var(--border-subtle);
       border-radius: 14px;
       padding: 0 16px;
-      text-decoration: none;
       color: inherit;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      cursor: default;
       overflow: hidden;
     }
 
     .cockpit-hero-card:hover {
       background: var(--bg-panel-hover);
-      transform: translateY(-2px);
-    }
-
-    .cockpit-hero-card:active {
-      transform: scale(0.98);
     }
 
     /* Distinct Cockpit Accent Borders & Glows */
@@ -409,17 +403,74 @@
       gap: 12px;
     }
 
+    /* Left Icon: Interactive Default Controller (1px light border ➔ 2px weighted border when DEFAULT) */
     .cockpit-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 11px;
-      background: rgba(0, 0, 0, 0.45);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.50);
       border: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.35rem;
       flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      padding: 0;
+      transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      position: relative;
+    }
+
+    .cockpit-avatar:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .cockpit-avatar:active {
+      transform: scale(0.94);
+    }
+
+    /* 1px light border when non-default */
+    .cockpit-avatar.avatar-digit {
+      border: 1px solid rgba(48, 209, 88, 0.40);
+      color: #30d158;
+    }
+    .cockpit-avatar.avatar-roadtrip {
+      border: 1px solid rgba(0, 243, 255, 0.40);
+      color: #00f3ff;
+    }
+    .cockpit-avatar.avatar-hyperspace {
+      border: 1px solid rgba(255, 0, 85, 0.40);
+      color: #ff0055;
+    }
+
+    /* 2px weighted border when DEFAULT setting is enabled */
+    .cockpit-avatar.is-default,
+    .cockpit-hero-card.is-default .cockpit-avatar {
+      border-width: 2px !important;
+    }
+
+    .cockpit-avatar.avatar-digit.is-default,
+    .cockpit-hero-card.is-default .cockpit-avatar.avatar-digit {
+      border-color: #30d158 !important;
+      background: rgba(48, 209, 88, 0.16) !important;
+      box-shadow: 0 0 14px rgba(48, 209, 88, 0.55) !important;
+    }
+
+    .cockpit-avatar.avatar-roadtrip.is-default,
+    .cockpit-hero-card.is-default .cockpit-avatar.avatar-roadtrip {
+      border-color: #00f3ff !important;
+      background: rgba(0, 243, 255, 0.16) !important;
+      box-shadow: 0 0 14px rgba(0, 243, 255, 0.55) !important;
+    }
+
+    .cockpit-avatar.avatar-hyperspace.is-default,
+    .cockpit-hero-card.is-default .cockpit-avatar.avatar-hyperspace {
+      border-color: #ff0055 !important;
+      background: rgba(255, 0, 85, 0.16) !important;
+      box-shadow: 0 0 14px rgba(255, 0, 85, 0.55) !important;
     }
 
     .cockpit-meta {
@@ -478,120 +529,33 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      padding: 5px 11px;
-      border-radius: 7px;
-      font-size: 0.70rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.72rem;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-subtle);
       color: #ffffff;
       letter-spacing: 0.03em;
-      transition: all 0.15s ease;
-    }
-
-    .cockpit-hero-card:hover .launch-btn-pill {
-      background: #ffffff;
-      color: #000000;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
-    }
-
-    /* Interactive Default Boot Radio Selector next to HUD Name (Star Indicator) */
-    .boot-radio-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 7px;
-      height: 22px;
-      border-radius: 11px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      text-decoration: none;
       cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-dim);
       transition: all 0.18s ease;
       user-select: none;
-      vertical-align: middle;
-      line-height: 1;
     }
 
-    .boot-radio-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.32);
-      transform: scale(1.06);
-    }
-
-    .radio-circle {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(148, 163, 184, 0.50);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.18s ease;
-      flex-shrink: 0;
-      background: rgba(11, 19, 37, 0.7);
-    }
-
-    .boot-radio-btn:hover .radio-circle {
+    .launch-btn-pill:hover {
+      background: #ffffff;
+      color: #000000;
       border-color: #ffffff;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.85);
     }
 
-    .radio-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: transparent;
-      transform: scale(0);
-      transition: all 0.18s ease;
-    }
-
-    .default-star-indicator {
-      font-size: 0.75rem;
-      color: var(--accent-amber);
-      display: none;
-      line-height: 1;
-      filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.8));
-    }
-
-    /* Active Default Radio State */
-    .cockpit-hero-card.is-default .boot-radio-btn,
-    .boot-radio-btn.is-active {
-      background: rgba(255, 183, 3, 0.14);
-      border-color: rgba(255, 183, 3, 0.45);
-      box-shadow: 0 0 10px rgba(255, 183, 3, 0.20);
-    }
-
-    .cockpit-hero-card.is-default .radio-circle,
-    .boot-radio-btn.is-active .radio-circle {
-      border-color: var(--accent-amber);
-      box-shadow: 0 0 8px rgba(255, 183, 3, 0.6);
-      background: rgba(255, 183, 3, 0.18);
-    }
-
-    .cockpit-hero-card.is-default .radio-dot,
-    .boot-radio-btn.is-active .radio-dot {
-      background: var(--accent-amber);
-      transform: scale(1);
-    }
-
-    .cockpit-hero-card.is-default .default-star-indicator,
-    .boot-radio-btn.is-active .default-star-indicator {
-      display: inline-block;
-      animation: star-glow-pulse 0.22s ease-out;
-    }
-
-    @keyframes star-glow-pulse {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* 4 Shared Utilities Deck / Utility Cluster (10px padding below Hyperspace) */
+    /* 4 Shared Utilities Deck / Utility Cluster (10px padding below Hyperspace, 11px between rows) */
     .utilities-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 11px 6px;
       width: 100%;
       margin-top: 10px !important;
       padding-top: 0 !important;
@@ -1180,64 +1144,52 @@
       <div class="cockpits-stack">
 
         <!-- 1. DIGIT -->
-        <a href="./digit.html" class="cockpit-hero-card card-digit" id="card-hud-digit">
+        <div class="cockpit-hero-card card-digit" id="card-hud-digit">
           <div class="cockpit-left">
-            <div class="cockpit-avatar" style="border-color: rgba(48, 209, 88, 0.4); color: #30d158;">📟</div>
+            <button type="button" class="cockpit-avatar avatar-digit" id="avatar-hud-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Tap icon to set DIGIT as Default HUD" aria-label="Tap icon to set DIGIT as Default HUD">📟</button>
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">DIGIT</span>
-                <button type="button" class="boot-radio-btn" id="radio-btn-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Choose DIGIT as Default HUD" aria-label="Choose DIGIT as Default HUD">
-                  <span class="radio-circle"><span class="radio-dot"></span></span>
-                  <span class="default-star-indicator">★</span>
-                </button>
               </div>
               <div class="cockpit-desc">Military monospace ASCII matrix</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
-            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <a href="./digit.html" class="launch-btn-pill" id="btn-launch-digit" title="Launch DIGIT Cockpit">LAUNCH ↗</a>
           </div>
-        </a>
+        </div>
 
         <!-- 2. ROAD TRIP -->
-        <a href="./roadtrip.html" class="cockpit-hero-card card-roadtrip" id="card-hud-roadtrip">
+        <div class="cockpit-hero-card card-roadtrip" id="card-hud-roadtrip">
           <div class="cockpit-left">
-            <div class="cockpit-avatar" style="border-color: rgba(0, 243, 255, 0.4); color: #00f3ff;">🚗</div>
+            <button type="button" class="cockpit-avatar avatar-roadtrip" id="avatar-hud-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Tap icon to set ROAD TRIP as Default HUD" aria-label="Tap icon to set ROAD TRIP as Default HUD">🚗</button>
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">ROAD TRIP</span>
-                <button type="button" class="boot-radio-btn" id="radio-btn-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Choose ROAD TRIP as Default HUD" aria-label="Choose ROAD TRIP as Default HUD">
-                  <span class="radio-circle"><span class="radio-dot"></span></span>
-                  <span class="default-star-indicator">★</span>
-                </button>
               </div>
               <div class="cockpit-desc">High-contrast street level mapping accuracy</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
-            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <a href="./roadtrip.html" class="launch-btn-pill" id="btn-launch-roadtrip" title="Launch ROAD TRIP Cockpit">LAUNCH ↗</a>
           </div>
-        </a>
+        </div>
 
         <!-- 3. HYPERSPACE -->
-        <a href="./hyperspace.html" class="cockpit-hero-card card-hyperspace" id="card-hud-hyperspace">
+        <div class="cockpit-hero-card card-hyperspace" id="card-hud-hyperspace">
           <div class="cockpit-left">
-            <div class="cockpit-avatar" style="border-color: rgba(255, 0, 85, 0.4); color: #ff0055;">🚀</div>
+            <button type="button" class="cockpit-avatar avatar-hyperspace" id="avatar-hud-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Tap icon to set HYPERSPACE as Default HUD" aria-label="Tap icon to set HYPERSPACE as Default HUD">🚀</button>
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">HYPERSPACE</span>
-                <button type="button" class="boot-radio-btn" id="radio-btn-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Choose HYPERSPACE as Default HUD" aria-label="Choose HYPERSPACE as Default HUD">
-                  <span class="radio-circle"><span class="radio-dot"></span></span>
-                  <span class="default-star-indicator">★</span>
-                </button>
               </div>
               <div class="cockpit-desc">Kinetic vector canvas with floating telemetry</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
-            <span class="launch-btn-pill">LAUNCH ↗</span>
+            <a href="./hyperspace.html" class="launch-btn-pill" id="btn-launch-hyperspace" title="Launch HYPERSPACE Cockpit">LAUNCH ↗</a>
           </div>
-        </a>
+        </div>
 
       </div>
 
@@ -1921,26 +1873,22 @@
       updateDataBarCardUI(false);
       resetAutoCycleTimer();
 
-      // Startup Boot Preference Management (Card Radio Selectors)
+      // Startup Boot Preference Management (Avatar Icon Controls Default Setting)
       function updateBootUI(cockpitId) {
         const cockpits = ['digit', 'roadtrip', 'hyperspace'];
         cockpits.forEach(id => {
           const card = document.getElementById(`card-hud-${id}`);
-          const radioBtn = document.getElementById(`radio-btn-${id}`);
+          const avatar = document.getElementById(`avatar-hud-${id}`);
           const isSelected = (id === cockpitId);
 
           if (card) {
-            if (isSelected) {
-              card.classList.add('is-default');
-            } else {
-              card.classList.remove('is-default');
-            }
+            card.classList.toggle('is-default', isSelected);
           }
 
-          if (radioBtn) {
-            radioBtn.classList.toggle('is-active', isSelected);
-            radioBtn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
-            radioBtn.title = isSelected ? `${id.toUpperCase()} is default HUD` : `Choose ${id.toUpperCase()} as default HUD`;
+          if (avatar) {
+            avatar.classList.toggle('is-default', isSelected);
+            avatar.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+            avatar.title = isSelected ? `${id.toUpperCase()} (Current Default HUD - Tap to change)` : `Tap icon to set ${id.toUpperCase()} as Default HUD`;
           }
         });
       }
