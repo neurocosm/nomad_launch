@@ -1139,14 +1139,14 @@
       line-height: 1;
     }
 
-    /* Block 01 Location Content (Top Justified & Dynamic Sizing) */
+    /* Block 01 Location Content (Top Justified & Dynamic Sizing with 5px top buffer) */
     .block-location-content {
       flex: 1;
       min-height: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-start; /* Justify TOP */
-      padding-top: 1px;
+      padding-top: 5px;
       gap: 2px;
       min-width: 0;
       overflow: hidden;
@@ -1252,6 +1252,92 @@
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 65%;
+    }
+
+    /* ====================================================================
+       Block 05 (Cognition & Perspective) Rolled-Up State & Scale-Aware HUD
+       ==================================================================== */
+    #block-philosophy.is-rolled-up {
+      flex: 0 0 28px !important;
+      min-height: 28px !important;
+      max-height: 28px !important;
+      padding: 0 10px !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      cursor: pointer !important;
+      background: var(--bg-card) !important;
+      border: 1.5px solid var(--border-cyan) !important;
+      border-radius: var(--radius-block) !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      user-select: none;
+    }
+
+    #block-philosophy.is-rolled-up:hover {
+      background: var(--bg-card-hover) !important;
+      border-color: var(--border-cyan-bright) !important;
+    }
+
+    #block-philosophy.is-rolled-up .block-meta-top {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 1;
+    }
+
+    #block-philosophy.is-rolled-up .phil-quote-viewport,
+    #block-philosophy.is-rolled-up .block-meta-bottom {
+      display: none !important;
+    }
+
+    /* Scale-Aware Proportional Boost for Blocks 01-04 when Block 05 is Rolled Up (Even increase across all 4 blocks) */
+    .layout-phil-collapsed .rounded-block:not(#block-philosophy) {
+      padding: 8px 12px;
+      transition: padding 0.2s ease;
+    }
+
+    /* Block 01 Location Scale-Aware Boost */
+    .layout-phil-collapsed .loc-street-name {
+      font-size: clamp(1.46rem, 3.8vh, 1.95rem);
+    }
+    .layout-phil-collapsed .loc-city-state {
+      font-size: clamp(1.08rem, 2.7vh, 1.25rem);
+    }
+    .layout-phil-collapsed .loc-county-zip {
+      font-size: clamp(0.92rem, 2.3vh, 1.08rem);
+    }
+
+    /* Blocks 02 & 03 & 04 Hero Typography Scale-Aware Boost */
+    .layout-phil-collapsed .col-hero {
+      font-size: clamp(1.48rem, 4.1vh, 2.05rem);
+    }
+    .layout-phil-collapsed .col-hero .sub-unit {
+      font-size: 0.90rem;
+    }
+    .layout-phil-collapsed .col-title {
+      font-size: 0.65rem;
+    }
+    .layout-phil-collapsed .col-subtext {
+      font-size: 0.70rem;
+    }
+
+    /* Block 04 Time Scale-Aware Boost */
+    .layout-phil-collapsed #clock-time {
+      font-size: clamp(1.68rem, 4.6vh, 2.40rem);
+    }
+    .layout-phil-collapsed #clock-day,
+    .layout-phil-collapsed #clock-date {
+      font-size: clamp(1.10rem, 2.9vh, 1.40rem);
+    }
+
+    /* Meta text proportional boost */
+    .layout-phil-collapsed .rounded-block:not(#block-philosophy) .block-meta-top,
+    .layout-phil-collapsed .rounded-block:not(#block-philosophy) .block-meta-bottom {
+      font-size: 0.68rem;
     }
 
     /* Toast Notification */
@@ -2032,7 +2118,8 @@
       philosophy: {
         quote: 'Syncing Daily API Insight...',
         author: ''
-      }
+      },
+      isPhilRolledUp: false
     };
 
     // Curated Classical Philosophy Corpus (Instant 0ms Feedback on Tap)
@@ -2246,6 +2333,43 @@
 
       // Background check for online quote
       fetchFreshOnlineQuote();
+    }
+
+    function setPhilosophyRollup(isRolledUp, skipToast = false) {
+      state.isPhilRolledUp = Boolean(isRolledUp);
+      const philEl = document.getElementById('block-philosophy');
+      const layoutEl = document.querySelector('.digit-layout');
+
+      if (philEl) {
+        philEl.classList.toggle('is-rolled-up', state.isPhilRolledUp);
+        philEl.title = state.isPhilRolledUp
+          ? '05 // COGNITION & PERSPECTIVE (Rolled Up • Tap to Expand)'
+          : '05 // COGNITION & PERSPECTIVE (Tap: Next Quote • Hold: Roll Up)';
+      }
+
+      if (layoutEl) {
+        layoutEl.classList.toggle('layout-phil-collapsed', state.isPhilRolledUp);
+      }
+      document.body.classList.toggle('layout-phil-collapsed', state.isPhilRolledUp);
+
+      try {
+        localStorage.setItem('nomad_digit_phil_rollup', state.isPhilRolledUp ? 'true' : 'false');
+      } catch (_) {}
+
+      // If scanner was actively highlighting block 05 when rolled up, clear it immediately
+      if (state.isPhilRolledUp && philEl) {
+        philEl.classList.remove('pulse-active', 'line-top-active', 'line-bottom-active');
+      }
+
+      if (!skipToast) {
+        if (state.isPhilRolledUp) {
+          playTone(850);
+          showToast('05 // COGNITION MINIMIZED (4-BLOCK HUD)');
+        } else {
+          playTone(1200);
+          showToast('05 // COGNITION EXPANDED');
+        }
+      }
     }
 
     window.addEventListener('resize', () => {
@@ -3098,10 +3222,73 @@
       showToast('LOCAL TIME SYNCED');
     });
 
-    document.getElementById('block-philosophy').addEventListener('click', () => {
-      playTone(1500);
-      cyclePhilosophyQuote();
-    });
+    // Block 5 (Cognition & Perspective): Tap to cycle quote • Long-Press (500ms) to roll up • Tap when rolled up to expand
+    const philBlock = document.getElementById('block-philosophy');
+    let philPressTimer = null;
+    let isPhilLongPress = false;
+    let philTouchStartX = 0;
+    let philTouchStartY = 0;
+
+    function startPhilPress(e) {
+      if (state.isPhilRolledUp) return; // In rolled-up mode, a simple tap expands
+      isPhilLongPress = false;
+      if (e.touches && e.touches[0]) {
+        philTouchStartX = e.touches[0].clientX;
+        philTouchStartY = e.touches[0].clientY;
+      } else {
+        philTouchStartX = e.clientX;
+        philTouchStartY = e.clientY;
+      }
+      clearTimeout(philPressTimer);
+      if (philBlock) philBlock.classList.add('pressing');
+      philPressTimer = setTimeout(() => {
+        isPhilLongPress = true;
+        if (philBlock) philBlock.classList.remove('pressing');
+        try {
+          if ('vibrate' in navigator) navigator.vibrate(50);
+        } catch (_) {}
+        setPhilosophyRollup(true);
+      }, 500);
+    }
+
+    function cancelPhilPress(e) {
+      if (e && e.type === 'touchmove' && e.touches && e.touches[0]) {
+        const dx = Math.abs(e.touches[0].clientX - philTouchStartX);
+        const dy = Math.abs(e.touches[0].clientY - philTouchStartY);
+        if (dx < 12 && dy < 12) return;
+      }
+      clearTimeout(philPressTimer);
+      if (philBlock) philBlock.classList.remove('pressing');
+    }
+
+    if (philBlock) {
+      philBlock.addEventListener('touchstart', startPhilPress, { passive: true });
+      philBlock.addEventListener('touchend', cancelPhilPress);
+      philBlock.addEventListener('touchcancel', cancelPhilPress);
+      philBlock.addEventListener('touchmove', cancelPhilPress, { passive: true });
+      philBlock.addEventListener('mousedown', startPhilPress);
+      philBlock.addEventListener('mouseup', cancelPhilPress);
+      philBlock.addEventListener('mouseleave', cancelPhilPress);
+
+      philBlock.addEventListener('click', (e) => {
+        if (isPhilLongPress) {
+          e.preventDefault();
+          e.stopPropagation();
+          isPhilLongPress = false;
+          return;
+        }
+
+        // When rolled up: simple tap reinstates/expands the block
+        if (state.isPhilRolledUp) {
+          setPhilosophyRollup(false);
+          return;
+        }
+
+        // When expanded: simple tap cycles to next quote
+        playTone(1500);
+        cyclePhilosophyQuote();
+      });
+    }
 
     // ==========================================
     // 4-THEME AVIONICS COLOR CONTROLLER
@@ -3804,6 +3991,13 @@
       SCANNER_BLOCK_IDS.forEach((id, idx) => {
         const el = document.getElementById(id);
         if (!el) return;
+
+        // Never illuminate block-philosophy when it is rolled up
+        if (id === 'block-philosophy' && state.isPhilRolledUp) {
+          el.classList.remove('line-top-active', 'line-bottom-active', 'pulse-active', 'pulse-trail', 'idle-mode');
+          return;
+        }
+
         if (SCANNER_CONFIG.target === 'lines') {
           if (step && typeof step === 'object' && idx === step.blockIdx) {
             if (step.line === 'top') {
@@ -3844,50 +4038,86 @@
 
       let sequence;
       if (SCANNER_CONFIG.target === 'lines') {
-        // 10-step process: top and bottom bars of each block change color
-        // block 01 top line -> bottom line -> block 2 top line -> bottom line ... -> block 5 bottom line
-        if (SCANNER_CONFIG.mode === 'bounce') {
-          // Bounce: 10 steps top-to-bottom, then bounce back up
-          sequence = [
-            { blockIdx: 0, line: 'top' },
-            { blockIdx: 0, line: 'bottom' },
-            { blockIdx: 1, line: 'top' },
-            { blockIdx: 1, line: 'bottom' },
-            { blockIdx: 2, line: 'top' },
-            { blockIdx: 2, line: 'bottom' },
-            { blockIdx: 3, line: 'top' },
-            { blockIdx: 3, line: 'bottom' },
-            { blockIdx: 4, line: 'top' },
-            { blockIdx: 4, line: 'bottom' },
-            { blockIdx: 4, line: 'top' },
-            { blockIdx: 3, line: 'bottom' },
-            { blockIdx: 3, line: 'top' },
-            { blockIdx: 2, line: 'bottom' },
-            { blockIdx: 2, line: 'top' },
-            { blockIdx: 1, line: 'bottom' },
-            { blockIdx: 1, line: 'top' },
-            { blockIdx: 0, line: 'bottom' }
-          ];
+        if (state.isPhilRolledUp) {
+          // 8-step process for Blocks 01-04 (Block 05 excluded while rolled up)
+          if (SCANNER_CONFIG.mode === 'bounce') {
+            sequence = [
+              { blockIdx: 0, line: 'top' },
+              { blockIdx: 0, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 3, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 0, line: 'bottom' }
+            ];
+          } else {
+            sequence = [
+              { blockIdx: 0, line: 'top' },
+              { blockIdx: 0, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 3, line: 'bottom' }
+            ];
+          }
         } else {
-          // Cascade: 10 steps top-to-bottom, then wrap
-          sequence = [
-            { blockIdx: 0, line: 'top' },
-            { blockIdx: 0, line: 'bottom' },
-            { blockIdx: 1, line: 'top' },
-            { blockIdx: 1, line: 'bottom' },
-            { blockIdx: 2, line: 'top' },
-            { blockIdx: 2, line: 'bottom' },
-            { blockIdx: 3, line: 'top' },
-            { blockIdx: 3, line: 'bottom' },
-            { blockIdx: 4, line: 'top' },
-            { blockIdx: 4, line: 'bottom' }
-          ];
+          // Full 10-step process for all 5 blocks
+          if (SCANNER_CONFIG.mode === 'bounce') {
+            sequence = [
+              { blockIdx: 0, line: 'top' },
+              { blockIdx: 0, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 3, line: 'bottom' },
+              { blockIdx: 4, line: 'top' },
+              { blockIdx: 4, line: 'bottom' },
+              { blockIdx: 4, line: 'top' },
+              { blockIdx: 3, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 0, line: 'bottom' }
+            ];
+          } else {
+            sequence = [
+              { blockIdx: 0, line: 'top' },
+              { blockIdx: 0, line: 'bottom' },
+              { blockIdx: 1, line: 'top' },
+              { blockIdx: 1, line: 'bottom' },
+              { blockIdx: 2, line: 'top' },
+              { blockIdx: 2, line: 'bottom' },
+              { blockIdx: 3, line: 'top' },
+              { blockIdx: 3, line: 'bottom' },
+              { blockIdx: 4, line: 'top' },
+              { blockIdx: 4, line: 'bottom' }
+            ];
+          }
         }
       } else {
-        // Full block outline: 5 steps
-        sequence = (SCANNER_CONFIG.mode === 'bounce')
-          ? [0, 1, 2, 3, 4, 3, 2, 1]
-          : [0, 1, 2, 3, 4];
+        // Full block outline: 4 steps when rolled up, 5 steps when expanded
+        if (state.isPhilRolledUp) {
+          sequence = (SCANNER_CONFIG.mode === 'bounce')
+            ? [0, 1, 2, 3, 2, 1]
+            : [0, 1, 2, 3];
+        } else {
+          sequence = (SCANNER_CONFIG.mode === 'bounce')
+            ? [0, 1, 2, 3, 4, 3, 2, 1]
+            : [0, 1, 2, 3, 4];
+        }
       }
 
       if (scannerSeqIndex >= sequence.length) {
@@ -3904,8 +4134,8 @@
       // Turnaround sonic feedback if bounce mode reached turnaround endpoints
       if (SCANNER_CONFIG.mode === 'bounce') {
         const isReversal = (SCANNER_CONFIG.target === 'lines')
-          ? (scannerSeqIndex === 0 || scannerSeqIndex === 9)
-          : (scannerSeqIndex === 0 || scannerSeqIndex === 4);
+          ? (scannerSeqIndex === 0 || scannerSeqIndex === (state.isPhilRolledUp ? 7 : 9))
+          : (scannerSeqIndex === 0 || scannerSeqIndex === (state.isPhilRolledUp ? 3 : 4));
         if (isReversal && SCANNER_CONFIG.soundTurnaround && state.soundEnabled && typeof playTone === 'function') {
           playTone(1350, 0.04);
         }
@@ -4423,6 +4653,14 @@
     startTracking();
     updateDOM();
     loadDailyQuote(false);
+
+    // Restore saved roll-up state for Block 05
+    try {
+      const savedRollup = localStorage.getItem('nomad_digit_phil_rollup') === 'true';
+      if (savedRollup) {
+        setPhilosophyRollup(true, true);
+      }
+    } catch (_) {}
   </script>
   <script src="js/nomad-return.js"></script>
 </body>

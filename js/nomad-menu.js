@@ -1102,7 +1102,7 @@
       name: 'BostonyFX',
       url: 'https://www.instagram.com/tony_bostony/'
     };
-    const version = window.NOMAD_VERSION || 'v4.10172026.0805';
+    const version = window.NOMAD_VERSION || 'v4.10172026.0926';
 
     let overlay = document.getElementById('about-modal');
     if (!overlay) {
