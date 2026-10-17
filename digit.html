@@ -962,6 +962,56 @@
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
 
+    /* Restored Simple Color Picker for Scrolling Bar / Block Illumination */
+    .scanner-color-picker-box {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 8, 17, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
+
+    .scanner-color-picker-input-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin: 0;
+      flex: 1;
+    }
+
+    .scanner-color-input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 32px;
+      height: 28px;
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      border-radius: 6px;
+      padding: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .scanner-color-input::-webkit-color-swatch-wrapper {
+      padding: 1px;
+      border-radius: 4px;
+    }
+
+    .scanner-color-input::-webkit-color-swatch {
+      border: none;
+      border-radius: 4px;
+    }
+
+    .scanner-color-input::-moz-color-swatch {
+      border: none;
+      border-radius: 4px;
+    }
+
     .scanner-done-btn {
       width: 100%;
       background: rgba(0, 243, 255, 0.18);
@@ -1830,9 +1880,12 @@
         </div>
       </div>
 
-      <!-- Accent Color Swatches -->
+      <!-- Accent Color Swatches & Simple Color Picker -->
       <div class="scanner-section">
-        <div class="scanner-section-label">OUTLINE LINE COLOR</div>
+        <div class="scanner-section-label">
+          <span>OUTLINE LINE COLOR</span>
+          <span id="scanner-color-hex" style="font-family: 'JetBrains Mono', monospace; font-size: 0.60rem; color: var(--accent-cyan); font-weight: 800;">THEME ACCENT</span>
+        </div>
         <div class="scanner-color-row">
           <div class="scanner-swatch" data-opt-color="theme" style="background: linear-gradient(135deg, #00f3ff, #f59e0b); color:#fff;" title="Theme Accent">THEME</div>
           <div class="scanner-swatch" data-opt-color="#00f3ff" style="background: #00f3ff; color:#050811;" title="Cyan Neon">CYAN</div>
@@ -1840,6 +1893,23 @@
           <div class="scanner-swatch" data-opt-color="#f59e0b" style="background: #f59e0b;" title="Amber Gold">AMBER</div>
           <div class="scanner-swatch" data-opt-color="#ff0055" style="background: #ff0055;" title="Hot Pink">PINK</div>
           <div class="scanner-swatch" data-opt-color="#ffffff" style="background: #ffffff; color:#050811;" title="Ice White">WHITE</div>
+        </div>
+
+        <!-- Restored Simple Color Picker for Scrolling Bar / Block Illumination -->
+        <div class="scanner-color-picker-box">
+          <label for="scanner-color-picker" class="scanner-color-picker-input-label">
+            <input type="color" id="scanner-color-picker" class="scanner-color-input" value="#00f3ff" title="Tap to choose custom illumination color" />
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 5px;">
+                <span>CUSTOM COLOR PICKER</span>
+                <span style="font-size: 0.54rem; color: #10b981; font-weight: 800; background: rgba(16, 185, 129, 0.2); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.5);">RESTORED</span>
+              </div>
+              <div style="font-size: 0.58rem; color: var(--text-dim); margin-top: 1px;">Full spectrum color for kinetic bars &amp; outline illumination</div>
+            </div>
+          </label>
+          <div id="scanner-picker-preview" style="font-size: 0.62rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; padding: 4px 8px; border-radius: 6px; border: 1.5px solid rgba(0, 243, 255, 0.4); color: var(--accent-cyan); background: rgba(0, 243, 255, 0.12); cursor: pointer;" onclick="document.getElementById('scanner-color-picker')?.click();">
+            #00F3FF
+          </div>
         </div>
       </div>
 
@@ -4038,10 +4108,34 @@
         btn.classList.toggle('is-selected', btn.getAttribute('data-opt-intensity') === SCANNER_CONFIG.intensity);
       });
 
-      // 6. Color swatches
+      // 6. Color swatches & restored color picker
       document.querySelectorAll('[data-opt-color]').forEach(swatch => {
         swatch.classList.toggle('is-selected', swatch.getAttribute('data-opt-color') === SCANNER_CONFIG.color);
       });
+
+      const colorPicker = document.getElementById('scanner-color-picker');
+      const colorHexLabel = document.getElementById('scanner-color-hex');
+      const pickerPreview = document.getElementById('scanner-picker-preview');
+
+      if (SCANNER_CONFIG.color === 'theme' || !SCANNER_CONFIG.color) {
+        if (colorHexLabel) colorHexLabel.textContent = 'THEME ACCENT';
+        if (pickerPreview) {
+          pickerPreview.textContent = 'THEME';
+          pickerPreview.style.color = '#00f3ff';
+          pickerPreview.style.borderColor = 'rgba(0, 243, 255, 0.4)';
+          pickerPreview.style.background = 'rgba(0, 243, 255, 0.12)';
+        }
+      } else {
+        const hexVal = SCANNER_CONFIG.color.startsWith('#') ? SCANNER_CONFIG.color : '#00f3ff';
+        if (colorPicker) colorPicker.value = hexVal;
+        if (colorHexLabel) colorHexLabel.textContent = hexVal.toUpperCase();
+        if (pickerPreview) {
+          pickerPreview.textContent = hexVal.toUpperCase();
+          pickerPreview.style.color = hexVal;
+          pickerPreview.style.borderColor = hexVal;
+          pickerPreview.style.background = 'rgba(255, 255, 255, 0.08)';
+        }
+      }
 
       // 7. Sound turnaround
       const chkSound = document.getElementById('chk-scanner-sound');
@@ -4284,6 +4378,23 @@
         syncScannerModalUI();
       });
     });
+
+    // Restored Simple Color Picker: input & change events for custom color selection
+    const colorPickerInput = document.getElementById('scanner-color-picker');
+    if (colorPickerInput) {
+      const handleColorPicked = (e) => {
+        const pickedColor = e.target.value;
+        if (!pickedColor) return;
+        SCANNER_CONFIG.color = pickedColor;
+        try {
+          localStorage.setItem('nomad_digit_scan_color', pickedColor);
+        } catch (_) {}
+        applyScannerCustomStyles();
+        syncScannerModalUI();
+      };
+      colorPickerInput.addEventListener('input', handleColorPicked);
+      colorPickerInput.addEventListener('change', handleColorPicked);
+    }
 
     // Sound checkbox
     const chkSound = document.getElementById('chk-scanner-sound');

@@ -434,7 +434,8 @@
     .cockpit-meta {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      justify-content: center;
+      gap: 5px;
     }
 
     .cockpit-title-row {
@@ -477,9 +478,8 @@
 
     .cockpit-launch-action {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
 
@@ -505,69 +505,95 @@
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
     }
 
-    /* Interactive Default Boot Radio Selector on Card */
+    /* Interactive Default Boot Radio Selector next to HUD Name (Star Indicator) */
     .boot-radio-btn {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 3px 6px;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 5px;
+      padding: 2px 7px;
+      height: 22px;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       cursor: pointer;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.60rem;
       color: var(--text-dim);
-      transition: all 0.15s ease;
+      transition: all 0.18s ease;
       user-select: none;
-      margin-top: 2px;
+      vertical-align: middle;
+      line-height: 1;
     }
 
     .boot-radio-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      border-color: rgba(255, 255, 255, 0.20);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.32);
+      transform: scale(1.06);
     }
 
     .radio-circle {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      border: 1.5px solid rgba(148, 163, 184, 0.50);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s ease;
+      transition: all 0.18s ease;
       flex-shrink: 0;
+      background: rgba(11, 19, 37, 0.7);
+    }
+
+    .boot-radio-btn:hover .radio-circle {
+      border-color: #ffffff;
     }
 
     .radio-dot {
-      width: 4px;
-      height: 4px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: transparent;
-      transition: all 0.15s ease;
+      transform: scale(0);
+      transition: all 0.18s ease;
+    }
+
+    .default-star-indicator {
+      font-size: 0.75rem;
+      color: var(--accent-amber);
+      display: none;
+      line-height: 1;
+      filter: drop-shadow(0 0 5px rgba(255, 183, 3, 0.8));
     }
 
     /* Active Default Radio State */
-    .cockpit-hero-card.is-default .boot-radio-btn {
-      background: rgba(255, 183, 3, 0.10);
-      border-color: rgba(255, 183, 3, 0.35);
-      color: var(--accent-amber);
+    .cockpit-hero-card.is-default .boot-radio-btn,
+    .boot-radio-btn.is-active {
+      background: rgba(255, 183, 3, 0.14);
+      border-color: rgba(255, 183, 3, 0.45);
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.20);
     }
 
-    .cockpit-hero-card.is-default .radio-circle {
+    .cockpit-hero-card.is-default .radio-circle,
+    .boot-radio-btn.is-active .radio-circle {
       border-color: var(--accent-amber);
-      box-shadow: 0 0 8px rgba(255, 183, 3, 0.5);
+      box-shadow: 0 0 8px rgba(255, 183, 3, 0.6);
+      background: rgba(255, 183, 3, 0.18);
     }
 
-    .cockpit-hero-card.is-default .radio-dot {
+    .cockpit-hero-card.is-default .radio-dot,
+    .boot-radio-btn.is-active .radio-dot {
       background: var(--accent-amber);
+      transform: scale(1);
     }
 
-    .cockpit-hero-card.is-default .radio-label {
-      font-weight: 800;
-      color: var(--accent-amber);
+    .cockpit-hero-card.is-default .default-star-indicator,
+    .boot-radio-btn.is-active .default-star-indicator {
+      display: inline-block;
+      animation: star-glow-pulse 0.22s ease-out;
+    }
+
+    @keyframes star-glow-pulse {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     /* 4 Shared Utilities Deck / Utility Cluster (10px padding below Hyperspace) */
@@ -1173,16 +1199,16 @@
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">DIGIT</span>
+                <button type="button" class="boot-radio-btn is-active" id="radio-btn-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Choose DIGIT as Default HUD" aria-label="Choose DIGIT as Default HUD">
+                  <span class="radio-circle"><span class="radio-dot"></span></span>
+                  <span class="default-star-indicator">★</span>
+                </button>
               </div>
               <div class="cockpit-desc">Military monospace ASCII matrix</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
             <span class="launch-btn-pill">LAUNCH ↗</span>
-            <button type="button" class="boot-radio-btn" id="radio-btn-digit" onclick="setBootDefaultFromCard(event, 'digit')" title="Set DIGIT as Default Boot Cockpit">
-              <span class="radio-circle"><span class="radio-dot"></span></span>
-              <span class="radio-label">★ DEFAULT</span>
-            </button>
           </div>
         </a>
 
@@ -1193,16 +1219,16 @@
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">ROAD TRIP</span>
+                <button type="button" class="boot-radio-btn" id="radio-btn-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Choose ROAD TRIP as Default HUD" aria-label="Choose ROAD TRIP as Default HUD">
+                  <span class="radio-circle"><span class="radio-dot"></span></span>
+                  <span class="default-star-indicator">★</span>
+                </button>
               </div>
               <div class="cockpit-desc">High-contrast street level mapping accuracy</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
             <span class="launch-btn-pill">LAUNCH ↗</span>
-            <button type="button" class="boot-radio-btn" id="radio-btn-roadtrip" onclick="setBootDefaultFromCard(event, 'roadtrip')" title="Set ROAD TRIP as Default Boot Cockpit">
-              <span class="radio-circle"><span class="radio-dot"></span></span>
-              <span class="radio-label">SET DEFAULT</span>
-            </button>
           </div>
         </a>
 
@@ -1213,16 +1239,16 @@
             <div class="cockpit-meta">
               <div class="cockpit-title-row">
                 <span class="cockpit-name">HYPERSPACE</span>
+                <button type="button" class="boot-radio-btn" id="radio-btn-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Choose HYPERSPACE as Default HUD" aria-label="Choose HYPERSPACE as Default HUD">
+                  <span class="radio-circle"><span class="radio-dot"></span></span>
+                  <span class="default-star-indicator">★</span>
+                </button>
               </div>
               <div class="cockpit-desc">Kinetic vector canvas with floating telemetry</div>
             </div>
           </div>
           <div class="cockpit-launch-action">
             <span class="launch-btn-pill">LAUNCH ↗</span>
-            <button type="button" class="boot-radio-btn" id="radio-btn-hyperspace" onclick="setBootDefaultFromCard(event, 'hyperspace')" title="Set HYPERSPACE as Default Boot Cockpit">
-              <span class="radio-circle"><span class="radio-dot"></span></span>
-              <span class="radio-label">SET DEFAULT</span>
-            </button>
           </div>
         </a>
 
@@ -1469,7 +1495,7 @@
 
       const TOTAL_CARDS = 5;
       let activeCardIndex = 0; // Default: Card 0 (Civic Location)
-      let isAutoCycleOn = (localStorage.getItem('nomad_databar_autocycle') === 'true');
+      let isAutoCycleOn = (localStorage.getItem('nomad_databar_autocycle') !== 'false'); // Default: ON (scroll every 8 seconds)
       let cycleCadenceSec = parseInt(localStorage.getItem('nomad_databar_cadence') || '8', 10);
       let autoCycleTimer = null;
       let isDataBarPaused = false;
@@ -1539,13 +1565,13 @@
         }
       }
 
-      // Gesture & Touch Tracking
+      // Gesture & Touch Tracking (Tapping cycles cards, ONLY Long-Press opens settings)
       let touchStartX = 0;
       let touchStartY = 0;
       let touchStartTime = 0;
       let isLongPressFired = false;
       let longPressTimeout = null;
-      let lastTapTime = 0;
+      const LONG_PRESS_DURATION = 550; // Sustained 550ms hold triggers dedicated DATA BAR settings
 
       function startPress(clientX, clientY) {
         touchStartX = clientX;
@@ -1564,15 +1590,16 @@
           } catch (_) {}
           playDataBarTone(1800);
           openDataBarModal();
-        }, 400); // 400ms hold triggers dedicated DATA BAR settings
+        }, LONG_PRESS_DURATION);
       }
 
       function endPress(clientX, clientY) {
         clearTimeout(longPressTimeout);
         if (dataBarEl) dataBarEl.classList.remove('pressing');
 
+        // If long-press fired, settings modal was already opened: ignore tap/swipe
         if (isLongPressFired) {
-          setTimeout(() => { isLongPressFired = false; }, 120);
+          setTimeout(() => { isLongPressFired = false; }, 150);
           return;
         }
 
@@ -1592,17 +1619,8 @@
           return;
         }
 
-        // Tap detected (< 320ms, < 20px move)
+        // Tap detected (< 320ms, < 20px move) ➔ ALWAYS cycles card, NEVER opens settings!
         if (duration < 320 && Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
-          const now = Date.now();
-          if (now - lastTapTime < 320) {
-            // Quick Double-Tap shortcut to open DATA BAR settings
-            lastTapTime = 0;
-            openDataBarModal();
-            return;
-          }
-          lastTapTime = now;
-
           if (activeCardIndex === 4) {
             // Coordinates card: Tap to copy
             const coordsText = document.getElementById('db-coords-full')?.innerText || '';
@@ -1681,12 +1699,6 @@
           if (!isMouseDown) return;
           isMouseDown = false;
           endPress(e.clientX, e.clientY);
-        });
-
-        // Double click shortcut for desktop
-        dataBarEl.addEventListener('dblclick', (e) => {
-          e.preventDefault();
-          openDataBarModal();
         });
 
         dataBarEl.addEventListener('mouseenter', () => { isDataBarPaused = true; });
@@ -1911,9 +1923,11 @@
           if (tempCEl && w.tempC !== null) tempCEl.innerText = w.tempC.toFixed(1);
           if (condEl && w.conditionText) condEl.innerText = w.conditionText.toUpperCase();
           if (weatherSubEl) {
-            const rh = w.humidityPercent !== null ? `${w.humidityPercent}%` : '--%';
-            const uv = w.uvIndex !== null ? w.uvIndex.toFixed(1) : '--';
-            const inHg = w.pressureInHg !== null ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
+            const rh = (w.humidityPercent !== null && w.humidityPercent !== undefined && !isNaN(w.humidityPercent))
+              ? `${Math.round(w.humidityPercent)}%`
+              : (w.humidity !== undefined && w.humidity !== null && !isNaN(w.humidity) ? `${Math.round(w.humidity)}%` : '--%');
+            const uv = (w.uvIndex !== null && w.uvIndex !== undefined && !isNaN(w.uvIndex)) ? w.uvIndex.toFixed(1) : '--';
+            const inHg = (w.pressureInHg !== null && w.pressureInHg !== undefined && !isNaN(w.pressureInHg)) ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
             weatherSubEl.innerText = `HUMIDITY: ${rh} • UV: ${uv} • BARO: ${inHg}`;
           }
         });
@@ -1940,10 +1954,9 @@
           }
 
           if (radioBtn) {
-            const label = radioBtn.querySelector('.radio-label');
-            if (label) {
-              label.innerText = isSelected ? '★ DEFAULT' : 'SET DEFAULT';
-            }
+            radioBtn.classList.toggle('is-active', isSelected);
+            radioBtn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+            radioBtn.title = isSelected ? `${id.toUpperCase()} is default HUD` : `Choose ${id.toUpperCase()} as default HUD`;
           }
         });
       }
