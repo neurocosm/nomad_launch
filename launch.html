@@ -130,10 +130,10 @@
     }
 
     /* ========================================================
-       PRECISE HUD BLOCK PARITY SPECIFICATION
-       DATA BAR Card matches the exact height (70px), width (100%), and border-radius (14px) of Lower HUD Cockpit cards
+       PRECISE HUD BLOCK SPECIFICATION
+       DATA BAR Card: 88px height (+25% increase from baseline 70px)
+       Lower HUD Cockpit cards: 70px height
        ======================================================== */
-    .data-bar-card,
     .cockpit-hero-card {
       width: 100%;
       height: 70px;
@@ -144,6 +144,12 @@
     }
 
     .data-bar-card {
+      width: 100%;
+      height: 88px;
+      min-height: 88px;
+      max-height: 88px;
+      border-radius: 15px;
+      box-sizing: border-box;
       position: relative;
       background: var(--bg-panel);
       backdrop-filter: blur(14px);
@@ -181,36 +187,41 @@
     .data-bar-viewport {
       position: relative;
       width: 100%;
+      height: 100%;
       overflow: hidden;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     .data-bar-slider {
       display: flex;
       width: 100%;
+      height: 100%;
+      align-items: center;
       transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .data-card {
       min-width: 100%;
+      height: 100%;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 2px 0;
+      padding: 0;
     }
 
     .data-hero-text {
-      font-size: clamp(1.15rem, 3vh, 1.35rem);
+      font-size: 1.56rem;
       font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      line-height: 1.15;
+      line-height: 1.2;
       letter-spacing: -0.01em;
     }
 
@@ -218,39 +229,39 @@
       display: flex;
       justify-content: center;
       align-items: baseline;
-      gap: 12px;
+      gap: 14px;
     }
 
     .data-hero-val {
-      font-size: clamp(1.15rem, 3vh, 1.35rem);
+      font-size: 1.56rem;
       font-weight: 800;
       color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .data-hero-val.secondary {
-      font-size: clamp(0.88rem, 2.3vh, 1.02rem);
-      font-weight: 700;
+      font-size: 1.56rem;
+      font-weight: 800;
       color: var(--accent-cyan);
     }
 
     .data-unit {
-      font-size: 0.65em;
-      font-weight: 700;
-      color: #94a3b8;
+      font-size: 0.72em;
+      font-weight: 800;
+      color: var(--accent-cyan);
       letter-spacing: 0.02em;
     }
 
     .data-sub-text {
-      font-size: clamp(0.66rem, 1.8vh, 0.74rem);
+      font-size: 0.83rem;
       font-family: 'JetBrains Mono', monospace;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
     }
 
     /* Unified Avionics Deck: Telemetry DATA BAR + Separator Dots + 3 Cockpits + Flush 4 Utilities */

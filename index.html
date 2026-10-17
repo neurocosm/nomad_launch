@@ -130,10 +130,10 @@
     }
 
     /* ========================================================
-       PRECISE HUD BLOCK PARITY SPECIFICATION
-       DATA BAR Card matches the exact height (70px), width (100%), and border-radius (14px) of Lower HUD Cockpit cards
+       PRECISE HUD BLOCK SPECIFICATION
+       DATA BAR Card: 88px height (+25% increase from baseline 70px)
+       Lower HUD Cockpit cards: 70px height
        ======================================================== */
-    .data-bar-card,
     .cockpit-hero-card {
       width: 100%;
       height: 70px;
@@ -144,6 +144,12 @@
     }
 
     .data-bar-card {
+      width: 100%;
+      height: 88px;
+      min-height: 88px;
+      max-height: 88px;
+      border-radius: 15px;
+      box-sizing: border-box;
       position: relative;
       background: var(--bg-panel);
       backdrop-filter: blur(14px);
@@ -209,7 +215,7 @@
     }
 
     .data-hero-text {
-      font-size: 1.25rem;
+      font-size: 1.56rem;
       font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
@@ -227,7 +233,7 @@
     }
 
     .data-hero-val {
-      font-size: 1.25rem;
+      font-size: 1.56rem;
       font-weight: 800;
       color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
@@ -235,7 +241,7 @@
     }
 
     .data-hero-val.secondary {
-      font-size: 1.25rem;
+      font-size: 1.56rem;
       font-weight: 800;
       color: var(--accent-cyan);
     }
@@ -256,10 +262,10 @@
     }
 
     .data-sub-text {
-      font-size: 0.68rem;
+      font-size: 0.83rem;
       font-family: 'JetBrains Mono', monospace;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1104,7 +1110,7 @@
     <!-- AVIONICS DECK (DATA Block + Tight Dots Separator + Cockpits Stack + Flush 4 Utilities) -->
     <div class="avionics-deck">
 
-      <!-- DATA BLOCK (Precise Height and Width of Lower HUD Blocks: 70px x 100%) -->
+      <!-- DATA BLOCK (Height: 88px [+25% scale-aware], Width: 100%) -->
       <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
         <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
         <div class="data-bar-viewport">
