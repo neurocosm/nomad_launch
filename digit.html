@@ -1301,14 +1301,17 @@
     }
 
     /* Block 01 Location Scale-Aware Boost */
+    .layout-phil-collapsed .block-location-content {
+      gap: 3px;
+    }
     .layout-phil-collapsed .loc-street-name {
-      font-size: clamp(1.46rem, 3.8vh, 1.95rem);
+      font-size: clamp(1.46rem, 3.8vh, 1.95rem) !important;
     }
     .layout-phil-collapsed .loc-city-state {
-      font-size: clamp(1.08rem, 2.7vh, 1.25rem);
+      font-size: clamp(1.08rem, 2.7vh, 1.25rem) !important;
     }
     .layout-phil-collapsed .loc-county-zip {
-      font-size: clamp(0.92rem, 2.3vh, 1.08rem);
+      font-size: clamp(0.92rem, 2.3vh, 1.08rem) !important;
     }
 
     /* Blocks 02 & 03 & 04 Hero Typography Scale-Aware Boost */
@@ -2352,6 +2355,9 @@
       }
       document.body.classList.toggle('layout-phil-collapsed', state.isPhilRolledUp);
 
+      // Immediately re-render DOM to trigger scale-aware typography across all blocks
+      updateDOM();
+
       try {
         localStorage.setItem('nomad_digit_phil_rollup', state.isPhilRolledUp ? 'true' : 'false');
       } catch (_) {}
@@ -2550,16 +2556,30 @@
       const roadName = state.location.road || 'Resolving Location...';
       streetEl.textContent = roadName;
 
-      // Dynamic sizing for street name based on length & container width
+      const isRolled = Boolean(state.isPhilRolledUp);
+
+      // Dynamic sizing for street name based on length & container width (Scale-aware boost when rolled up)
       const roadLen = roadName.length;
-      if (roadLen <= 15) {
-        streetEl.style.fontSize = 'clamp(1.28rem, 3.25vh, 1.65rem)';
-      } else if (roadLen <= 24) {
-        streetEl.style.fontSize = 'clamp(1.15rem, 2.8vh, 1.42rem)';
-      } else if (roadLen <= 34) {
-        streetEl.style.fontSize = 'clamp(1.00rem, 2.3vh, 1.20rem)';
+      if (isRolled) {
+        if (roadLen <= 15) {
+          streetEl.style.fontSize = 'clamp(1.52rem, 3.85vh, 2.05rem)';
+        } else if (roadLen <= 24) {
+          streetEl.style.fontSize = 'clamp(1.36rem, 3.35vh, 1.72rem)';
+        } else if (roadLen <= 34) {
+          streetEl.style.fontSize = 'clamp(1.18rem, 2.85vh, 1.45rem)';
+        } else {
+          streetEl.style.fontSize = 'clamp(1.02rem, 2.45vh, 1.25rem)';
+        }
       } else {
-        streetEl.style.fontSize = 'clamp(0.88rem, 2.05vh, 1.05rem)';
+        if (roadLen <= 15) {
+          streetEl.style.fontSize = 'clamp(1.28rem, 3.25vh, 1.65rem)';
+        } else if (roadLen <= 24) {
+          streetEl.style.fontSize = 'clamp(1.15rem, 2.8vh, 1.42rem)';
+        } else if (roadLen <= 34) {
+          streetEl.style.fontSize = 'clamp(1.00rem, 2.3vh, 1.20rem)';
+        } else {
+          streetEl.style.fontSize = 'clamp(0.88rem, 2.05vh, 1.05rem)';
+        }
       }
 
       // Check width overflow for street name
@@ -2571,16 +2591,26 @@
         }
       });
 
-      // Line 2: City & State (+10% enlarged, clear secondary scale with overflow safety)
+      // Line 2: City & State (Scale-aware secondary hierarchy with overflow safety)
       const cityStateText = state.location.cityState || 'Triangulating GNSS & Wi-Fi';
       cityStateEl.textContent = cityStateText;
       const cityStateLen = cityStateText.length;
-      if (cityStateLen <= 16) {
-        cityStateEl.style.fontSize = 'clamp(0.97rem, 2.42vh, 1.12rem)';
-      } else if (cityStateLen <= 26) {
-        cityStateEl.style.fontSize = 'clamp(0.88rem, 2.20vh, 1.04rem)';
+      if (isRolled) {
+        if (cityStateLen <= 16) {
+          cityStateEl.style.fontSize = 'clamp(1.14rem, 2.85vh, 1.36rem)';
+        } else if (cityStateLen <= 26) {
+          cityStateEl.style.fontSize = 'clamp(1.04rem, 2.55vh, 1.22rem)';
+        } else {
+          cityStateEl.style.fontSize = 'clamp(0.94rem, 2.32vh, 1.12rem)';
+        }
       } else {
-        cityStateEl.style.fontSize = 'clamp(0.82rem, 2.04vh, 0.95rem)';
+        if (cityStateLen <= 16) {
+          cityStateEl.style.fontSize = 'clamp(0.97rem, 2.42vh, 1.12rem)';
+        } else if (cityStateLen <= 26) {
+          cityStateEl.style.fontSize = 'clamp(0.88rem, 2.20vh, 1.04rem)';
+        } else {
+          cityStateEl.style.fontSize = 'clamp(0.82rem, 2.04vh, 0.95rem)';
+        }
       }
 
       requestAnimationFrame(() => {
@@ -2591,18 +2621,28 @@
         }
       });
 
-      // Line 3: County & Zip on their own line (+10% enlarged, clean slate metadata scale)
+      // Line 3: County & Zip on their own line (Scale-aware tertiary metadata)
       const countyZipParts = [state.location.county, state.location.zip].filter(Boolean);
       const countyZipText = countyZipParts.join(' • ') || (state.location.cityState ? '' : 'Scanning Position');
       countyZipEl.textContent = countyZipText;
       countyZipEl.style.display = countyZipText ? 'block' : 'none';
       const czLen = countyZipText.length;
-      if (czLen <= 24) {
-        countyZipEl.style.fontSize = 'clamp(0.84rem, 2.04vh, 0.97rem)';
-      } else if (czLen <= 36) {
-        countyZipEl.style.fontSize = 'clamp(0.79rem, 1.93vh, 0.90rem)';
+      if (isRolled) {
+        if (czLen <= 24) {
+          countyZipEl.style.fontSize = 'clamp(1.00rem, 2.45vh, 1.18rem)';
+        } else if (czLen <= 36) {
+          countyZipEl.style.fontSize = 'clamp(0.92rem, 2.24vh, 1.06rem)';
+        } else {
+          countyZipEl.style.fontSize = 'clamp(0.86rem, 2.05vh, 0.98rem)';
+        }
       } else {
-        countyZipEl.style.fontSize = 'clamp(0.75rem, 1.82vh, 0.86rem)';
+        if (czLen <= 24) {
+          countyZipEl.style.fontSize = 'clamp(0.84rem, 2.04vh, 0.97rem)';
+        } else if (czLen <= 36) {
+          countyZipEl.style.fontSize = 'clamp(0.79rem, 1.93vh, 0.90rem)';
+        } else {
+          countyZipEl.style.fontSize = 'clamp(0.75rem, 1.82vh, 0.86rem)';
+        }
       }
 
       requestAnimationFrame(() => {
