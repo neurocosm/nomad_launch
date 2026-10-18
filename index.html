@@ -229,19 +229,17 @@
       letter-spacing: -0.01em;
       max-width: 100%;
       box-sizing: border-box;
-      transition: font-size 0.08s ease;
     }
 
     .data-hero-split {
       display: flex;
       justify-content: center;
       align-items: baseline;
-      gap: 12px;
+      gap: 8px;
       max-width: 100%;
       white-space: nowrap;
       box-sizing: border-box;
       font-size: 1.56rem;
-      transition: font-size 0.08s ease;
     }
 
     .data-hero-val {
@@ -1497,47 +1495,85 @@
         } catch (_) {}
       }
 
-      // Dynamic Auto-Shrink Text Sizing Engine (RoadTrip Parity Algorithm)
-      // Adapts typography to fit inside the known usable internal width of each card
-      function autoShrinkDataCard(cardEl) {
+      // ====================================================================
+      // Zero-Flicker Pre-Evaluation & Auto-Fit Engine (Static Pre-Sized Telemetry)
+      // Computes optimal typography off-screen in a hidden sandbox before paint.
+      // Employs strict dirty-check caching so static cards never breathe or reflow.
+      // ====================================================================
+      function getMeasureSandbox() {
+        let sandbox = document.getElementById('data-card-measure-sandbox');
+        if (!sandbox) {
+          sandbox = document.createElement('div');
+          sandbox.id = 'data-card-measure-sandbox';
+          sandbox.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;pointer-events:none;opacity:0;z-index:-1000;display:flex;flex-direction:column;align-items:flex-start;';
+          document.body.appendChild(sandbox);
+        }
+        return sandbox;
+      }
+
+      function computeFitSize(el, maxAllowedWidth, idealSize, minSize) {
+        if (!el) return idealSize;
+        const sandbox = getMeasureSandbox();
+        const clone = el.cloneNode(true);
+        clone.style.transition = 'none';
+        clone.style.fontSize = `${idealSize}px`;
+        clone.style.maxWidth = 'none';
+        clone.style.width = 'max-content';
+        clone.style.display = el.classList.contains('data-hero-split') ? 'inline-flex' : 'inline-block';
+        clone.style.visibility = 'hidden';
+        sandbox.appendChild(clone);
+
+        let size = idealSize;
+        while ((clone.scrollWidth > maxAllowedWidth || clone.offsetWidth > maxAllowedWidth) && size > minSize) {
+          size -= 0.5;
+          clone.style.fontSize = `${size}px`;
+        }
+        sandbox.removeChild(clone);
+        return size;
+      }
+
+      function autoShrinkDataCard(cardEl, force = false) {
         if (!cardEl) return;
         const maxAllowedWidth = Math.max(120, (cardEl.clientWidth || (dataBarEl ? dataBarEl.clientWidth - 32 : 320)) - 16);
 
-        // 1. Hero row (.data-hero-text or .data-hero-split)
         const heroEl = cardEl.querySelector('.data-hero-text, .data-hero-split');
-        if (heroEl) {
-          let heroSize = 25; // 25px ≈ 1.56rem ideal ceiling
-          heroEl.style.fontSize = `${heroSize}px`;
-          const minHeroSize = 13.5;
-
-          while (heroEl.scrollWidth > maxAllowedWidth && heroSize > minHeroSize) {
-            heroSize -= 0.5;
-            heroEl.style.fontSize = `${heroSize}px`;
-          }
-        }
-
-        // 2. Sub-data row (.data-sub-text)
         const subEl = cardEl.querySelector('.data-sub-text');
-        if (subEl) {
-          let subSize = 13.5; // 13.5px ≈ 0.83rem ideal ceiling
-          subEl.style.fontSize = `${subSize}px`;
-          const minSubSize = 9.5;
 
-          while (subEl.scrollWidth > maxAllowedWidth && subSize > minSubSize) {
-            subSize -= 0.5;
-            subEl.style.fontSize = `${subSize}px`;
+        const heroText = heroEl ? heroEl.textContent.trim() : '';
+        const subText = subEl ? subEl.textContent.trim() : '';
+        const sig = `${heroText}:::${subText}:::${Math.round(maxAllowedWidth)}`;
+
+        // Dirty-check: if content and container width haven't changed, DO NOT touch styles or DOM!
+        if (!force && cardEl._autoSizeSig === sig) {
+          return;
+        }
+        cardEl._autoSizeSig = sig;
+
+        if (heroEl) {
+          const fittedHero = computeFitSize(heroEl, maxAllowedWidth, 25, 13.5);
+          const targetStr = `${fittedHero}px`;
+          if (heroEl.style.fontSize !== targetStr) {
+            heroEl.style.fontSize = targetStr;
+          }
+        }
+
+        if (subEl) {
+          const fittedSub = computeFitSize(subEl, maxAllowedWidth, 13.5, 9.5);
+          const targetStr = `${fittedSub}px`;
+          if (subEl.style.fontSize !== targetStr) {
+            subEl.style.fontSize = targetStr;
           }
         }
       }
 
-      function autoShrinkAllDataCards() {
+      function autoShrinkAllDataCards(force = false) {
         const cards = document.querySelectorAll('.data-card');
-        cards.forEach(card => autoShrinkDataCard(card));
+        cards.forEach(card => autoShrinkDataCard(card, force));
       }
 
-      window.addEventListener('resize', autoShrinkAllDataCards);
+      window.addEventListener('resize', () => autoShrinkAllDataCards(true));
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(autoShrinkAllDataCards).catch(() => {});
+        document.fonts.ready.then(() => autoShrinkAllDataCards(true)).catch(() => {});
       }
 
       function updateDataBarCardUI(sound = true) {
