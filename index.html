@@ -203,7 +203,9 @@
     }
 
     .data-card {
+      width: 100%;
       min-width: 100%;
+      max-width: 100%;
       height: 100%;
       flex-shrink: 0;
       display: flex;
@@ -211,7 +213,9 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 0;
+      padding: 2px 8px;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     .data-hero-text {
@@ -223,25 +227,34 @@
       text-overflow: ellipsis;
       line-height: 1.2;
       letter-spacing: -0.01em;
+      max-width: 100%;
+      box-sizing: border-box;
+      transition: font-size 0.08s ease;
     }
 
     .data-hero-split {
       display: flex;
       justify-content: center;
       align-items: baseline;
-      gap: 14px;
+      gap: 12px;
+      max-width: 100%;
+      white-space: nowrap;
+      box-sizing: border-box;
+      font-size: 1.56rem;
+      transition: font-size 0.08s ease;
     }
 
     .data-hero-val {
-      font-size: 1.56rem;
+      font-size: inherit;
       font-weight: 800;
       color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .data-hero-val.secondary {
-      font-size: 1.56rem;
+      font-size: inherit;
       font-weight: 800;
       color: var(--accent-cyan);
     }
@@ -270,6 +283,9 @@
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.03em;
+      max-width: 100%;
+      box-sizing: border-box;
+      transition: font-size 0.08s ease;
     }
 
     /* Unified Avionics Deck: Telemetry DATA BAR + Separator Dots + 3 Cockpits + Flush 4 Utilities */
@@ -1136,13 +1152,13 @@
               </div>
               <div class="data-sub-text" id="db-weather-sub">HUMIDITY: --% • UV: -- • BARO: --.-- inHg</div>
             </div>
-            <!-- Card 04: Compass & Altimetry (Matching Target Screenshot) -->
+            <!-- Card 04: Compass & Altimetry -->
             <div class="data-card" data-index="3">
               <div class="data-hero-split">
                 <div class="data-hero-val"><span id="db-compass-cardinal">N</span> <span id="db-compass-degrees">000°</span></div>
-                <div class="data-hero-val secondary"><span id="db-alt-ft">--</span> <span class="data-unit">FT</span> <span class="data-unit-dim">FT MSL</span></div>
+                <div class="data-hero-val secondary"><span id="db-alt-ft">--</span> <span class="data-unit">FT MSL</span></div>
               </div>
-              <div class="data-sub-text" id="db-compass-sub">ELEVATION: -- M • GPS ACCURACY: ±119 M</div>
+              <div class="data-sub-text" id="db-compass-sub">ELEVATION: -- M • GPS ACCURACY: ±-- M</div>
             </div>
             <!-- Card 05: Precision Geodetic Coordinates -->
             <div class="data-card" data-index="4">
@@ -1481,6 +1497,49 @@
         } catch (_) {}
       }
 
+      // Dynamic Auto-Shrink Text Sizing Engine (RoadTrip Parity Algorithm)
+      // Adapts typography to fit inside the known usable internal width of each card
+      function autoShrinkDataCard(cardEl) {
+        if (!cardEl) return;
+        const maxAllowedWidth = Math.max(120, (cardEl.clientWidth || (dataBarEl ? dataBarEl.clientWidth - 32 : 320)) - 16);
+
+        // 1. Hero row (.data-hero-text or .data-hero-split)
+        const heroEl = cardEl.querySelector('.data-hero-text, .data-hero-split');
+        if (heroEl) {
+          let heroSize = 25; // 25px ≈ 1.56rem ideal ceiling
+          heroEl.style.fontSize = `${heroSize}px`;
+          const minHeroSize = 13.5;
+
+          while (heroEl.scrollWidth > maxAllowedWidth && heroSize > minHeroSize) {
+            heroSize -= 0.5;
+            heroEl.style.fontSize = `${heroSize}px`;
+          }
+        }
+
+        // 2. Sub-data row (.data-sub-text)
+        const subEl = cardEl.querySelector('.data-sub-text');
+        if (subEl) {
+          let subSize = 13.5; // 13.5px ≈ 0.83rem ideal ceiling
+          subEl.style.fontSize = `${subSize}px`;
+          const minSubSize = 9.5;
+
+          while (subEl.scrollWidth > maxAllowedWidth && subSize > minSubSize) {
+            subSize -= 0.5;
+            subEl.style.fontSize = `${subSize}px`;
+          }
+        }
+      }
+
+      function autoShrinkAllDataCards() {
+        const cards = document.querySelectorAll('.data-card');
+        cards.forEach(card => autoShrinkDataCard(card));
+      }
+
+      window.addEventListener('resize', autoShrinkAllDataCards);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(autoShrinkAllDataCards).catch(() => {});
+      }
+
       function updateDataBarCardUI(sound = true) {
         if (!dataBarSlider) return;
         dataBarSlider.style.transform = `translateX(-${activeCardIndex * 100}%)`;
@@ -1501,6 +1560,9 @@
           dbCycleStatus.innerText = isAutoCycleOn ? `AUTO (${cycleCadenceSec}s)` : 'MANUAL';
           dbCycleStatus.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
         }
+
+        // Auto-fit typography to ensure zero overflow or card bleed
+        autoShrinkAllDataCards();
 
         if (sound) {
           playDataBarTone(1500 + activeCardIndex * 120);
@@ -1832,7 +1894,7 @@
           const compassSubEl = document.getElementById('db-compass-sub');
           if (compassCardEl) compassCardEl.innerText = snap.cardinalShort || 'N';
           if (compassDegEl) compassDegEl.innerText = `${String(snap.headingDeg || 0).padStart(3, '0')}°`;
-          if (altFtEl) altFtEl.innerText = snap.altitudeFeet !== null ? `${snap.altitudeFeet} FT MSL` : '-- FT';
+          if (altFtEl) altFtEl.innerText = snap.altitudeFeet !== null ? Math.round(snap.altitudeFeet).toLocaleString() : '--';
           if (compassSubEl) {
             const altM = snap.altitudeMeters !== null ? `${snap.altitudeMeters} M` : '-- M';
             const accM = snap.accuracyMeters !== null ? `±${snap.accuracyMeters} M` : '±-- M';
@@ -1866,6 +1928,8 @@
               dbBadge.style.background = 'rgba(0, 243, 255, 0.18)';
             }
           }
+
+          autoShrinkAllDataCards();
         });
       }
 
@@ -1893,12 +1957,16 @@
             const inHg = (w.pressureInHg !== null && w.pressureInHg !== undefined && !isNaN(w.pressureInHg)) ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
             weatherSubEl.innerText = `HUMIDITY: ${rh} • UV: ${uv} • BARO: ${inHg}`;
           }
+
+          autoShrinkAllDataCards();
         });
       }
 
       // Initial View Setup (Location Card 0 is Default)
       updateDataBarCardUI(false);
       resetAutoCycleTimer();
+      setTimeout(autoShrinkAllDataCards, 50);
+      setTimeout(autoShrinkAllDataCards, 300);
 
       // Startup Boot Preference Management (Avatar Icon Controls Default Setting)
       function updateBootUI(cockpitId) {

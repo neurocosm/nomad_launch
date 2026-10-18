@@ -101,18 +101,18 @@
     }
 
     .main-title {
-      font-size: clamp(1.35rem, 3.8vh, 1.65rem);
+      font-size: 1.55rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 2px;
-      text-shadow: 0 0 24px rgba(0, 243, 255, 0.28);
+      margin-bottom: 3px;
+      text-shadow: 0 0 24px rgba(0, 243, 255, 0.35);
     }
 
     .subtitle {
-      font-size: clamp(0.68rem, 1.8vh, 0.74rem);
-      color: var(--text-muted);
+      font-size: 0.74rem;
+      color: #94a3b8;
       letter-spacing: 0.02em;
       margin-bottom: 0;
     }
@@ -173,8 +173,8 @@
     }
 
     .data-bar-card:hover {
-      border-color: rgba(0, 243, 255, 0.65);
-      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 243, 255, 0.22);
+      border-color: rgba(0, 243, 255, 0.75);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 243, 255, 0.25);
     }
 
     .data-bar-card.pressing {
@@ -203,7 +203,9 @@
     }
 
     .data-card {
+      width: 100%;
       min-width: 100%;
+      max-width: 100%;
       height: 100%;
       flex-shrink: 0;
       display: flex;
@@ -211,7 +213,9 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 0;
+      padding: 2px 8px;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     .data-hero-text {
@@ -223,25 +227,34 @@
       text-overflow: ellipsis;
       line-height: 1.2;
       letter-spacing: -0.01em;
+      max-width: 100%;
+      box-sizing: border-box;
+      transition: font-size 0.08s ease;
     }
 
     .data-hero-split {
       display: flex;
       justify-content: center;
       align-items: baseline;
-      gap: 14px;
+      gap: 12px;
+      max-width: 100%;
+      white-space: nowrap;
+      box-sizing: border-box;
+      font-size: 1.56rem;
+      transition: font-size 0.08s ease;
     }
 
     .data-hero-val {
-      font-size: 1.56rem;
+      font-size: inherit;
       font-weight: 800;
       color: #ffffff;
       font-family: 'JetBrains Mono', monospace;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .data-hero-val.secondary {
-      font-size: 1.56rem;
+      font-size: inherit;
       font-weight: 800;
       color: var(--accent-cyan);
     }
@@ -253,6 +266,14 @@
       letter-spacing: 0.02em;
     }
 
+    .data-unit-dim {
+      font-size: 0.58em;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.02em;
+      margin-left: 2px;
+    }
+
     .data-sub-text {
       font-size: 0.83rem;
       font-family: 'JetBrains Mono', monospace;
@@ -262,11 +283,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.03em;
+      max-width: 100%;
+      box-sizing: border-box;
+      transition: font-size 0.08s ease;
     }
 
     /* Unified Avionics Deck: Telemetry DATA BAR + Separator Dots + 3 Cockpits + Flush 4 Utilities */
-    .avionics-deck,
-    .avionics-console-deck {
+    .avionics-deck {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -283,7 +306,6 @@
       height: 12px;
       margin: 2px 0 4px 0;
       flex-shrink: 0;
-      line-height: 1;
     }
 
     .data-bar-dots {
@@ -395,7 +417,6 @@
 
     .cockpit-hero-card.card-hyperspace {
       border-color: rgba(255, 0, 85, 0.40);
-      margin-bottom: 0 !important;
     }
     .cockpit-hero-card.card-hyperspace:hover {
       border-color: var(--accent-magenta);
@@ -405,7 +426,6 @@
       border-color: var(--accent-magenta);
       background: rgba(255, 0, 85, 0.08);
       box-shadow: 0 0 18px rgba(255, 0, 85, 0.35);
-      margin-bottom: 0 !important;
     }
 
     .cockpit-left {
@@ -560,6 +580,11 @@
       color: #000000;
       border-color: #ffffff;
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.85);
+      transform: scale(1.05);
+    }
+
+    .launch-btn-pill:active {
+      transform: scale(0.96);
     }
 
     /* 4 Shared Utilities Deck / Utility Cluster (10px padding below Hyperspace, 11px between rows) */
@@ -598,14 +623,14 @@
     }
 
     .util-tile-title {
-      font-size: clamp(0.72rem, 2.3vw, 0.78rem);
+      font-size: 0.76rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       letter-spacing: 0.02em;
       margin-bottom: 0;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -616,7 +641,7 @@
       background: rgba(255, 0, 127, 0.12);
       border: 1.5px solid #ff007f;
       color: #ffffff;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.25);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.22);
     }
     .util-arcade .util-tile-title { color: #ffffff; }
 
@@ -624,17 +649,17 @@
       background: rgba(255, 176, 0, 0.10);
       border: 1.5px solid #ffb000;
       color: #ffb000;
-      box-shadow: 0 0 10px rgba(255, 176, 0, 0.20);
+      box-shadow: 0 0 10px rgba(255, 176, 0, 0.18);
     }
     .util-stats .util-tile-title { color: #ffb000; }
 
     .util-guide {
-      background: rgba(56, 189, 248, 0.10);
-      border: 1.5px solid #38bdf8;
-      color: #38bdf8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.20);
+      background: rgba(0, 243, 255, 0.10);
+      border: 1.5px solid #00f3ff;
+      color: #00f3ff;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.18);
     }
-    .util-guide .util-tile-title { color: #38bdf8; }
+    .util-guide .util-tile-title { color: #00f3ff; }
 
     .util-download {
       background: rgba(16, 185, 129, 0.14);
@@ -653,9 +678,10 @@
     .util-purge .util-tile-title { color: #ff004f; }
 
     .util-about {
-      background: rgba(148, 163, 184, 0.08);
-      border: 1.5px solid rgba(148, 163, 184, 0.30);
+      background: rgba(15, 23, 42, 0.65);
+      border: 1.5px solid rgba(148, 163, 184, 0.40);
       color: #cbd5e1;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
     }
     .util-about .util-tile-title { color: #cbd5e1; }
 
@@ -1097,8 +1123,10 @@
       <p class="subtitle">Select Cockpit to Begin Experience</p>
     </div>
 
-    <!-- Unified Avionics Console Deck (DATA BAR + Compact Dots Separator + Cockpits + Flush 4 Utilities) -->
-    <div class="avionics-console-deck">
+    <!-- AVIONICS DECK (DATA Block + Tight Dots Separator + Cockpits Stack + Flush 4 Utilities) -->
+    <div class="avionics-deck">
+
+      <!-- DATA BLOCK (Height: 88px [+25% scale-aware], Width: 100%) -->
       <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
         <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
         <div class="data-bar-viewport">
@@ -1141,7 +1169,7 @@
         </div>
       </div>
 
-      <!-- Telemetry Carousel Dots (Compact Natural Separator from HUD Cockpits) -->
+      <!-- Telemetry Carousel Dots (Centered Natural Separator Directly Under DATA Block) -->
       <div class="data-bar-dots-separator">
         <div class="data-bar-dots" id="data-bar-dots">
           <span class="db-dot active" data-index="0" title="01 Civic Location"></span>
@@ -1152,6 +1180,7 @@
         </div>
       </div>
 
+      <!-- 3 Cockpits Stack (DIGIT, ROAD TRIP, HYPERSPACE) -->
       <div class="cockpits-stack">
 
         <!-- 1. DIGIT -->
@@ -1204,7 +1233,7 @@
 
       </div>
 
-      <!-- 4 Utilities Deck (Tightly coupled with NO space below Hyperspace) -->
+      <!-- 4 Utilities Deck (Flush directly below Hyperspace with NO gap) -->
       <div class="utilities-grid">
 
         <!-- A: VISUALIZER ARCADE -->
@@ -1228,6 +1257,7 @@
         </div>
 
       </div>
+
     </div>
 
     <footer>
@@ -1444,7 +1474,7 @@
 
       const TOTAL_CARDS = 5;
       let activeCardIndex = 0; // Default: Card 0 (Civic Location)
-      let isAutoCycleOn = (localStorage.getItem('nomad_databar_autocycle') === 'true');
+      let isAutoCycleOn = (localStorage.getItem('nomad_databar_autocycle') !== 'false'); // Default: ON (scroll every 8 seconds)
       let cycleCadenceSec = parseInt(localStorage.getItem('nomad_databar_cadence') || '8', 10);
       let autoCycleTimer = null;
       let isDataBarPaused = false;
@@ -1467,6 +1497,49 @@
         } catch (_) {}
       }
 
+      // Dynamic Auto-Shrink Text Sizing Engine (RoadTrip Parity Algorithm)
+      // Adapts typography to fit inside the known usable internal width of each card
+      function autoShrinkDataCard(cardEl) {
+        if (!cardEl) return;
+        const maxAllowedWidth = Math.max(120, (cardEl.clientWidth || (dataBarEl ? dataBarEl.clientWidth - 32 : 320)) - 16);
+
+        // 1. Hero row (.data-hero-text or .data-hero-split)
+        const heroEl = cardEl.querySelector('.data-hero-text, .data-hero-split');
+        if (heroEl) {
+          let heroSize = 25; // 25px ≈ 1.56rem ideal ceiling
+          heroEl.style.fontSize = `${heroSize}px`;
+          const minHeroSize = 13.5;
+
+          while (heroEl.scrollWidth > maxAllowedWidth && heroSize > minHeroSize) {
+            heroSize -= 0.5;
+            heroEl.style.fontSize = `${heroSize}px`;
+          }
+        }
+
+        // 2. Sub-data row (.data-sub-text)
+        const subEl = cardEl.querySelector('.data-sub-text');
+        if (subEl) {
+          let subSize = 13.5; // 13.5px ≈ 0.83rem ideal ceiling
+          subEl.style.fontSize = `${subSize}px`;
+          const minSubSize = 9.5;
+
+          while (subEl.scrollWidth > maxAllowedWidth && subSize > minSubSize) {
+            subSize -= 0.5;
+            subEl.style.fontSize = `${subSize}px`;
+          }
+        }
+      }
+
+      function autoShrinkAllDataCards() {
+        const cards = document.querySelectorAll('.data-card');
+        cards.forEach(card => autoShrinkDataCard(card));
+      }
+
+      window.addEventListener('resize', autoShrinkAllDataCards);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(autoShrinkAllDataCards).catch(() => {});
+      }
+
       function updateDataBarCardUI(sound = true) {
         if (!dataBarSlider) return;
         dataBarSlider.style.transform = `translateX(-${activeCardIndex * 100}%)`;
@@ -1487,6 +1560,9 @@
           dbCycleStatus.innerText = isAutoCycleOn ? `AUTO (${cycleCadenceSec}s)` : 'MANUAL';
           dbCycleStatus.style.color = isAutoCycleOn ? '#30d158' : '#94a3b8';
         }
+
+        // Auto-fit typography to ensure zero overflow or card bleed
+        autoShrinkAllDataCards();
 
         if (sound) {
           playDataBarTone(1500 + activeCardIndex * 120);
@@ -1818,7 +1894,7 @@
           const compassSubEl = document.getElementById('db-compass-sub');
           if (compassCardEl) compassCardEl.innerText = snap.cardinalShort || 'N';
           if (compassDegEl) compassDegEl.innerText = `${String(snap.headingDeg || 0).padStart(3, '0')}°`;
-          if (altFtEl) altFtEl.innerText = snap.altitudeFeet !== null ? `${snap.altitudeFeet} FT MSL` : '-- FT';
+          if (altFtEl) altFtEl.innerText = snap.altitudeFeet !== null ? Math.round(snap.altitudeFeet).toLocaleString() : '--';
           if (compassSubEl) {
             const altM = snap.altitudeMeters !== null ? `${snap.altitudeMeters} M` : '-- M';
             const accM = snap.accuracyMeters !== null ? `±${snap.accuracyMeters} M` : '±-- M';
@@ -1852,6 +1928,8 @@
               dbBadge.style.background = 'rgba(0, 243, 255, 0.18)';
             }
           }
+
+          autoShrinkAllDataCards();
         });
       }
 
@@ -1872,17 +1950,23 @@
           if (tempCEl && w.tempC !== null) tempCEl.innerText = w.tempC.toFixed(1);
           if (condEl && w.conditionText) condEl.innerText = w.conditionText.toUpperCase();
           if (weatherSubEl) {
-            const rh = w.humidityPercent !== null ? `${w.humidityPercent}%` : '--%';
-            const uv = w.uvIndex !== null ? w.uvIndex.toFixed(1) : '--';
-            const inHg = w.pressureInHg !== null ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
+            const rh = (w.humidityPercent !== null && w.humidityPercent !== undefined && !isNaN(w.humidityPercent))
+              ? `${Math.round(w.humidityPercent)}%`
+              : (w.humidity !== undefined && w.humidity !== null && !isNaN(w.humidity) ? `${Math.round(w.humidity)}%` : '--%');
+            const uv = (w.uvIndex !== null && w.uvIndex !== undefined && !isNaN(w.uvIndex)) ? w.uvIndex.toFixed(1) : '--';
+            const inHg = (w.pressureInHg !== null && w.pressureInHg !== undefined && !isNaN(w.pressureInHg)) ? `${w.pressureInHg.toFixed(2)} inHg` : '-- inHg';
             weatherSubEl.innerText = `HUMIDITY: ${rh} • UV: ${uv} • BARO: ${inHg}`;
           }
+
+          autoShrinkAllDataCards();
         });
       }
 
       // Initial View Setup (Location Card 0 is Default)
       updateDataBarCardUI(false);
       resetAutoCycleTimer();
+      setTimeout(autoShrinkAllDataCards, 50);
+      setTimeout(autoShrinkAllDataCards, 300);
 
       // Startup Boot Preference Management (Avatar Icon Controls Default Setting)
       function updateBootUI(cockpitId) {
