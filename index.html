@@ -96,8 +96,11 @@
       text-align: center;
       padding: 0;
       margin-top: 0;
-      margin-bottom: 12px;
+      margin-bottom: 2px;
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .main-title {
@@ -106,15 +109,31 @@
       letter-spacing: -0.01em;
       color: #ffffff;
       line-height: 1.1;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       text-shadow: 0 0 24px rgba(0, 243, 255, 0.35);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.12s ease, text-shadow 0.2s ease, color 0.2s ease, opacity 0.15s ease;
+      display: inline-block;
+    }
+
+    .main-title:hover {
+      opacity: 0.90;
+      transform: scale(1.02);
+    }
+
+    .main-title:active {
+      transform: scale(0.96);
     }
 
     .subtitle {
-      font-size: 0.74rem;
+      font-size: 0.90rem;
       color: #94a3b8;
       letter-spacing: 0.02em;
-      margin-bottom: 0;
+      margin: 9px 0 6px 0; /* +3px buffer from DATABLOCK */
+      text-align: center;
+      font-weight: 600;
     }
 
     .creator-tag {
@@ -131,7 +150,7 @@
 
     /* ========================================================
        PRECISE HUD BLOCK SPECIFICATION
-       DATA BAR Card: 88px height (+25% increase from baseline 70px)
+       DATA BAR Card: 110px height (+25% increase from 88px)
        Lower HUD Cockpit cards: 70px height
        ======================================================== */
     .cockpit-hero-card {
@@ -145,10 +164,10 @@
 
     .data-bar-card {
       width: 100%;
-      height: 88px;
-      min-height: 88px;
-      max-height: 88px;
-      border-radius: 15px;
+      height: 110px;
+      min-height: 110px;
+      max-height: 110px;
+      border-radius: 16px;
       box-sizing: border-box;
       position: relative;
       background: var(--bg-panel);
@@ -219,7 +238,7 @@
     }
 
     .data-hero-text {
-      font-size: 1.56rem;
+      font-size: 1.78rem;
       font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
@@ -239,7 +258,7 @@
       max-width: 100%;
       white-space: nowrap;
       box-sizing: border-box;
-      font-size: 1.56rem;
+      font-size: 1.78rem;
     }
 
     .data-hero-val {
@@ -273,17 +292,16 @@
     }
 
     .data-sub-text {
-      font-size: 0.83rem;
+      font-size: 1.02rem;
       font-family: 'JetBrains Mono', monospace;
       color: #94a3b8;
-      margin-top: 5px;
+      margin-top: 7px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.03em;
       max-width: 100%;
       box-sizing: border-box;
-      transition: font-size 0.08s ease;
     }
 
     /* Unified Avionics Deck: Telemetry DATA BAR + Separator Dots + 3 Cockpits + Flush 4 Utilities */
@@ -296,13 +314,13 @@
       flex-shrink: 0;
     }
 
-    /* Natural Separator: Pagination Dots Underneath the Block */
+    /* Telemetry Carousel Dots: Positioned directly below Title and above DATABLOCK */
     .data-bar-dots-separator {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 12px;
-      margin: 2px 0 4px 0;
+      margin: 2px 0 6px 0;
       flex-shrink: 0;
     }
 
@@ -1109,22 +1127,467 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* ========================================================
+       THEME 2: RELAXED 256-GRAY (MONOCHROME TITANIUM SLATE)
+       Calm matte titanium silver, zero harsh white, muted pewter
+       ======================================================== */
+    body.theme-gray,
+    body.mode-relaxed {
+      --bg-space: #080a0d;
+      --bg-panel: rgba(18, 22, 28, 0.78);
+      --bg-panel-hover: rgba(26, 32, 40, 0.92);
+      --border-subtle: rgba(148, 163, 184, 0.18);
+      --border-glow: rgba(148, 163, 184, 0.28);
+      --accent-cyan: #8b96a4;
+      --accent-amber: #948c82;
+      --accent-green: #83918b;
+      --accent-blue: #7a8694;
+      --text-main: #9ea7b4;
+      --text-muted: #6b7480;
+      --text-dim: #444c56;
+      background: radial-gradient(circle at 50% 0%, #161a22 0%, #080a0d 75%) !important;
+      background-color: #080a0d !important;
+    }
+
+    body.theme-gray .main-title,
+    body.mode-relaxed .main-title {
+      color: #9ea7b4;
+      text-shadow: 0 0 16px rgba(158, 167, 180, 0.25);
+    }
+
+    body.theme-gray .subtitle,
+    body.mode-relaxed .subtitle {
+      color: #6b7480;
+    }
+
+    body.theme-gray .data-bar-card,
+    body.mode-relaxed .data-bar-card {
+      border-color: rgba(148, 163, 184, 0.32) !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 12px rgba(148, 163, 184, 0.12) !important;
+    }
+
+    body.theme-gray .data-bar-card:hover,
+    body.mode-relaxed .data-bar-card:hover {
+      border-color: rgba(175, 186, 199, 0.6) !important;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 16px rgba(175, 186, 199, 0.20) !important;
+    }
+
+    body.theme-gray .data-hero-text,
+    body.theme-gray .data-hero-val,
+    body.mode-relaxed .data-hero-text,
+    body.mode-relaxed .data-hero-val {
+      color: #9ea7b4 !important;
+    }
+
+    body.theme-gray .data-hero-val.secondary,
+    body.theme-gray .data-unit,
+    body.mode-relaxed .data-hero-val.secondary,
+    body.mode-relaxed .data-unit {
+      color: #8b96a4 !important;
+    }
+
+    body.theme-gray .data-sub-text,
+    body.mode-relaxed .data-sub-text {
+      color: #6b7480 !important;
+    }
+
+    body.theme-gray .db-dot.active,
+    body.mode-relaxed .db-dot.active {
+      background: #9ea7b4 !important;
+      box-shadow: 0 0 8px rgba(158, 167, 180, 0.6) !important;
+    }
+
+    body.theme-gray .launch-btn-pill,
+    body.mode-relaxed .launch-btn-pill {
+      background: rgba(148, 163, 184, 0.10);
+      border-color: rgba(148, 163, 184, 0.25);
+      color: #9ea7b4;
+    }
+
+    body.theme-gray .launch-btn-pill:hover,
+    body.mode-relaxed .launch-btn-pill:hover {
+      background: #9ea7b4;
+      color: #080a0d;
+      border-color: #9ea7b4;
+      box-shadow: 0 0 12px rgba(158, 167, 180, 0.7);
+    }
+
+    body.theme-gray .launch-toast,
+    body.mode-relaxed .launch-toast {
+      background: #323943 !important;
+      color: #a4abb5 !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    body.theme-gray .util-arcade,
+    body.mode-relaxed .util-arcade {
+      background: rgba(158, 167, 180, 0.10);
+      border-color: rgba(158, 167, 180, 0.35);
+      color: #9ea7b4;
+      box-shadow: none;
+    }
+    body.theme-gray .util-arcade .util-tile-title,
+    body.mode-relaxed .util-arcade .util-tile-title { color: #9ea7b4; }
+
+    body.theme-gray .util-stats,
+    body.mode-relaxed .util-stats {
+      background: rgba(148, 140, 130, 0.10);
+      border-color: rgba(148, 140, 130, 0.35);
+      color: #948c82;
+      box-shadow: none;
+    }
+    body.theme-gray .util-stats .util-tile-title,
+    body.mode-relaxed .util-stats .util-tile-title { color: #948c82; }
+
+    body.theme-gray .util-guide,
+    body.mode-relaxed .util-guide {
+      background: rgba(139, 150, 164, 0.10);
+      border-color: rgba(139, 150, 164, 0.35);
+      color: #8b96a4;
+      box-shadow: none;
+    }
+    body.theme-gray .util-guide .util-tile-title,
+    body.mode-relaxed .util-guide .util-tile-title { color: #8b96a4; }
+
+    body.theme-gray .util-download,
+    body.mode-relaxed .util-download {
+      background: rgba(131, 145, 139, 0.10);
+      border-color: rgba(131, 145, 139, 0.35);
+      color: #83918b;
+      box-shadow: none;
+    }
+    body.theme-gray .util-download .util-tile-title,
+    body.mode-relaxed .util-download .util-tile-title { color: #83918b; }
+
+    body.theme-gray .util-purge,
+    body.mode-relaxed .util-purge {
+      background: rgba(132, 142, 156, 0.10);
+      border-color: rgba(132, 142, 156, 0.35);
+      color: #848e9c;
+      box-shadow: none;
+    }
+    body.theme-gray .util-purge .util-tile-title,
+    body.mode-relaxed .util-purge .util-tile-title { color: #848e9c; }
+
+    body.theme-gray .creator-tag a,
+    body.mode-relaxed .creator-tag a { color: #948c82; }
+    body.theme-gray .bottom-action-pill,
+    body.mode-relaxed .bottom-action-pill {
+      background: rgba(18, 22, 28, 0.7);
+      border-color: rgba(148, 163, 184, 0.25);
+      color: #9ea7b4;
+    }
+    body.theme-gray .footer-firmware-val,
+    body.mode-relaxed .footer-firmware-val { color: #6b7480; }
+
+    body.theme-gray .databar-settings-box,
+    body.mode-relaxed .databar-settings-box {
+      background: #0f1217 !important;
+      border-color: rgba(148, 163, 184, 0.35) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 20px rgba(148, 163, 184, 0.15) !important;
+    }
+
+    /* ========================================================
+       THEME 3: APOLLO HERITAGE (RETRO NAVAL R-W-B)
+       Matte Bone Chalk, Steel Cadet Blue, Subdued Apollo Crimson
+       ======================================================== */
+    body.theme-apollo {
+      --bg-space: #080a0d;
+      --bg-panel: rgba(13, 18, 25, 0.82);
+      --bg-panel-hover: rgba(20, 28, 40, 0.94);
+      --border-subtle: rgba(95, 126, 155, 0.22);
+      --border-glow: rgba(95, 126, 155, 0.40);
+      --accent-cyan: #5f7e9b;
+      --accent-amber: #b25555;
+      --accent-green: #6f9185;
+      --accent-blue: #5f7e9b;
+      --text-main: #b4bcc8;
+      --text-muted: #6e7e93;
+      --text-dim: #444f5e;
+      background: radial-gradient(circle at 50% 0%, #111a26 0%, #080a0d 75%) !important;
+      background-color: #080a0d !important;
+    }
+
+    body.theme-apollo .main-title {
+      color: #5f7e9b;
+      text-shadow: 0 0 16px rgba(95, 126, 155, 0.35);
+    }
+
+    body.theme-apollo .subtitle {
+      color: #6e7e93;
+    }
+
+    body.theme-apollo .data-bar-card {
+      border-color: rgba(95, 126, 155, 0.42) !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 14px rgba(95, 126, 155, 0.18) !important;
+    }
+
+    body.theme-apollo .data-bar-card:hover {
+      border-color: rgba(95, 126, 155, 0.75) !important;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(95, 126, 155, 0.25) !important;
+    }
+
+    body.theme-apollo .data-hero-text,
+    body.theme-apollo .data-hero-val {
+      color: #b4bcc8 !important;
+    }
+
+    body.theme-apollo .data-hero-val.secondary,
+    body.theme-apollo .data-unit {
+      color: #5f7e9b !important;
+    }
+
+    body.theme-apollo .data-sub-text {
+      color: #6e7e93 !important;
+    }
+
+    body.theme-apollo .db-dot.active {
+      background: #b25555 !important;
+      box-shadow: 0 0 8px rgba(178, 85, 85, 0.6) !important;
+    }
+
+    body.theme-apollo .launch-btn-pill {
+      background: rgba(95, 126, 155, 0.12);
+      border-color: rgba(95, 126, 155, 0.30);
+      color: #b4bcc8;
+    }
+
+    body.theme-apollo .launch-btn-pill:hover {
+      background: #5f7e9b;
+      color: #080a0d;
+      border-color: #5f7e9b;
+      box-shadow: 0 0 12px rgba(95, 126, 155, 0.7);
+    }
+
+    body.theme-apollo .launch-toast {
+      background: #222c3a !important;
+      color: #b4bcc8 !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    body.theme-apollo .util-arcade {
+      background: rgba(178, 85, 85, 0.12);
+      border-color: rgba(178, 85, 85, 0.40);
+      color: #b25555;
+      box-shadow: none;
+    }
+    body.theme-apollo .util-arcade .util-tile-title { color: #b25555; }
+
+    body.theme-apollo .util-stats {
+      background: rgba(180, 188, 200, 0.10);
+      border-color: rgba(180, 188, 200, 0.35);
+      color: #b4bcc8;
+      box-shadow: none;
+    }
+    body.theme-apollo .util-stats .util-tile-title { color: #b4bcc8; }
+
+    body.theme-apollo .util-guide {
+      background: rgba(95, 126, 155, 0.14);
+      border-color: rgba(95, 126, 155, 0.45);
+      color: #5f7e9b;
+      box-shadow: none;
+    }
+    body.theme-apollo .util-guide .util-tile-title { color: #5f7e9b; }
+
+    body.theme-apollo .util-download {
+      background: rgba(111, 145, 133, 0.14);
+      border-color: rgba(111, 145, 133, 0.45);
+      color: #6f9185;
+      box-shadow: none;
+    }
+    body.theme-apollo .util-download .util-tile-title { color: #6f9185; }
+
+    body.theme-apollo .util-purge {
+      background: rgba(178, 85, 85, 0.12);
+      border-color: rgba(178, 85, 85, 0.40);
+      color: #b25555;
+      box-shadow: none;
+    }
+    body.theme-apollo .util-purge .util-tile-title { color: #b25555; }
+
+    body.theme-apollo .creator-tag a { color: #b25555; }
+    body.theme-apollo .bottom-action-pill {
+      background: rgba(13, 18, 25, 0.7);
+      border-color: rgba(95, 126, 155, 0.30);
+      color: #b4bcc8;
+    }
+    body.theme-apollo .footer-firmware-val { color: #6e7e93; }
+
+    body.theme-apollo .databar-settings-box {
+      background: #0d1219 !important;
+      border-color: rgba(95, 126, 155, 0.45) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 20px rgba(95, 126, 155, 0.20) !important;
+    }
+
+    /* ========================================================
+       THEME 4: ARIZONA DUSK (DESERT SUNSET / MOJAVE TWILIGHT)
+       Sun-Bleached Dune Sand, Washed Agave, Canyon Terracotta
+       ======================================================== */
+    body.theme-arizona {
+      --bg-space: #080a0d;
+      --bg-panel: rgba(20, 16, 18, 0.82);
+      --bg-panel-hover: rgba(30, 22, 26, 0.94);
+      --border-subtle: rgba(184, 109, 78, 0.22);
+      --border-glow: rgba(184, 109, 78, 0.40);
+      --accent-cyan: #689793;
+      --accent-amber: #b86d4e;
+      --accent-green: #7d8c76;
+      --accent-blue: #689793;
+      --text-main: #c4b8a5;
+      --text-muted: #827267;
+      --text-dim: #4a403b;
+      background: radial-gradient(circle at 50% 0%, #201516 0%, #080a0d 75%) !important;
+      background-color: #080a0d !important;
+    }
+
+    body.theme-arizona .main-title {
+      color: #b86d4e;
+      text-shadow: 0 0 16px rgba(184, 109, 78, 0.35);
+    }
+
+    body.theme-arizona .subtitle {
+      color: #827267;
+    }
+
+    body.theme-arizona .data-bar-card {
+      border-color: rgba(184, 109, 78, 0.42) !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 14px rgba(184, 109, 78, 0.18) !important;
+    }
+
+    body.theme-arizona .data-bar-card:hover {
+      border-color: rgba(184, 109, 78, 0.75) !important;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(184, 109, 78, 0.25) !important;
+    }
+
+    body.theme-arizona .data-hero-text,
+    body.theme-arizona .data-hero-val {
+      color: #c4b8a5 !important;
+    }
+
+    body.theme-arizona .data-hero-val.secondary,
+    body.theme-arizona .data-unit {
+      color: #689793 !important;
+    }
+
+    body.theme-arizona .data-sub-text {
+      color: #827267 !important;
+    }
+
+    body.theme-arizona .db-dot.active {
+      background: #b86d4e !important;
+      box-shadow: 0 0 8px rgba(184, 109, 78, 0.6) !important;
+    }
+
+    body.theme-arizona .launch-btn-pill {
+      background: rgba(184, 109, 78, 0.12);
+      border-color: rgba(184, 109, 78, 0.30);
+      color: #c4b8a5;
+    }
+
+    body.theme-arizona .launch-btn-pill:hover {
+      background: #b86d4e;
+      color: #080a0d;
+      border-color: #b86d4e;
+      box-shadow: 0 0 12px rgba(184, 109, 78, 0.7);
+    }
+
+    body.theme-arizona .launch-toast {
+      background: #332624 !important;
+      color: #c4b8a5 !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    body.theme-arizona .util-arcade {
+      background: rgba(184, 109, 78, 0.14);
+      border-color: rgba(184, 109, 78, 0.45);
+      color: #b86d4e;
+      box-shadow: none;
+    }
+    body.theme-arizona .util-arcade .util-tile-title { color: #b86d4e; }
+
+    body.theme-arizona .util-stats {
+      background: rgba(196, 184, 165, 0.10);
+      border-color: rgba(196, 184, 165, 0.35);
+      color: #c4b8a5;
+      box-shadow: none;
+    }
+    body.theme-arizona .util-stats .util-tile-title { color: #c4b8a5; }
+
+    body.theme-arizona .util-guide {
+      background: rgba(104, 151, 147, 0.14);
+      border-color: rgba(104, 151, 147, 0.45);
+      color: #689793;
+      box-shadow: none;
+    }
+    body.theme-arizona .util-guide .util-tile-title { color: #689793; }
+
+    body.theme-arizona .util-download {
+      background: rgba(125, 140, 118, 0.14);
+      border-color: rgba(125, 140, 118, 0.45);
+      color: #7d8c76;
+      box-shadow: none;
+    }
+    body.theme-arizona .util-download .util-tile-title { color: #7d8c76; }
+
+    body.theme-arizona .util-purge {
+      background: rgba(184, 109, 78, 0.14);
+      border-color: rgba(184, 109, 78, 0.45);
+      color: #b86d4e;
+      box-shadow: none;
+    }
+    body.theme-arizona .util-purge .util-tile-title { color: #b86d4e; }
+
+    body.theme-arizona .creator-tag a { color: #b86d4e; }
+    body.theme-arizona .bottom-action-pill {
+      background: rgba(20, 16, 18, 0.7);
+      border-color: rgba(184, 109, 78, 0.30);
+      color: #c4b8a5;
+    }
+    body.theme-arizona .footer-firmware-val { color: #827267; }
+
+    body.theme-arizona .databar-settings-box {
+      background: #141012 !important;
+      border-color: rgba(184, 109, 78, 0.45) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 20px rgba(184, 109, 78, 0.20) !important;
+    }
   </style>
 </head>
-<body>
+<body data-cockpit="launcher">
+  <script>
+    try {
+      var savedTheme = localStorage.getItem('nomad_color_theme') || localStorage.getItem('nomad_color_mode');
+      if (savedTheme === 'gray' || savedTheme === 'relaxed') {
+        document.body.classList.add('theme-gray', 'mode-relaxed');
+      } else if (savedTheme === 'apollo') {
+        document.body.classList.add('theme-apollo');
+      } else if (savedTheme === 'arizona') {
+        document.body.classList.add('theme-arizona');
+      }
+    } catch (e) {}
+  </script>
 
   <div class="launcher-frame">
     
     <!-- Top Header -->
     <div class="header-zone">
-      <h1 class="main-title">LAUNCH CONTROL</h1>
-      <p class="subtitle">Select Cockpit to Begin Experience</p>
+      <h1 class="main-title" id="launcher-title-theme-toggle" title="Tap to cycle Theme (Vivid / Gray / Apollo / Arizona)" role="button" tabindex="0">LAUNCH CONTROL</h1>
+      <!-- Telemetry Carousel Dots (Placed directly under Title & above DATABLOCK) -->
+      <div class="data-bar-dots-separator">
+        <div class="data-bar-dots" id="data-bar-dots">
+          <span class="db-dot active" data-index="0" title="01 Civic Location"></span>
+          <span class="db-dot" data-index="1" title="02 Speed &amp; Velocity"></span>
+          <span class="db-dot" data-index="2" title="03 Weather &amp; Atmosphere"></span>
+          <span class="db-dot" data-index="3" title="04 Compass &amp; Altitude"></span>
+          <span class="db-dot" data-index="4" title="05 Coordinates"></span>
+        </div>
+      </div>
     </div>
 
-    <!-- AVIONICS DECK (DATA Block + Tight Dots Separator + Cockpits Stack + Flush 4 Utilities) -->
+    <!-- AVIONICS DECK (DATA Block + Subtitle Prompt + Cockpits Stack + Flush 4 Utilities) -->
     <div class="avionics-deck">
 
-      <!-- DATA BLOCK (Height: 88px [+25% scale-aware], Width: 100%) -->
+      <!-- DATA BLOCK (Height: 110px [+25% scale-aware], Width: 100%) -->
       <div class="data-bar-card" id="launcher-data-bar" title="Swipe left/right or tap to cycle • Long-press for DATA BAR Settings">
         <!-- Carousel Sliding Viewport (5 Real-Time Telemetry Cards) -->
         <div class="data-bar-viewport">
@@ -1167,16 +1630,8 @@
         </div>
       </div>
 
-      <!-- Telemetry Carousel Dots (Centered Natural Separator Directly Under DATA Block) -->
-      <div class="data-bar-dots-separator">
-        <div class="data-bar-dots" id="data-bar-dots">
-          <span class="db-dot active" data-index="0" title="01 Civic Location"></span>
-          <span class="db-dot" data-index="1" title="02 Speed &amp; Velocity"></span>
-          <span class="db-dot" data-index="2" title="03 Weather &amp; Atmosphere"></span>
-          <span class="db-dot" data-index="3" title="04 Compass &amp; Altitude"></span>
-          <span class="db-dot" data-index="4" title="05 Coordinates"></span>
-        </div>
-      </div>
+      <!-- Cockpit Selection Prompt: "Select Cockpit Below" (+10% larger text) -->
+      <p class="subtitle">Select Cockpit Below</p>
 
       <!-- 3 Cockpits Stack (DIGIT, ROAD TRIP, HYPERSPACE) -->
       <div class="cockpits-stack">
@@ -1550,7 +2005,7 @@
         cardEl._autoSizeSig = sig;
 
         if (heroEl) {
-          const fittedHero = computeFitSize(heroEl, maxAllowedWidth, 25, 13.5);
+          const fittedHero = computeFitSize(heroEl, maxAllowedWidth, 28.5, 15);
           const targetStr = `${fittedHero}px`;
           if (heroEl.style.fontSize !== targetStr) {
             heroEl.style.fontSize = targetStr;
@@ -1558,7 +2013,7 @@
         }
 
         if (subEl) {
-          const fittedSub = computeFitSize(subEl, maxAllowedWidth, 13.5, 9.5);
+          const fittedSub = computeFitSize(subEl, maxAllowedWidth, 16.5, 11.5);
           const targetStr = `${fittedSub}px`;
           if (subEl.style.fontSize !== targetStr) {
             subEl.style.fontSize = targetStr;
@@ -2224,6 +2679,108 @@
             .catch(err => console.warn('Service worker registration failed:', err));
         });
       }
+
+      // ==========================================
+      // SUITE-WIDE AVIONICS THEME CONTROLLER
+      // Synced seamlessly across Launch Control & DIGIT via LocalStorage
+      // Tap "LAUNCH CONTROL" title to cycle through themes
+      // ==========================================
+      const NOMAD_THEMES = [
+        { id: 'vivid', name: 'ORIGINAL VIVID HUD', className: '', freq: 1200, bgThemeColor: '#050811' },
+        { id: 'gray', name: 'RELAXED 256-GRAY', className: 'theme-gray mode-relaxed', freq: 750, bgThemeColor: '#080a0d' },
+        { id: 'apollo', name: 'APOLLO (R-W-B)', className: 'theme-apollo', freq: 900, bgThemeColor: '#080a0d' },
+        { id: 'arizona', name: 'ARIZONA DUSK', className: 'theme-arizona', freq: 1050, bgThemeColor: '#080a0d' }
+      ];
+
+      function getInitialTheme() {
+        try {
+          const stored = localStorage.getItem('nomad_color_theme') || localStorage.getItem('nomad_color_mode');
+          if (stored === 'relaxed') return 'gray';
+          if (['vivid', 'gray', 'apollo', 'arizona'].includes(stored)) return stored;
+        } catch (e) {}
+        return 'vivid';
+      }
+
+      let activeThemeId = getInitialTheme();
+
+      function applyTheme(themeId, showFeedback = false) {
+        activeThemeId = themeId;
+        document.body.classList.remove('theme-gray', 'mode-relaxed', 'theme-apollo', 'theme-arizona');
+
+        const themeObj = NOMAD_THEMES.find(t => t.id === themeId) || NOMAD_THEMES[0];
+        if (themeObj.className) {
+          themeObj.className.split(' ').forEach(cls => {
+            if (cls) document.body.classList.add(cls);
+          });
+        }
+
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) {
+          themeMeta.setAttribute('content', themeObj.bgThemeColor);
+        }
+
+        try {
+          localStorage.setItem('nomad_color_theme', themeId);
+          localStorage.setItem('nomad_color_mode', themeId);
+        } catch (e) {}
+
+        if (showFeedback) {
+          playDataBarTone(themeObj.freq);
+          showToast(`THEME: ${themeObj.name}`);
+          try {
+            if ('vibrate' in navigator) navigator.vibrate(25);
+          } catch (_) {}
+        }
+
+        // Re-evaluate typography fit off-screen for new theme contrast/dimensions
+        setTimeout(() => {
+          if (typeof autoShrinkAllDataCards === 'function') {
+            autoShrinkAllDataCards(true);
+          }
+        }, 20);
+      }
+
+      function cycleNomadTheme() {
+        const currentIndex = NOMAD_THEMES.findIndex(t => t.id === activeThemeId);
+        const nextIndex = (currentIndex + 1) % NOMAD_THEMES.length;
+        const nextTheme = NOMAD_THEMES[nextIndex];
+        applyTheme(nextTheme.id, true);
+        return nextTheme;
+      }
+
+      window.cycleNomadTheme = cycleNomadTheme;
+      window.applyNomadTheme = applyTheme;
+      window.getCurrentNomadTheme = function() {
+        return NOMAD_THEMES.find(t => t.id === activeThemeId) || NOMAD_THEMES[0];
+      };
+
+      // Wire up title click & keyboard navigation
+      const mainTitleEl = document.querySelector('.main-title');
+      if (mainTitleEl) {
+        mainTitleEl.addEventListener('click', function(e) {
+          e.preventDefault();
+          cycleNomadTheme();
+        });
+        mainTitleEl.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            cycleNomadTheme();
+          }
+        });
+      }
+
+      // Live sync across tabs / windows when theme is toggled in DIGIT
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'nomad_color_theme' || e.key === 'nomad_color_mode') {
+          const updated = getInitialTheme();
+          if (updated !== activeThemeId) {
+            applyTheme(updated, false);
+          }
+        }
+      });
+
+      // Apply initial theme
+      applyTheme(activeThemeId, false);
 
       // Automatically check for suite updates upon startup (non-blocking)
       setTimeout(() => {

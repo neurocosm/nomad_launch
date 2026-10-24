@@ -3644,6 +3644,16 @@
     // Apply active theme on initial load
     applyTheme(state.colorTheme);
 
+    // Live sync across tabs / windows when theme is toggled in Launch Control
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'nomad_color_theme' || e.key === 'nomad_color_mode') {
+        const updated = getInitialTheme();
+        if (updated !== state.colorTheme) {
+          applyTheme(updated);
+        }
+      }
+    });
+
     // Toggle Audio (Audio Engine integration)
     window.digitSoundEnabled = (state.soundEnabled !== false);
     window.toggleUnifiedAudio = function() {
