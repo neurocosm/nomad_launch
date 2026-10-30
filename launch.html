@@ -18,7 +18,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -95,7 +95,7 @@
     .header-zone {
       text-align: center;
       padding: 0;
-      margin-top: 0;
+      margin-top: 5px; /* Brought down 5px from top per user request */
       margin-bottom: 2px;
       flex-shrink: 0;
       display: flex;
@@ -104,12 +104,14 @@
     }
 
     .main-title {
-      font-size: 1.55rem;
+      font-family: 'Orbitron', 'Space Grotesk', -apple-system, sans-serif;
+      font-size: 1.85rem;
       font-weight: 800;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.04em;
       color: #ffffff;
-      line-height: 1.1;
+      line-height: 1.15;
       margin-bottom: 2px;
+      white-space: nowrap;
       text-shadow: 0 0 24px rgba(0, 243, 255, 0.35);
       cursor: pointer;
       user-select: none;
@@ -2341,6 +2343,7 @@
 
         window.NomadTelemetryEngine.onUpdate((snap) => {
           if (!snap) return;
+          window.__nomadCurrentSpeedMph = Number(snap.speedMph) || 0;
 
           // Card 01: Civic Location & Highway Route
           const locStreet = document.getElementById('db-loc-street');
